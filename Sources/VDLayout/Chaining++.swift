@@ -36,7 +36,7 @@ extension ChainingProperty: SubviewProtocol where C.W: SubviewProtocol, C: Value
 	}
 	
 	public func didAdded(to superview: UIView) {
-		chaining.wrappedValue.didAdded(to: superview)
+		chaining.apply().didAdded(to: superview)
 	}
 	
 }
