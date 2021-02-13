@@ -13,18 +13,18 @@ This repository provides a declarative way to laoyut
 
 ```swift
 view.add {
-		UIStackView.V {
-				UILabel().chain.text["1"]
-				UILabel().chain.text["2"]
-				UIButton().chain.titleLabel.text[""]
-		}
-			.chain
-			.alignment[.center]
-			.distribution[.equalSpacing]
-			.spacing[3]
-			.edges().equal(to: 0)
-			.width[8]
-			.widthToHeight(equal: 1 / 2)
+	UIStackView.V {
+		UILabel().chain.text["1"]
+		UILabel().chain.text["2"]
+		UIButton().chain.titleLabel.text[""]
+	}
+	.chain
+	.alignment[.center]
+	.distribution[.equalSpacing]
+	.spacing[3]
+	.edges().equal(to: 0)
+	.width[8]
+	.widthToHeight(equal: 1 / 2)
 }
 ```
 ## Usage
@@ -49,7 +49,7 @@ import PackageDescription
 let package = Package(
   name: "SomeProject",
   dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "1.0.1")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "1.0.2")
   ],
   targets: [
     .target(name: "SomeProject", dependencies: ["VDLayout"])

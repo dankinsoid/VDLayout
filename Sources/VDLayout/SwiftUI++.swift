@@ -9,43 +9,43 @@ import UIKit
 import SwiftUI
 
 @available(iOS 13.0, *)
-struct UIKitView<V: UIView>: UIViewRepresentable {
+public struct UIKitView<V: UIView>: UIViewRepresentable {
 	
 	let make: () -> V
 	
-	init(_ make: @escaping () -> V) {
+	public init(_ make: @escaping () -> V) {
 		self.make = make
 	}
 	
-	init(_ make: @escaping @autoclosure () -> V) {
+	public init(_ make: @escaping @autoclosure () -> V) {
 		self.make = make
 	}
 	
-	func makeUIView(context: UIViewRepresentableContext<UIKitView<V>>) -> V {
+	public func makeUIView(context: UIViewRepresentableContext<UIKitView<V>>) -> V {
 		make()
 	}
 	
-	func updateUIView(_ uiView: V, context: UIViewRepresentableContext<UIKitView<V>>) {}
+	public func updateUIView(_ uiView: V, context: UIViewRepresentableContext<UIKitView<V>>) {}
 	
 }
 
 @available(iOS 13.0, *)
-struct UIKitViewController<V: UIViewController>: UIViewControllerRepresentable {
+public struct UIKitViewController<V: UIViewController>: UIViewControllerRepresentable {
 	
-	let make: () -> V
+	public let make: () -> V
 	
-	init(_ make: @escaping () -> V) {
+	public init(_ make: @escaping () -> V) {
 		self.make = make
 	}
 	
-	init(_ make: @escaping @autoclosure () -> V) {
+	public init(_ make: @escaping @autoclosure () -> V) {
 		self.make = make
 	}
 	
-	func makeUIViewController(context: UIViewControllerRepresentableContext<UIKitViewController<V>>) -> V {
+	public func makeUIViewController(context: UIViewControllerRepresentableContext<UIKitViewController<V>>) -> V {
 		make()
 	}
 	
-	func updateUIViewController(_ uiViewController: V, context: UIViewControllerRepresentableContext<UIKitViewController<V>>) {}
+	public func updateUIViewController(_ uiViewController: V, context: UIViewControllerRepresentableContext<UIKitViewController<V>>) {}
 	
 }
