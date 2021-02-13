@@ -9,34 +9,34 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
-extension ChainingProperty: UILayoutableArray where C.W: UILayoutableArray, C: ValueChainingProtocol {
+extension ValueChaining: UILayoutableArray where W: UILayoutableArray {
 	
 	public func asLayoutableArray() -> [UILayoutable] {
-		chaining.wrappedValue.asLayoutableArray()
+		wrappedValue.asLayoutableArray()
 	}
 	
 }
 
-extension ChainingProperty: UILayoutable where C.W: SubviewProtocol, C: ValueChainingProtocol {
+extension ValueChaining: UILayoutable where W: SubviewProtocol {
 	public var itemForConstraint: Any {
-		chaining.wrappedValue.itemForConstraint
+		wrappedValue.itemForConstraint
 	}
 }
 
-extension ChainingProperty: SubviewsArrayConvertable where C.W: SubviewProtocol, C: ValueChainingProtocol {
+extension ValueChaining: SubviewsArrayConvertable where W: SubviewProtocol {
 	public func asSubviews() -> [SubviewProtocol] {
-		chaining.wrappedValue.asSubviews()
+		wrappedValue.asSubviews()
 	}
 }
 
-extension ChainingProperty: SubviewProtocol where C.W: SubviewProtocol, C: ValueChainingProtocol {
+extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
 	
 	public func viewToAdd() -> UIView {
-		chaining.wrappedValue.viewToAdd()
+		wrappedValue.viewToAdd()
 	}
 	
 	public func didAdded(to superview: UIView) {
-		chaining.apply().didAdded(to: superview)
+		apply().didAdded(to: superview)
 	}
 	
 }

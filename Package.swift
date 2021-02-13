@@ -13,8 +13,8 @@ let package = Package(
         .library(name: "VDLayout", targets: ["VDLayout"]),
     ],
     dependencies: [
-			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.3.22"),
-			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.0.49"),
+			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.3.26"),
+			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.0.51"),
 			.package(url: "https://github.com/ReactiveX/RxSwift", from: "5.0.0"),
 			.package(url: "https://github.com/dankinsoid/Carbon", from: "1.0.1")
     ],
