@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "Carbon",
-        "repositoryURL": "https://github.com/ra1028/Carbon",
+        "repositoryURL": "https://github.com/dankinsoid/Carbon",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "9e572593e02ce77e54932d46d130054a13e2a056",
-          "version": null
+          "version": "1.0.1"
         }
       },
       {
