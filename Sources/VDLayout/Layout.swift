@@ -11,9 +11,7 @@ import ConstraintsOperators
 public typealias AttributableSubview = SubviewProtocol & Attributable
 
 extension Constraints: SubviewsArrayConvertable where Item: SubviewProtocol {
-	public func asSubviews() -> [SubviewProtocol] {
-		[self]
-	}
+	public func asSubviews() -> [SubviewProtocol] { [self] }
 }
 
 extension Constraints: SubviewProtocol where Item: SubviewProtocol {
