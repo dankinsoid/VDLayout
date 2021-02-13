@@ -1,0 +1,52 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Carbon",
+        "repositoryURL": "https://github.com/ra1028/Carbon",
+        "state": {
+          "branch": "master",
+          "revision": "9e572593e02ce77e54932d46d130054a13e2a056",
+          "version": null
+        }
+      },
+      {
+        "package": "ConstraintsOperators",
+        "repositoryURL": "https://github.com/dankinsoid/ConstraintsOperators.git",
+        "state": {
+          "branch": null,
+          "revision": "d875bfbde6c81941b362d1596a885fe702abbb0d",
+          "version": "2.3.24"
+        }
+      },
+      {
+        "package": "DifferenceKit",
+        "repositoryURL": "https://github.com/ra1028/DifferenceKit.git",
+        "state": {
+          "branch": null,
+          "revision": "14c66681e12a38b81045f44c6c29724a0d4b0e72",
+          "version": "1.1.5"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
+        "state": {
+          "branch": null,
+          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
+          "version": "5.1.1"
+        }
+      },
+      {
+        "package": "VDKit",
+        "repositoryURL": "https://github.com/dankinsoid/VDKit.git",
+        "state": {
+          "branch": null,
+          "revision": "6161324ab5b5c17ca571e7cfc361f035fc446df1",
+          "version": "1.0.47"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

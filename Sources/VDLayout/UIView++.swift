@@ -1,0 +1,87 @@
+//
+//  UIKit++.swift
+//  TestUI (iOS)
+//
+//  Created by Данил Войдилов on 09.02.2021.
+//
+
+import Foundation
+import UIKit
+import VDKit
+
+extension UIView {
+	
+	public convenience init(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) {
+		self.init()
+		subviews().asSubviews().forEach(add)
+	}
+	
+	public func add(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) {
+		subviews().asSubviews().forEach(add)
+	}
+	
+	public func with(_ subviews: [SubviewProtocol]) -> Self {
+		subviews.forEach(add)
+		return self
+	}
+	
+	public func with(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) -> Self {
+		with(subviews().asSubviews())
+	}
+	
+	public func add(subview: SubviewProtocol) {
+		let view = subview.viewToAdd()
+		view.translatesAutoresizingMaskIntoConstraints = false
+		if let stack = self as? UIStackView {
+			stack.addArrangedSubview(view)
+		} else {
+			addSubview(view)
+		}
+		subview.didAdded(to: self)
+	}
+	
+}
+
+extension UIButton {
+	
+	public var title: String? {
+		get { title(for: .normal) }
+		set { setTitle(newValue, for: .normal) }
+	}
+	
+	public var titleColor: UIColor? {
+		get { titleColor(for: .normal) }
+		set { setTitleColor(newValue, for: .normal) }
+	}
+	
+	public var titles: UIControl.States<String> {
+		UIControl.States(get: title, set: setTitle)
+	}
+	
+	public var titleColors: UIControl.States<UIColor> {
+		UIControl.States(get: titleColor, set: setTitleColor)
+	}
+	
+}
+
+extension UIControl {
+	
+	public struct States<Value> {
+		private let get: (State) -> Value?
+		private let set: (Value?, State) -> Void
+		
+		public subscript(_ key: State) -> Value? {
+			get { get(key) }
+			nonmutating set { set(newValue, key) }
+		}
+		
+		public init(get: @escaping (State) -> Value?, set: @escaping (Value?, State) -> Void) {
+			self.get = get
+			self.set = set
+		}
+		
+	}
+	
+}
+
+extension UIControl.State: Hashable {}
