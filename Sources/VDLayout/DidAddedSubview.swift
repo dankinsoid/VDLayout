@@ -11,7 +11,7 @@ import ConstraintsOperators
 
 @dynamicMemberLookup
 public struct DidAddedSubview<W: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
-	public let wrappedValue: W
+	public var wrappedValue: W
 	public var itemForConstraint: Any { wrappedValue.itemForConstraint }
 	private let didAddedTo: (UIView) -> Void
 	private(set) public var action: (W) -> W = { $0 }

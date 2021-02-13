@@ -15,15 +15,12 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 	
 	public var itemForConstraint: Any { parent.itemForConstraint }
 	let parent: P
-	let child: W
-	public var wrappedValue: W {
-		child
-	}
+	public var wrappedValue: W
 	
 	private(set) public var action: (W) -> W = { $0 }
 	
 	public init(_ child: W, parent: P) {
-		self.child = child
+		self.wrappedValue = child
 		self.parent = parent
 	}
 	
@@ -33,7 +30,7 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 	
 	public func didAdded(to superview: UIView) {
 		parent.didAdded(to: superview)
-		parent.viewToAdd().add(subview: child)
+		parent.viewToAdd().add(subview: wrappedValue)
 	}
 	
 	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<WrappedView, A, KeyPath<W, A>> {
@@ -49,7 +46,7 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 	}
 	
 	public func copy(with action: @escaping (W) -> W) -> WrappedView {
-		var result = WrappedView(child, parent: parent)
+		var result = WrappedView(wrappedValue, parent: parent)
 		result.action = action
 		return result
 	}
