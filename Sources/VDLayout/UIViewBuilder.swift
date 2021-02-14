@@ -12,8 +12,8 @@ public struct UIViewBuilder {
 	
 //	/// :nodoc:
 	@inlinable
-	public static func buildBlock() -> SubviewsArrayConvertable {
-		Array<AnySubview>()
+	public static func buildBlock() -> AnySubviews {
+		AnySubviews([])
 	}
 	
 //	/// :nodoc:

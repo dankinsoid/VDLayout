@@ -11,12 +11,12 @@ import VDKit
 
 extension UIView {
 	
-	public convenience init(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) {
+	public convenience init(@UIViewBuilder _ subviews: () -> AnySubviews) {
 		self.init()
 		subviews().asSubviews().forEach(add)
 	}
 	
-	public func add(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) {
+	public func add(@UIViewBuilder _ subviews: () -> AnySubviews) {
 		subviews().asSubviews().forEach(add)
 	}
 	
@@ -25,7 +25,7 @@ extension UIView {
 		return self
 	}
 	
-	public func with(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) -> Self {
+	public func with(@UIViewBuilder _ subviews: () -> AnySubviews) -> Self {
 		with(subviews().asSubviews())
 	}
 	
