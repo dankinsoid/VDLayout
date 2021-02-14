@@ -10,34 +10,34 @@ import UIKit
 @_functionBuilder
 public struct UIViewBuilder {
 	
-	/// :nodoc:
-	@inlinable
-	public static func buildBlock() -> SubviewsArrayConvertable {
-		Array<AnySubview>()
-	}
-	
+//	/// :nodoc:
+//	@inlinable
+//	public static func buildBlock() -> SubviewsArrayConvertable {
+//		Array<AnySubview>()
+//	}
+//
 	/// :nodoc:
 	@inlinable
 	public static func buildBlock(_ components: SubviewsArrayConvertable...) -> SubviewsArrayConvertable {
 		components.map { $0.asSubviews() }.joined().map { AnySubview($0) }
 	}
 	
-	@inlinable
-	public static func buildIf(_ component: SubviewsArrayConvertable?) -> SubviewsArrayConvertable {
-		component ?? Array<AnySubview>()
-	}
-	
-	/// :nodoc:
-	@inlinable
-	public static func buildEither(first: SubviewsArrayConvertable) -> SubviewsArrayConvertable {
-		first
-	}
-	
-	/// :nodoc:
-	@inlinable
-	public static func buildEither(second: SubviewsArrayConvertable) -> SubviewsArrayConvertable {
-		second
-	}
+//	@inlinable
+//	public static func buildIf(_ component: SubviewsArrayConvertable?) -> SubviewsArrayConvertable {
+//		component ?? Array<AnySubview>()
+//	}
+//
+//	/// :nodoc:
+//	@inlinable
+//	public static func buildEither(first: SubviewsArrayConvertable) -> SubviewsArrayConvertable {
+//		first
+//	}
+//
+//	/// :nodoc:
+//	@inlinable
+//	public static func buildEither(second: SubviewsArrayConvertable) -> SubviewsArrayConvertable {
+//		second
+//	}
 	
 }
 
