@@ -40,3 +40,13 @@ extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
 	}
 	
 }
+
+extension ValueChaining: Attributable where W: Attributable {
+	public typealias Target = W.Target
+	public typealias Att = W.Att
+	
+	public var target: W.Target {
+		wrappedValue.target
+	}
+	
+}
