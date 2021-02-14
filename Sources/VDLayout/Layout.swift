@@ -18,22 +18,16 @@ extension Constraints: SubviewsArrayConvertable where Item: SubviewProtocol {
 extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 	
 	public func viewToAdd() -> UIView {
-		target.viewToAdd()
+		item.viewToAdd()
 	}
 	
 	public func didAdded(to superview: UIView) {
-		target.didAdded(to: superview)
-		let view = target.viewToAdd()
+		item.didAdded(to: superview)
+		let view = item.viewToAdd()
 		view.ignoreAutoresizingMask()
 		view.rx.movedToWindow.subscribe(onSuccess: {
 			self.isActive = true
 		}).disposed(by: superview.rx.asDisposeBag)
 	}
-	
-}
-
-extension Constraints {
-	
-	public var chain: ValueChaining<Item> { ValueChaining(target) }
 	
 }
