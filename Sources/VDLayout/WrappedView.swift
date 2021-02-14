@@ -33,16 +33,8 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 		parent.viewToAdd().add(subview: wrappedValue)
 	}
 	
-	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<WrappedView, A, KeyPath<W, A>> {
-		ChainingProperty<WrappedView, A, KeyPath<W, A>>(self, getter: keyPath)
-	}
-	
-	public subscript<A>(dynamicMember keyPath: WritableKeyPath<W, A>) -> ChainingProperty<WrappedView, A, WritableKeyPath<W, A>> {
-		ChainingProperty<WrappedView, A, WritableKeyPath<W, A>>(self, getter: keyPath)
-	}
-	
-	public subscript<A>(dynamicMember keyPath: ReferenceWritableKeyPath<W, A>) -> ChainingProperty<WrappedView, A, ReferenceWritableKeyPath<W, A>> {
-		ChainingProperty<WrappedView, A, ReferenceWritableKeyPath<W, A>>(self, getter: keyPath)
+	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<WrappedView, A> {
+		ChainingProperty<WrappedView, A>(self, getter: keyPath)
 	}
 	
 	public func copy(with action: @escaping (W) -> W) -> WrappedView {

@@ -30,16 +30,8 @@ public struct DidAddedSubview<W: SubviewProtocol>: SubviewProtocol, ValueChainin
 		didAddedTo(superview)
 	}
 	
-	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<DidAddedSubview, A, KeyPath<W, A>> {
-		ChainingProperty<DidAddedSubview, A, KeyPath<W, A>>(self, getter: keyPath)
-	}
-	
-	public subscript<A>(dynamicMember keyPath: WritableKeyPath<W, A>) -> ChainingProperty<DidAddedSubview, A, WritableKeyPath<W, A>> {
-		ChainingProperty<DidAddedSubview, A, WritableKeyPath<W, A>>(self, getter: keyPath)
-	}
-	
-	public subscript<A>(dynamicMember keyPath: ReferenceWritableKeyPath<W, A>) -> ChainingProperty<DidAddedSubview, A, ReferenceWritableKeyPath<W, A>> {
-		ChainingProperty<DidAddedSubview, A, ReferenceWritableKeyPath<W, A>>(self, getter: keyPath)
+	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<DidAddedSubview, A> {
+		ChainingProperty<DidAddedSubview, A>(self, getter: keyPath)
 	}
 	
 	public func copy(with action: @escaping (W) -> W) -> DidAddedSubview {

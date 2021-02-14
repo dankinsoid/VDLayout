@@ -38,7 +38,7 @@ extension Reactive where Base: AnyObject {
 	
 }
 
-extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, G: SetterProtocol {
+extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject {
 	
 	public subscript<O: ObservableConvertibleType>(_ value: O) -> C where O.Element == B {
 		subscribe(value)
@@ -52,10 +52,10 @@ extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, G: Se
 	
 	private func subscribe<O: ObservableConvertibleType>(_ value: O) where O.Element == B {
 		let result = chaining.wrappedValue
-		let setter = getter.set
+		let setter = (getter as? ReferenceWritableKeyPath<C.W, B>)?.set
 		value.asObservable().subscribe(onNext: {[weak result] in
 			guard let it = result else { return }
-			_ = setter(it, $0)
+			_ = setter?(it, $0)
 		}).disposed(by: Reactive(result).asDisposeBag)
 	}
 	
