@@ -6,11 +6,17 @@
 //
 
 import XCTest
+@testable import VDKit
 @testable import VDLayout
 
 final class VDTests: XCTestCase {
 	
 	func tests() {
+		UIButton().chain
+			.title[""]
+			.titleColor[.red]
+			.alpha[1]
+			.tap[{}]
 	}
 	
 	static var allTests = [

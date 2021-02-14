@@ -25,6 +25,6 @@ let package = Package(
 				),
 			.testTarget(
 				name: "VDLayoutTests",
-				dependencies: ["VDLayout"]),
+				dependencies: ["VDLayout", "VDKit"]),
     ]
 )

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import VDKit
 import ConstraintsOperators
 
 public typealias AttributableSubview = SubviewProtocol & Attributable
@@ -28,5 +29,11 @@ extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 			self.isActive = true
 		}).disposed(by: superview.rx.asDisposeBag)
 	}
+	
+}
+
+extension Constraints {
+	
+	public var chain: ValueChaining<Item> { ValueChaining(target) }
 	
 }
