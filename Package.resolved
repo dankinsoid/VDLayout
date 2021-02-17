@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/dankinsoid/VDKit.git",
         "state": {
           "branch": null,
-          "revision": "fca423f8632906788f45c3663f61c3ba65adf646",
-          "version": "1.6.0"
+          "revision": "c715ad58ef4ed9a0d75144cc602cd00fdeb0b0b3",
+          "version": "1.7.0"
         }
       }
     ]
