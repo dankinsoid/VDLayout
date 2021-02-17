@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/ReactiveX/RxSwift",
         "state": {
           "branch": null,
-          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
-          "version": "5.1.1"
+          "revision": "7e01c05f25c025143073eaa3be3532f9375c614b",
+          "version": "6.1.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/dankinsoid/VDKit.git",
         "state": {
           "branch": null,
-          "revision": "1013ea7799d70f7b29f107358854d4bcb4384431",
-          "version": "1.3.0"
+          "revision": "fca423f8632906788f45c3663f61c3ba65adf646",
+          "version": "1.6.0"
         }
       }
     ]
