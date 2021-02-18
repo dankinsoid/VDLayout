@@ -11,8 +11,8 @@ import ConstraintsOperators
 
 extension ValueChaining: UILayoutableArray where W: UILayoutableArray {
 	
-	public func asLayoutableArray(for other: UILayoutableArray?) -> [UILayoutable] {
-		wrappedValue.asLayoutableArray(for: other)
+	public func asLayoutableArray() -> [UILayoutable] {
+		wrappedValue.asLayoutableArray()
 	}
 	
 }
