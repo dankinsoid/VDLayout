@@ -6,17 +6,22 @@
 //
 
 import XCTest
+@testable import Carbon
 @testable import VDKit
 @testable import VDLayout
 
 final class VDTests: XCTestCase {
 	
 	func tests() {
-		UIButton().chain
-			.title[""]
-			.titleColor[.red]
-			.alpha[1]
-			.tap[{}]
+		UIStackView.V {
+			UIList {
+				Section(id: UUID()) {
+					UIView()
+					UIView()
+					UIView()
+				}
+			}
+		}
 	}
 	
 	static var allTests = [

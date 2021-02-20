@@ -30,14 +30,14 @@ extension UIView {
 	}
 	
 	public func add(subview: SubviewProtocol) {
-		let view = subview.viewToAdd()
+		let view = subview.createViewToAdd()
 		view.translatesAutoresizingMaskIntoConstraints = false
 		if let stack = self as? UIStackView {
 			stack.addArrangedSubview(view)
 		} else {
 			addSubview(view)
 		}
-		subview.didAdded(to: self)
+		subview.didAdded(view: view, to: self)
 	}
 	
 }

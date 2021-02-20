@@ -24,13 +24,13 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 		self.parent = parent
 	}
 	
-	public func viewToAdd() -> UIView {
-		parent.viewToAdd()
+	public func createViewToAdd() -> UIView {
+		parent.createViewToAdd()
 	}
 	
-	public func didAdded(to superview: UIView) {
-		parent.didAdded(to: superview)
-		parent.viewToAdd().add(subview: wrappedValue)
+	public func didAdded(view: UIView, to superview: UIView) {
+		parent.didAdded(view: view, to: superview)
+		view.add(subview: wrappedValue)
 	}
 	
 	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<WrappedView, A> {

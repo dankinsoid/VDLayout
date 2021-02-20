@@ -10,8 +10,8 @@ import VDKit
 import ConstraintsOperators
 
 public protocol SubviewProtocol: SubviewsArrayConvertable, UILayoutable {
-	func viewToAdd() -> UIView
-	func didAdded(to superview: UIView)
+	func createViewToAdd() -> UIView
+	func didAdded(view: UIView, to superview: UIView)
 }
 
 public protocol SubviewsArrayConvertable {
@@ -31,8 +31,8 @@ extension Optional: SubviewsArrayConvertable where Wrapped: SubviewsArrayConvert
 }
 
 extension UIView: SubviewProtocol {
-	public func viewToAdd() -> UIView { self }
-	public func didAdded(to superview: UIView) {}
+	public func createViewToAdd() -> UIView { self }
+	public func didAdded(view: UIView, to superview: UIView) {}
 }
 
 extension UIViewController: SubviewProtocol {
@@ -41,12 +41,12 @@ extension UIViewController: SubviewProtocol {
 		view.itemForConstraint
 	}
 	
-	public func viewToAdd() -> UIView {
+	public func createViewToAdd() -> UIView {
 		loadViewIfNeeded()
 		return view
 	}
 	
-	public func didAdded(to superview: UIView) {
+	public func didAdded(view: UIView, to superview: UIView) {
 		superview.vc?.addChild(self)
 	}
 	

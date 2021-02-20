@@ -13,21 +13,21 @@ import ConstraintsOperators
 public struct DidAddedSubview<W: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
 	public var wrappedValue: W
 	public var itemForConstraint: Any { wrappedValue.itemForConstraint }
-	private let didAddedTo: (UIView) -> Void
+	private let didAddedTo: (UIView, UIView) -> Void
 	private(set) public var action: (W) -> W = { $0 }
 	
-	init(_ content: W, didAdded: @escaping (UIView) -> Void) {
+	init(_ content: W, didAdded: @escaping (UIView, UIView) -> Void) {
 		wrappedValue = content
 		didAddedTo = didAdded
 	}
 	
-	public func viewToAdd() -> UIView {
-		wrappedValue.viewToAdd()
+	public func createViewToAdd() -> UIView {
+		wrappedValue.createViewToAdd()
 	}
 	
-	public func didAdded(to superview: UIView) {
-		wrappedValue.didAdded(to: superview)
-		didAddedTo(superview)
+	public func didAdded(view: UIView, to superview: UIView) {
+		wrappedValue.didAdded(view: view, to: superview)
+		didAddedTo(view, superview)
 	}
 	
 	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<DidAddedSubview, A> {

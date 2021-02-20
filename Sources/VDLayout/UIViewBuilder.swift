@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import VDKit
 
 @_functionBuilder
 public struct UIViewBuilder {
@@ -19,7 +20,7 @@ public struct UIViewBuilder {
 	/// :nodoc:
 	@inlinable
 	public static func buildBlock(_ components: SubviewsArrayConvertable...) -> SubviewsArrayConvertable {
-		components.map { $0.asSubviews() }.joined().map { AnySubview($0) }
+		AnySubviews(components.map { $0.asSubviews() }.joinedArray())
 	}
 	
 	@inlinable
@@ -60,12 +61,12 @@ public struct AnySubview: SubviewProtocol {
 		self.item = item
 	}
 	
-	public func viewToAdd() -> UIView {
-		item.viewToAdd()
+	public func createViewToAdd() -> UIView {
+		item.createViewToAdd()
 	}
 	
-	public func didAdded(to superview: UIView) {
-		item.didAdded(to: superview)
+	public func didAdded(view: UIView, to superview: UIView) {
+		item.didAdded(view: view, to: superview)
 	}
 	
 	public var itemForConstraint: Any { item.itemForConstraint }

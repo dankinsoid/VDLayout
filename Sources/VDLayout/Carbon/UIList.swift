@@ -10,7 +10,7 @@ import UIKit
 import Carbon
 import RxSwift
 
-open class UIList: UITableView {
+open class UIList: UITableView, RenderableView {
 	
 	open var renderer = Renderer(adapter: UIListAdapter(), updater: UITableViewUpdater())
 	fileprivate let bag = DisposeBag()
@@ -20,7 +20,7 @@ open class UIList: UITableView {
 		set { renderer.adapter.scrollDelegate = newValue }
 	}
 	
-	public init() {
+	required public init() {
 		super.init(frame: .zero, style: .plain)
 		afterInit()
 	}
@@ -37,24 +37,6 @@ open class UIList: UITableView {
 	
 	private func afterInit() {
 		renderer.target = self
-	}
-	
-}
-
-extension UIList {
-	
-	public convenience init<S: SectionsBuildable, O: ObservableConvertibleType>(_ binder: O, @SectionsBuilder sections: @escaping (O.Element) -> S) {
-		self.init()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render(sections($0).buildSections())
-		}).disposed(by: bag)
-	}
-	
-	public convenience init<C: CellsBuildable, O: ObservableConvertibleType>(_ binder: O, @CellsBuilder cells: @escaping (O.Element) -> C) {
-		self.init()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render(Section(id: UUID(), cells: cells($0).buildCells()))
-		}).disposed(by: bag)
 	}
 	
 }

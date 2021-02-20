@@ -17,15 +17,14 @@ extension Constraints: SubviewsArrayConvertable where Item: SubviewProtocol {
 
 extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 	
-	public func viewToAdd() -> UIView {
-		item?.viewToAdd() ?? UIView()
+	public func createViewToAdd() -> UIView {
+		item?.createViewToAdd() ?? UIView()
 	}
 	
-	public func didAdded(to superview: UIView) {
-		item?.didAdded(to: superview)
-		let view = item?.viewToAdd()
-		view?.ignoreAutoresizingMask()
-		view?.rx.movedToWindow.subscribe(onSuccess: {
+	public func didAdded(view: UIView, to superview: UIView) {
+		item?.didAdded(view: view, to: superview)
+		view.ignoreAutoresizingMask()
+		view.rx.movedToWindow.subscribe(onSuccess: {
 			self.isActive = true
 		}).disposed(by: superview.rx.asDisposeBag)
 	}

@@ -13,19 +13,30 @@ import ConstraintsOperators
 extension SubviewProtocol {
 	
 	public func onAdded(_ action: @escaping (Self, _ superview: UIView) -> Void) -> DidAddedSubview<Self> {
-		DidAddedSubview(self) { superview in
+		DidAddedSubview(self) { _, superview in
 			action(self, superview)
 		}
 	}
 	
 	public func onMovedToWindow(_ action: @escaping (Self) -> Void) -> DidAddedSubview<Self> {
-		DidAddedSubview(self) { superview in
-			let view = self.viewToAdd()
+		DidAddedSubview(self) { view, superview in
 			view.rx.movedToWindow.subscribe(onSuccess: {
 				action(self)
-			}).disposed(by: view.rx.asDisposeBag)
+			}).disposed(by: superview.rx.asDisposeBag)
 		}
 	}
+	
+//	public func with(_ subviews: [SubviewProtocol]) -> Self {
+////		DidAddedSubview(self) { _, superview in
+//		let view = createViewToAdd()
+//		subviews.forEach(view.add)
+//		return self
+////		}
+//	}
+//	
+//	public func with(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) -> Self {
+//		with(subviews().asSubviews())
+//	}
 	
 }
 

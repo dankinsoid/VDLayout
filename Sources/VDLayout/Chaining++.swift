@@ -31,12 +31,12 @@ extension ValueChaining: SubviewsArrayConvertable where W: SubviewProtocol {
 
 extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
 	
-	public func viewToAdd() -> UIView {
-		wrappedValue.viewToAdd()
+	public func createViewToAdd() -> UIView {
+		wrappedValue.createViewToAdd()
 	}
 	
-	public func didAdded(to superview: UIView) {
-		apply().didAdded(to: superview)
+	public func didAdded(view: UIView, to superview: UIView) {
+		apply().didAdded(view: view, to: superview)
 	}
 	
 }
