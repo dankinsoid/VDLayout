@@ -37,6 +37,7 @@ open class UIList: UITableView, RenderableView {
 	
 	private func afterInit() {
 		renderer.target = self
+		rowHeight = UITableView.automaticDimension
 	}
 	
 }

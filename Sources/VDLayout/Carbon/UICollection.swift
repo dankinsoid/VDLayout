@@ -20,6 +20,11 @@ open class UICollection: UICollectionView, RenderableView {
 		set { renderer.adapter.scrollDelegate = newValue }
 	}
 	
+	public init() {
+		super.init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+		afterInit()
+	}
+	
 	public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
 		super.init(frame: frame, collectionViewLayout: layout)
 		afterInit()
