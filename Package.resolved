@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "Carbon",
-        "repositoryURL": "https://github.com/dankinsoid/Carbon",
+        "repositoryURL": "https://github.com/dankinsoid/Carbon.git",
         "state": {
           "branch": null,
           "revision": "9e572593e02ce77e54932d46d130054a13e2a056",
@@ -30,7 +30,7 @@
       },
       {
         "package": "RxSwift",
-        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
         "state": {
           "branch": null,
           "revision": "7e01c05f25c025143073eaa3be3532f9375c614b",

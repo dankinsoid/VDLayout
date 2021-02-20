@@ -15,8 +15,8 @@ let package = Package(
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.13.0"),
 			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.7.0"),
-			.package(url: "https://github.com/ReactiveX/RxSwift", from: "6.0.0"),
-			.package(url: "https://github.com/dankinsoid/Carbon", from: "1.0.1")
+			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0"),
+			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "1.0.1")
     ],
     targets: [
         .target(
