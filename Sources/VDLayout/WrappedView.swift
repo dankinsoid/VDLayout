@@ -10,7 +10,6 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
-@dynamicMemberLookup
 public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
 	
 	public var itemForConstraint: Any { parent.itemForConstraint }
@@ -31,10 +30,6 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 	public func didAdded(view: UIView, to superview: UIView) {
 		parent.didAdded(view: view, to: superview)
 		view.add(subview: wrappedValue)
-	}
-	
-	public subscript<A>(dynamicMember keyPath: KeyPath<W, A>) -> ChainingProperty<WrappedView, A> {
-		ChainingProperty<WrappedView, A>(self, getter: keyPath)
 	}
 	
 	public func copy(with action: @escaping (W) -> W) -> WrappedView {

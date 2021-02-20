@@ -21,7 +21,7 @@ let package = Package(
     targets: [
         .target(
             name: "VDLayout",
-            dependencies: ["ConstraintsOperators", "VDKit", "RxSwift", "RxCocoa", "Carbon"]
+            dependencies: ["ConstraintsOperators", "VDKit", "RxSwift", .product(name: "RxCocoa", package: "RxSwift"), "Carbon"]
 				),
 			.testTarget(
 				name: "VDLayoutTests",
