@@ -9,6 +9,7 @@ import UIKit
 import VDKit
 import RxSwift
 import Carbon
+import ConstraintsOperators
 
 public protocol AnyRenderableView: UIView {
 	init()
@@ -115,13 +116,22 @@ private struct LazyComponent<ID: Hashable>: IdentifiableComponent {
 	var create: () -> SubviewProtocol
 	
 	func renderContent() -> UIView {
-		UIView {
-			create().createViewToAdd()
-				.edges().equal(to: 0)
+		CellView {
+			create()
 		}
 	}
 	
 	func render(in content: UIView) {}
+	
+}
+
+fileprivate final class CellView: UIView {
+	
+	override func addSubview(_ view: UIView) {
+		super.addSubview(view)
+		view.ignoreAutoresizingMask()
+		view.edges() =| 0
+	}
 	
 }
 
