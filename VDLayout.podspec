@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'VDLayout'
-  s.version          = '1.18.0'
+  s.version          = '1.19.0'
   s.summary          = 'A short description of VDLayout.'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.

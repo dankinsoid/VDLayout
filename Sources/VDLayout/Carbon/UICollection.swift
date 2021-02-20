@@ -20,7 +20,7 @@ open class UICollection: UICollectionView, RenderableView {
 		set { renderer.adapter.scrollDelegate = newValue }
 	}
 	
-	public init() {
+	required public init() {
 		super.init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 		afterInit()
 	}
