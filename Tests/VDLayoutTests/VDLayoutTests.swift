@@ -14,16 +14,6 @@ import XCTest
 final class VDTests: XCTestCase {
 	
 	func tests() {
-		let observable = Observable<[Int]>.just([1, 2, 3, 4])
-		UIStackView.V {
-			UIList(observable) { element in
-				Section(id: "") {
-					UIView()
-					UIView()
-					UIView()
-				}
-			}
-		}
 	}
 	
 	static var allTests = [

@@ -14,7 +14,15 @@ public struct SubviewsArrayCreator: ArrayInitable {
 	}
 }
 
-public typealias SubviewsBuilder = ComposeBuilder<SubviewsArrayCreator>
+public typealias SubviewsBuilder = ArrayBuilder<SubviewProtocol>
+
+extension ArrayBuilder where T == SubviewProtocol {
+	
+	public static func buildExpression<S: SubviewProtocol>(_ expression: S) -> [T] {
+		[expression]
+	}
+	
+}
 
 public struct AnySubviews: SubviewsArrayConvertable {
 	public let items: [SubviewsArrayConvertable]

@@ -111,7 +111,7 @@ extension RenderableView {
 
 private var bagKey = "disposeBagKey043400"
 
-private struct LazyComponent<ID: Hashable>: IdentifiableComponent {
+struct LazyComponent<ID: Hashable>: IdentifiableComponent {
 	let id: ID
 	var create: () -> SubviewProtocol
 	
@@ -147,14 +147,27 @@ extension Section {
 		self = Section(id: id, header: header, items: items, cellId: \.self, cells: cells, footer: footer)
 	}
 	
-	public init<I: Hashable, T: SubviewProtocol>(id: I, header: ViewNode? = nil, @LazyBuilder cells: @escaping () -> LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
-		self = Section(id: id, header: header, cells: cells(), footer: footer)
-	}
-	
-	public init<I: Hashable, T: SubviewProtocol>(id: I, header: ViewNode? = nil, cells: LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
-	self = Section(id: id, header: header, cells: cells.items.enumerated().map { CellNode(LazyComponent(id: $0.offset, create: $0.element)) }, footer: footer)
-	}
-	
+//	public init<I: Hashable, T: SubviewProtocol>(id: I, header: ViewNode? = nil, @LazyBuilder cells: @escaping () -> LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
+//		self = Section(id: id, header: header, cells: cells(), footer: footer)
+//	}
+//	
+//	public init<I: Hashable, T: SubviewProtocol>(id: I, header: ViewNode? = nil, cells: LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
+//	self = Section(id: id, header: header, cells: cells.items.enumerated().map { CellNode(LazyComponent(id: $0.offset, create: $0.element)) }, footer: footer)
+//	}
+//	
 }
 
 private struct UniqueIdentifier: Hashable {}
+
+extension CellsBuilder {
+
+	public static func buildExpression(_ expression: @escaping @autoclosure () -> UIView) -> CellsBuildable {
+		LazyComponent(id: UUID(), create: expression)
+	}
+	
+//	@inlinable
+//	public static func buildExpression<C: CellsBuildable>(_ expression: C) -> CellsBuildable {
+//		expression
+//	}
+	
+}
