@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import RxSwift
 @testable import Carbon
 @testable import VDKit
 @testable import VDLayout
@@ -13,9 +14,10 @@ import XCTest
 final class VDTests: XCTestCase {
 	
 	func tests() {
+		let observable = Observable<[Int]>.just([1, 2, 3, 4])
 		UIStackView.V {
-			UIList {
-				Section(id: UUID()) {
+			UIList(observable) { element in
+				Section(id: "") {
 					UIView()
 					UIView()
 					UIView()

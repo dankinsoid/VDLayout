@@ -23,7 +23,7 @@ open class LtView: UIView {
 		add(createLayout)
 	}
 	
-	@UIViewBuilder
+	@SubviewsBuilder
 	open func createLayout() -> SubviewsArrayConvertable {}
 	
 }
@@ -35,7 +35,7 @@ open class LtViewController: UIViewController {
 		view.add(createLayout)
 	}
 	
-	@UIViewBuilder
+	@SubviewsBuilder
 	open func createLayout() -> SubviewsArrayConvertable {}
 	
 }

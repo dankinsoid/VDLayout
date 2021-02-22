@@ -1,5 +1,5 @@
 //
-//  UIViewBuilder.swift
+//  SubviewsBuilder.swift
 //  TestUI (iOS)
 //
 //  Created by Данил Войдилов on 09.02.2021.
@@ -8,67 +8,22 @@
 import UIKit
 import VDKit
 
-@_functionBuilder
-public struct UIViewBuilder {
-	
-//	/// :nodoc:
-	@inlinable
-	public static func buildBlock() -> SubviewsArrayConvertable {
-		AnySubviews([])
+public struct SubviewsArrayCreator: ArrayInitable {
+	public static func create(from: [SubviewsArrayConvertable]) -> SubviewsArrayConvertable {
+		from.count == 1 ? from[0] : AnySubviews(from)
 	}
-	
-	/// :nodoc:
-	@inlinable
-	public static func buildBlock(_ components: SubviewsArrayConvertable...) -> SubviewsArrayConvertable {
-		AnySubviews(components.map { $0.asSubviews() }.joinedArray())
-	}
-	
-	@inlinable
-	public static func buildIf(_ component: SubviewsArrayConvertable?) -> SubviewsArrayConvertable {
-		component ?? Array<AnySubview>()
-	}
-
-	/// :nodoc:
-	@inlinable
-	public static func buildEither(first: SubviewsArrayConvertable) -> SubviewsArrayConvertable {
-		first
-	}
-
-	/// :nodoc:
-	@inlinable
-	public static func buildEither(second: SubviewsArrayConvertable) -> SubviewsArrayConvertable {
-		second
-	}
-	
 }
 
+public typealias SubviewsBuilder = ComposeBuilder<SubviewsArrayCreator>
+
 public struct AnySubviews: SubviewsArrayConvertable {
-	public let items: [SubviewProtocol]
+	public let items: [SubviewsArrayConvertable]
 	
 	public init(_ items: [SubviewsArrayConvertable]) {
-		self.items = Array(items.map { $0.asSubviews() }.joined())
+		self.items = items
 	}
 	
 	public func asSubviews() -> [SubviewProtocol] {
-		items
+		items.map { $0.asSubviews() }.joinedArray()
 	}
-}
-
-public struct AnySubview: SubviewProtocol {
-	public let item: SubviewProtocol
-	
-	public init(_ item: SubviewProtocol) {
-		self.item = item
-	}
-	
-	public func createViewToAdd() -> UIView {
-		item.createViewToAdd()
-	}
-	
-	public func didAdded(view: UIView, to superview: UIView) {
-		item.didAdded(view: view, to: superview)
-	}
-	
-	public var itemForConstraint: Any { item.itemForConstraint }
-	
 }

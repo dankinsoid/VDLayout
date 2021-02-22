@@ -35,7 +35,7 @@ extension SubviewProtocol {
 ////		}
 //	}
 //	
-//	public func with(@UIViewBuilder _ subviews: () -> SubviewsArrayConvertable) -> Self {
+//	public func with(@SubviewsBuilder _ subviews: () -> SubviewsArrayConvertable) -> Self {
 //		with(subviews().asSubviews())
 //	}
 	

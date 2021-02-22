@@ -9,6 +9,14 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
+public protocol SubviewTypedProtocol: SubviewProtocol {
+	associatedtype Subview: SubviewProtocol
+}
+
+public protocol SubviewConvertable {
+	
+}
+
 public protocol SubviewProtocol: SubviewsArrayConvertable, UILayoutable {
 	func createViewToAdd() -> UIView
 	func didAdded(view: UIView, to superview: UIView)
