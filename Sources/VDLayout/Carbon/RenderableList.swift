@@ -11,86 +11,163 @@ import RxSwift
 import Carbon
 import ConstraintsOperators
 
-public protocol AnyRenderableView: UIView {
-	init()
-}
+public typealias UISectionsBuilder = ArrayBuilder<Section>
 
-public protocol RenderableView: AnyRenderableView {
+public protocol RenderableView: AnyObject {
+	init()
 	associatedtype Updater: Carbon.Updater
 	var renderer: Renderer<Updater> { get }
 }
 
 extension RenderableView {
 	
-	public init<S: SectionsBuildable, O: ObservableConvertibleType>(_ binder: O, @SectionsBuilder sections: @escaping (O.Element) -> S) {
+	public init<C: Collection>(_ data: C) where C.Element == Section {
+		self.init()
+		renderer.render(data)
+	}
+	
+	/// Render given variadic number of sections with function builder syntax, immediately.
+	///
+	/// - Parameters:
+	///   - sections: A closure that constructs sections.
+	public init(@UISectionsBuilder sections: () -> [Section]) {
+		self.init()
+		render(sections: sections)
+	}
+	
+	/// Render a single section contains given cells with function builder syntax, immediately.
+	///
+	/// - Parameters:
+	///   - cells: A closure that constructs cells.
+	public init(@UICellsBuilder cells: () -> CellsBuildable) {
+		self.init()
+		render(cells: cells)
+	}
+	
+	public init<C: Collection>(cells: C) where C.Element == CellNode {
+		self.init()
+		render(cells: cells)
+	}
+	
+	public init<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
 		self.init()
 		bind(binder, sections: sections)
 	}
 	
-	public init<C: CellsBuildable, O: ObservableConvertibleType>(_ binder: O, @CellsBuilder cells: @escaping (O.Element) -> C) {
+	public init<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element.Element) -> [Section]) where O.Element: Collection {
+		self.init()
+		bind(binder, sections: sections)
+	}
+	
+	public init<O: ObservableConvertibleType, ID: Hashable>(_ binder: O, id: KeyPath<O.Element.Element, ID>, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection {
+		self.init()
+		bind(binder, id: id, cells: cells)
+	}
+	
+	public init<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection, O.Element.Element: Hashable {
 		self.init()
 		bind(binder, cells: cells)
 	}
 	
-	public init(header: ViewNode?, footer: ViewNode?, @UICellsBuilder cells: @escaping () -> CellsBuildable) {
+	public init<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
 		self.init()
-		reload(header: header, footer: footer, cells: cells)
+		bind(binder, cells: cells)
 	}
 	
-	public init<S: SectionsBuildable>(@SectionsBuilder sections: @escaping () -> S) {
+	public init<C: Swift.Collection>(_ data: C, @UISectionsBuilder sections: (C.Element) -> [Section]) {
 		self.init()
-		reload(sections: sections)
+		render(data, sections: sections)
 	}
 	
-	public func reload<S: SectionsBuildable>(@SectionsBuilder sections: @escaping () -> S) {
-		renderer.render(sections: sections)
+	public init<C: Swift.Collection, ID: Hashable>(_ data: C, id: KeyPath<C.Element, ID>, @UICellsBuilder cells: (C.Element) -> CellsBuildable) {
+		self.init()
+		render(data, id: id, cells: cells)
 	}
 	
-	public func reload<C: CellsBuildable>(@CellsBuilder cells: @escaping () -> C) {
-		renderer.render(cells: cells)
+	public init<C: Swift.Collection>(_ data: C, @UICellsBuilder cells: (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		self.init()
+		render(data, cells: cells)
 	}
 	
-	public func reload(_ sections: [Section]) {
-		renderer.render(sections)
+	public func render<C: Collection>(_ data: C) where C.Element == Section {
+		renderer.render(data)
 	}
 	
-	public func reload(header: ViewNode? = nil, footer: ViewNode? = nil, @UICellsBuilder cells: () -> CellsBuildable) {
-		reload([Section(id: UniqueIdentifier(), header: header, cells: cells().buildCells(), footer: footer)])
+	/// Render given collection sections, immediately.
+	///
+	/// - Parameters:
+	///   - data: A variadic number of sections to be rendered.
+	public func render(_ data: Section...) {
+		render(data)
 	}
 	
-	public func bind<S: SectionsBuildable, O: ObservableConvertibleType>(_ binder: O, @SectionsBuilder sections: @escaping (O.Element) -> S) {
+	/// Render given variadic number of sections with function builder syntax, immediately.
+	///
+	/// - Parameters:
+	///   - sections: A closure that constructs sections.
+	public func render(@UISectionsBuilder sections: () -> [Section]) {
+		render(sections())
+	}
+	
+	/// Render given variadic number of sections with function builder syntax, immediately.
+	///
+	/// - Parameters:
+	///   - sections: A closure that constructs sections.
+	public func render<C: Swift.Collection>(_ data: C, @UISectionsBuilder sections: (C.Element) -> [Section]) {
+		render(data.map(sections).joined())
+	}
+	
+	/// Render a single section contains given cells with function builder syntax, immediately.
+	///
+	/// - Parameters:
+	///   - cells: A closure that constructs cells.
+	public func render(@UICellsBuilder cells: () -> CellsBuildable) {
+		render(cells: cells().buildCells())
+	}
+	
+	public func render<C: Collection>(cells: C) where C.Element == CellNode {
+		render {
+			Section(id: UniqueIdentifier(), cells: cells)
+		}
+	}
+	
+	public func render<C: Swift.Collection, ID: Hashable>(_ data: C, id: KeyPath<C.Element, ID>, @UICellsBuilder cells: (C.Element) -> CellsBuildable) {
+		render(cells: data.map { item in cells(item).buildCells().map { CellNode($0.component.identified(by: item[keyPath: id])) } }.joined())
+	}
+	
+	public func render<C: Swift.Collection>(_ data: C, @UICellsBuilder cells: (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		render(data, id: \.self, cells: cells)
+	}
+	
+	public func bind<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
 		disposeBag = DisposeBag()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render(sections($0).buildSections())
+		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
+			self?.render(sections($0))
 		}).disposed(by: disposeBag)
 	}
 	
-	public func bind<C: CellsBuildable, O: ObservableConvertibleType>(_ binder: O, @CellsBuilder cells: @escaping (O.Element) -> C) {
+	public func bind<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element.Element) -> [Section]) where O.Element: Collection {
 		disposeBag = DisposeBag()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render(Section(id: UniqueIdentifier(), cells: cells($0).buildCells()))
+		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
+			self?.render($0, sections: sections)
 		}).disposed(by: disposeBag)
 	}
 	
-	public func bind<C: CellsBuildable, O: ObservableConvertibleType>(_ binder: O, @CellsBuilder cells: @escaping (O.Element.Element) -> C) where O.Element: Collection {
+	public func bind<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
+		bind(binder) {
+			Section(id: UniqueIdentifier(), cells: cells($0).buildCells())
+		}
+	}
+	
+	public func bind<O: ObservableConvertibleType, ID: Hashable>(_ binder: O, id: KeyPath<O.Element.Element, ID>, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection {
 		disposeBag = DisposeBag()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render(Section(id: UniqueIdentifier(), cells: $0.map { cells($0).buildCells() }.joined()))
+		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
+			self?.render($0, id: id, cells: cells)
 		}).disposed(by: disposeBag)
 	}
 	
-	public func bind<C: SubviewProtocol, O: ObservableConvertibleType>(_ binder: O, @GenericBuilder cells: @escaping (O.Element.Element) -> C) where O.Element: Collection {
-		disposeBag = DisposeBag()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render(Section(id: UniqueIdentifier(), cells: $0.map { item in CellNode(LazyComponent(id: UniqueIdentifier(), create: { cells(item) })) }))
-		}).disposed(by: disposeBag)
-	}
-	
-	public func bind<S: SectionsBuildable, O: ObservableConvertibleType>(_ binder: O, @SectionsBuilder sections: @escaping (O.Element.Element) -> S) where O.Element: Collection {
-		disposeBag = DisposeBag()
-		binder.asObservable().subscribe(onNext: {[weak self] in
-			self?.renderer.render($0.map { sections($0).buildSections() }.joined())
-		}).disposed(by: disposeBag)
+	public func bind<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection, O.Element.Element: Hashable {
+		bind(binder, id: \.self, cells: cells)
 	}
 	
 	private var disposeBag: DisposeBag {
@@ -113,24 +190,20 @@ private var bagKey = "disposeBagKey043400"
 
 extension Section {
 	
-	public init<I: Hashable, ID: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, items: C, cellId: KeyPath<C.Element, ID>, @GenericBuilder cells: @escaping (C.Element) -> SubviewProtocol, footer: ViewNode? = nil) {
+	public init<I: Hashable, ID: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, footer: ViewNode? = nil, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
 		self = Section(id: id, header: header, cells: items.map { item in
-			CellNode(LazyComponent(id: id, create: { cells(item) }))
-		}, footer: footer)
+			cells(item).buildCells().map { CellNode($0.component.identified(by: item[keyPath: cellId])) }
+		}.joined(), footer: footer)
 	}
 	
-	public init<I: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, items: C, @GenericBuilder cells: @escaping (C.Element) -> SubviewProtocol, footer: ViewNode? = nil) where C.Element: Hashable {
-		self = Section(id: id, header: header, items: items, cellId: \.self, cells: cells, footer: footer)
+	public init<I: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, footer: ViewNode? = nil, items: C, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		self = Section(id: id, header: header, footer: footer, items: items, cellId: \.self, cells: cells)
 	}
 	
-//	public init<I: Hashable, T: SubviewProtocol>(id: I, header: ViewNode? = nil, @LazyBuilder cells: @escaping () -> LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
-//		self = Section(id: id, header: header, cells: cells(), footer: footer)
-//	}
-//	
-//	public init<I: Hashable, T: SubviewProtocol>(id: I, header: ViewNode? = nil, cells: LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
-//	self = Section(id: id, header: header, cells: cells.items.enumerated().map { CellNode(LazyComponent(id: $0.offset, create: $0.element)) }, footer: footer)
-//	}
-//	
+	public static func `static`<I: Hashable>(id: I, header: ViewNode? = nil, footer: ViewNode? = nil, @UICellsBuilder cells: @escaping () -> CellsBuildable) -> Section {
+		Section(id: id, header: header, cells: cells().buildCells(), footer: footer)
+	}
+
 }
 
 private struct UniqueIdentifier: Hashable {}

@@ -56,7 +56,12 @@ public struct UICellsBuilder: CellsBuildable {
 	public static func buildExpression<C: CellsBuildable>(_ expression: C) -> CellsBuildable {
 		expression
 	}
-
+	
+	@inlinable
+	public static func buildExpression<C: Component>(_ expression: C) -> CellsBuildable {
+		UICellsBuilder([CellNode(expression.identified(by: UUID()))])
+	}
+	
 	@inlinable
 	public static func buildExpression<C: SubviewProtocol>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
 		UICellsBuilder([CellNode(LazyComponent(id: UUID(), create: expression))])
