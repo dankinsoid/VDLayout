@@ -32,9 +32,9 @@ extension RenderableView {
 		bind(binder, cells: cells)
 	}
 	
-	public init<C: SubviewProtocol>(header: ViewNode?, @LazyBuilder cells: @escaping () -> LazyBuilder.Collection<C>, footer: ViewNode?) {
+	public init(header: ViewNode?, footer: ViewNode?, @UICellsBuilder cells: @escaping () -> CellsBuildable) {
 		self.init()
-		reload(header: header, cells: cells, footer: footer)
+		reload(header: header, footer: footer, cells: cells)
 	}
 	
 	public init<S: SectionsBuildable>(@SectionsBuilder sections: @escaping () -> S) {
@@ -54,8 +54,8 @@ extension RenderableView {
 		renderer.render(sections)
 	}
 	
-	public func reload<T: SubviewProtocol>(header: ViewNode? = nil, @LazyBuilder cells: @escaping () -> LazyBuilder.Collection<T>, footer: ViewNode? = nil) {
-		reload([Section(id: UniqueIdentifier(), header: header, cells: cells().items.enumerated().map { CellNode(LazyComponent(id: $0.offset, create: $0.element)) }, footer: footer)])
+	public func reload(header: ViewNode? = nil, footer: ViewNode? = nil, @UICellsBuilder cells: () -> CellsBuildable) {
+		reload([Section(id: UniqueIdentifier(), header: header, cells: cells().buildCells(), footer: footer)])
 	}
 	
 	public func bind<S: SectionsBuildable, O: ObservableConvertibleType>(_ binder: O, @SectionsBuilder sections: @escaping (O.Element) -> S) {
