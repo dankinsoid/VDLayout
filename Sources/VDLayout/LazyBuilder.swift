@@ -7,128 +7,88 @@
 
 import UIKit
 import Carbon
+import ConstraintsOperators
 
 @_functionBuilder
-public struct LazyBuilder {
+public struct UICellsBuilder: CellsBuildable {
+
+	private var cells: [CellNode]
+
+	public init<C: Collection>(_ items: C) where C.Element == CellNode {
+		cells = Array(items)
+	}
 	
-	public struct Collection<T> {
-		public var items: [() -> T]
-		
-		public init(items: [() -> T]) {
-			self.items = items
+	public func buildCells() -> [CellNode] {
+		cells
+	}
+
+	@inlinable
+	public static func buildBlock(_ components: CellsBuildable...) -> CellsBuildable {
+		UICellsBuilder(components.map { $0.buildCells() }.joined())
+	}
+
+	@inlinable
+	public static func buildArray(_ components: [CellsBuildable]) -> CellsBuildable {
+		UICellsBuilder(components.map { $0.buildCells() }.joined())
+	}
+
+	@inlinable
+	public static func buildEither(first component: CellsBuildable) -> CellsBuildable {
+		component
+	}
+
+	@inlinable
+	public static func buildEither(second component: CellsBuildable) -> CellsBuildable {
+		component
+	}
+
+	@inlinable
+	public static func buildOptional(_ component: CellsBuildable?) -> CellsBuildable {
+		component ?? UICellsBuilder([])
+	}
+
+	@inlinable
+	public static func buildLimitedAvailability(_ component: CellsBuildable) -> CellsBuildable {
+		component
+	}
+
+	@inlinable
+	public static func buildExpression<C: CellsBuildable>(_ expression: C) -> CellsBuildable {
+		expression
+	}
+
+	@inlinable
+	public static func buildExpression<C: SubviewProtocol>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
+		UICellsBuilder([CellNode(LazyComponent(id: UUID(), create: expression))])
+	}
+
+}
+
+public struct LazyComponent<ID: Hashable>: IdentifiableComponent {
+	public let id: ID
+	var create: () -> SubviewProtocol
+	
+	public init(id: ID, create: @escaping () -> SubviewProtocol) {
+		self.id = id
+		self.create = create
+	}
+	
+	public func renderContent() -> UIView {
+		CellView {
+			create()
 		}
 	}
 	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0])
-	}
+	public func render(in content: UIView) {}
 	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1])
-	}
+}
+
+private final class CellView: UIView {
 	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T, _ c14: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T, _ c14: @escaping @autoclosure () -> T, _ c15: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T, _ c14: @escaping @autoclosure () -> T, _ c15: @escaping @autoclosure () -> T, _ c16: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T, _ c14: @escaping @autoclosure () -> T, _ c15: @escaping @autoclosure () -> T, _ c16: @escaping @autoclosure () -> T, _ c17: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T, _ c14: @escaping @autoclosure () -> T, _ c15: @escaping @autoclosure () -> T, _ c16: @escaping @autoclosure () -> T, _ c17: @escaping @autoclosure () -> T, _ c18: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18])
-	}
-	
-	@_alwaysEmitIntoClient
-	public static func buildBlock<T>(_ c0: @escaping @autoclosure () -> T, _ c1: @escaping @autoclosure () -> T, _ c2: @escaping @autoclosure () -> T, _ c3: @escaping @autoclosure () -> T, _ c4: @escaping @autoclosure () -> T, _ c5: @escaping @autoclosure () -> T, _ c6: @escaping @autoclosure () -> T, _ c7: @escaping @autoclosure () -> T, _ c8: @escaping @autoclosure () -> T, _ c9: @escaping @autoclosure () -> T, _ c10: @escaping @autoclosure () -> T, _ c11: @escaping @autoclosure () -> T, _ c12: @escaping @autoclosure () -> T, _ c13: @escaping @autoclosure () -> T, _ c14: @escaping @autoclosure () -> T, _ c15: @escaping @autoclosure () -> T, _ c16: @escaping @autoclosure () -> T, _ c17: @escaping @autoclosure () -> T, _ c18: @escaping @autoclosure () -> T, _ c19: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19])
-	}
-	
-	/// :nodoc:
-	@inlinable
-	public static func buildEither<T>(first: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [first])
-	}
-	
-	/// :nodoc:
-	@inlinable
-	public static func buildEither<T>(second: @escaping @autoclosure () -> T) -> Collection<T> {
-		Collection(items: [second])
+	override func addSubview(_ view: UIView) {
+		super.addSubview(view)
+		view.ignoreAutoresizingMask()
+		view.edges() =| 0
 	}
 	
 }

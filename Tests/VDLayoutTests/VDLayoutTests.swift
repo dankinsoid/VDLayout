@@ -41,66 +41,7 @@ final class VDTests: XCTestCase {
 //	}
 //}
 //
-//@_functionBuilder
-//struct _CellsBuilder: CellsBuildable {
-//
-//	private var cells: [CellNode]
-//
-//	func buildCells() -> [CellNode] {
-//		cells
-//	}
-//
-//	@inlinable
-//	public static func buildBlock(_ components: CellsBuildable...) -> CellsBuildable {
-//		_CellsBuilder(cells: Array(components.map { $0.buildCells() }.joined()))
-//	}
-//
-//	@inlinable
-//	public static func buildArray(_ components: [CellsBuildable]) -> CellsBuildable {
-//		_CellsBuilder(cells: Array(components.map { $0.buildCells() }.joined()))
-//	}
-//
-//	@inlinable
-//	public static func buildEither(first component: CellsBuildable) -> CellsBuildable {
-//		component
-//	}
-//
-//	@inlinable
-//	public static func buildEither(second component: CellsBuildable) -> CellsBuildable {
-//		component
-//	}
-//
-//	@inlinable
-//	public static func buildOptional(_ component: CellsBuildable?) -> CellsBuildable {
-//		component ?? _CellsBuilder(cells: [])
-//	}
-//
-//	@inlinable
-//	public static func buildLimitedAvailability(_ component: CellsBuildable) -> CellsBuildable {
-//		component
-//	}
-//
-//	@inlinable
-//	public static func buildExpression<C: CellsBuildable>(_ expression: C) -> CellsBuildable {
-//		expression
-//	}
-//
-//	@inlinable
-//	public static func buildExpression<C: UIView>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
-//		_CellsBuilder(cells: [CellNode(LazyComponent(id: UUID(), create: expression))])
-//	}
-//
-//}
-//
-//extension _CellsBuilder {
-//
-//	@inlinable
-//	public static func buildExpression<C: SubviewProtocol>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
-//		_CellsBuilder(cells: [CellNode(LazyComponent(id: UUID(), create: expression))])
-//	}
-//
-//}
-//
+
 //@_CellsBuilder
 //func cells() -> CellsBuildable {
 //	Cmp()

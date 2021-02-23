@@ -111,30 +111,6 @@ extension RenderableView {
 
 private var bagKey = "disposeBagKey043400"
 
-struct LazyComponent<ID: Hashable>: IdentifiableComponent {
-	let id: ID
-	var create: () -> SubviewProtocol
-	
-	func renderContent() -> UIView {
-		CellView {
-			create()
-		}
-	}
-	
-	func render(in content: UIView) {}
-	
-}
-
-fileprivate final class CellView: UIView {
-	
-	override func addSubview(_ view: UIView) {
-		super.addSubview(view)
-		view.ignoreAutoresizingMask()
-		view.edges() =| 0
-	}
-	
-}
-
 extension Section {
 	
 	public init<I: Hashable, ID: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, items: C, cellId: KeyPath<C.Element, ID>, @GenericBuilder cells: @escaping (C.Element) -> SubviewProtocol, footer: ViewNode? = nil) {

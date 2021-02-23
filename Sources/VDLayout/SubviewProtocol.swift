@@ -9,7 +9,7 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
-public protocol SubviewProtocol {//: UILayoutable {
+public protocol SubviewProtocol {
 	func createViewToAdd() -> UIView
 	func didAdded(view: UIView, to superview: UIView)
 }
