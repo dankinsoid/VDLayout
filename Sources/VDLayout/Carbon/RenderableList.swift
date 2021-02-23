@@ -158,16 +158,3 @@ extension Section {
 }
 
 private struct UniqueIdentifier: Hashable {}
-
-extension CellsBuilder {
-
-	public static func buildExpression(_ expression: @escaping @autoclosure () -> UIView) -> CellsBuildable {
-		LazyComponent(id: UUID(), create: expression)
-	}
-	
-//	@inlinable
-//	public static func buildExpression<C: CellsBuildable>(_ expression: C) -> CellsBuildable {
-//		expression
-//	}
-	
-}
