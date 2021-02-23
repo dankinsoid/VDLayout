@@ -31,23 +31,21 @@ final class VDTests: XCTestCase {
 	
 }
 
-//struct Cmp: IdentifiableComponent {
-//	var id: String { "" }
-//	func renderContent() -> UIView {
-//		UIView()
-//	}
-//	func render(in content: UIView) {
-//		
-//	}
-//}
-//
+struct Cmp: IdentifiableComponent {
+	var id: String { "" }
+	func renderContent() -> UIView {
+		UIView()
+	}
+	func render(in content: UIView) {
+		
+	}
+}
 
-//@_CellsBuilder
-//func cells() -> CellsBuildable {
-//	Cmp()
-//	Cmp()
-//	if true {
-//		Cmp()
-//	}
-//	UIView()
-//}
+
+//@UICellsBuilder
+func cells() -> Section {
+	let array = [0, 1, 2, 3]
+	return Section(id: "", items: array) { i in
+		UILabel("\(i)")
+	}
+}

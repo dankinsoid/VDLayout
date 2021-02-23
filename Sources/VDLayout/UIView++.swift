@@ -85,3 +85,12 @@ extension UIControl {
 }
 
 extension UIControl.State: Hashable {}
+
+extension UILabel {
+	
+	public convenience init(_ text: String) {
+		self.init()
+		self.text = text
+	}
+	
+}
