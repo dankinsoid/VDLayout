@@ -17,15 +17,9 @@ extension ValueChaining: UILayoutableArray where W: UILayoutableArray {
 	
 }
 
-extension ValueChaining: UILayoutable where W: SubviewProtocol {
+extension ValueChaining: UILayoutable where W: UILayoutable {
 	public var itemForConstraint: Any {
 		wrappedValue.itemForConstraint
-	}
-}
-
-extension ValueChaining: SubviewsArrayConvertable where W: SubviewProtocol {
-	public func asSubviews() -> [SubviewProtocol] {
-		wrappedValue.asSubviews()
 	}
 }
 

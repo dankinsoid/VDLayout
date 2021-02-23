@@ -12,7 +12,6 @@ import ConstraintsOperators
 
 public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
 	
-	public var itemForConstraint: Any { parent.itemForConstraint }
 	let parent: P
 	public var wrappedValue: W
 	
@@ -37,6 +36,16 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 		result.action = action
 		return result
 	}
+}
+
+extension WrappedView: UILayoutableArray where P: UILayoutableArray {
+	public func asLayoutableArray() -> [UILayoutable] {
+		parent.asLayoutableArray()
+	}
+}
+
+extension WrappedView: UILayoutable where P: UILayoutable {
+	public var itemForConstraint: Any { parent.itemForConstraint }
 }
 
 extension WrappedView: Attributable where P: Attributable {

@@ -12,7 +12,6 @@ import ConstraintsOperators
 @dynamicMemberLookup
 public struct DidAddedSubview<W: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
 	public var wrappedValue: W
-	public var itemForConstraint: Any { wrappedValue.itemForConstraint }
 	private let didAddedTo: (UIView, UIView) -> Void
 	private(set) public var action: (W) -> W = { $0 }
 	
@@ -40,6 +39,16 @@ public struct DidAddedSubview<W: SubviewProtocol>: SubviewProtocol, ValueChainin
 		return result
 	}
 	
+}
+
+extension DidAddedSubview: UILayoutableArray where W: UILayoutableArray {
+	public func asLayoutableArray() -> [UILayoutable] {
+		wrappedValue.asLayoutableArray()
+	}
+}
+
+extension DidAddedSubview: UILayoutable where W: UILayoutable {
+	public var itemForConstraint: Any { wrappedValue.itemForConstraint }
 }
 
 extension DidAddedSubview: Attributable where W: Attributable {

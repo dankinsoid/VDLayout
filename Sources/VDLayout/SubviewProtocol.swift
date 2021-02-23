@@ -9,33 +9,9 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
-public protocol SubviewTypedProtocol: SubviewProtocol {
-	associatedtype Subview: SubviewProtocol
-}
-
-public protocol SubviewConvertable {
-	
-}
-
-public protocol SubviewProtocol: SubviewsArrayConvertable, UILayoutable {
+public protocol SubviewProtocol {//: UILayoutable {
 	func createViewToAdd() -> UIView
 	func didAdded(view: UIView, to superview: UIView)
-}
-
-public protocol SubviewsArrayConvertable {
-	func asSubviews() -> [SubviewProtocol]
-}
-
-extension Array: SubviewsArrayConvertable where Element: SubviewProtocol {
-	public func asSubviews() -> [SubviewProtocol] {
-		self
-	}
-}
-
-extension Optional: SubviewsArrayConvertable where Wrapped: SubviewsArrayConvertable {
-	public func asSubviews() -> [SubviewProtocol] {
-		self?.asSubviews() ?? []
-	}
 }
 
 extension UIView: SubviewProtocol {
@@ -58,10 +34,4 @@ extension UIViewController: SubviewProtocol {
 		superview.vc?.addChild(self)
 	}
 	
-}
-
-extension SubviewsArrayConvertable where Self: SubviewProtocol {
-	public func asSubviews() -> [SubviewProtocol] {
-		[self]
-	}
 }
