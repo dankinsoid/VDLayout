@@ -85,6 +85,53 @@ extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, B: Eq
 	
 }
 
+extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, B: ObserverType {
+	
+	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element == B.Element {
+		subscribe(value.asObservable())
+		return chaining
+	}
+	
+	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element == B.Element? {
+		subscribe(value.asObservable().compactMap { $0 })
+		return chaining
+	}
+	
+	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element? == B.Element {
+		subscribe(value.asObservable().map { $0 })
+		return chaining
+	}
+	
+	private func subscribe(_ value: Observable<B.Element>) {
+		let result = chaining.wrappedValue
+		let getter = getter.get
+		value.asObservable().subscribe(onNext: {[weak result] in
+			guard let it = result else { return }
+			getter(it).on(.next($0))
+		}).disposed(by: Reactive(result).asDisposeBag)
+	}
+	
+}
+
+extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, B: ObserverType, B.Element: Equatable {
+	
+	public subscript<O: ObservableConvertibleType>(rx value: O, skipEqual: Bool = true) -> C where O.Element == B.Element {
+		subscribe(skipEqual ? value.asObservable().distinctUntilChanged() : value.asObservable())
+		return chaining
+	}
+	
+	public subscript<O: ObservableConvertibleType>(rx value: O, skipEqual: Bool = true) -> C where O.Element == B.Element? {
+		subscribe(skipEqual ? value.asObservable().distinctUntilChanged().compactMap { $0 } : value.asObservable().compactMap { $0 })
+		return chaining
+	}
+	
+	public subscript<O: ObservableConvertibleType>(rx value: O, skipEqual: Bool = true) -> C where O.Element? == B.Element {
+		subscribe(skipEqual ? value.asObservable().distinctUntilChanged().map { $0 } : value.asObservable().map { $0 })
+		return chaining
+	}
+	
+}
+
 extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, B: ObservableConvertibleType {
 	
 	public subscript<O: ObserverType>(_ observer: O) -> C where O.Element == B.Element {
