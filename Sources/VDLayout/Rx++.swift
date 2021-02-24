@@ -68,18 +68,18 @@ extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject {
 
 extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject, B: Equatable {
 	
-	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element == B {
-		subscribe(value.asObservable().distinctUntilChanged())
+	public subscript<O: ObservableConvertibleType>(rx value: O, skipEqual: Bool = true) -> C where O.Element == B {
+		subscribe(skipEqual ? value.asObservable().distinctUntilChanged() : value.asObservable())
 		return chaining
 	}
 	
-	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element == B? {
-		subscribe(value.asObservable().distinctUntilChanged().compactMap { $0 })
+	public subscript<O: ObservableConvertibleType>(rx value: O, skipEqual: Bool = true) -> C where O.Element == B? {
+		subscribe(skipEqual ? value.asObservable().distinctUntilChanged().compactMap { $0 } : value.asObservable().compactMap { $0 })
 		return chaining
 	}
 	
-	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element? == B {
-		subscribe(value.asObservable().distinctUntilChanged().map { $0 })
+	public subscript<O: ObservableConvertibleType>(rx value: O, skipEqual: Bool = true) -> C where O.Element? == B {
+		subscribe(skipEqual ? value.asObservable().distinctUntilChanged().map { $0 } : value.asObservable().map { $0 })
 		return chaining
 	}
 	
