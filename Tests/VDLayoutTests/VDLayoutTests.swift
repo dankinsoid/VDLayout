@@ -14,7 +14,10 @@ import XCTest
 final class VDTests: XCTestCase {
 	
 	func tests() {
-		let observable = Observable<[Int]>.just([1, 2, 3, 4])
+		let observable = Observable<[Int]>.from([[1, 2, 3, 4], [2, 3, 6, 8], [1, 3, 6]])
+		UIList(observable, id: \.self) {
+			UILabel("\($0)")
+		}
 	}
 	
 //	@SubviewsBuilder
@@ -41,11 +44,9 @@ struct Cmp: IdentifiableComponent {
 	}
 }
 
-
-//@UICellsBuilder
-func cells() -> Section {
-	let array = [0, 1, 2, 3]
-	return Section(id: "", items: array) { i in
+@UISectionsBuilder
+func cells(array: [Int]) -> [Section] {
+	Section(id: "", items: array) { i in
 		UILabel("\(i)")
 	}
 }
