@@ -40,17 +40,17 @@ extension Reactive where Base: AnyObject {
 
 extension ChainingProperty where C: ValueChainingProtocol, C.W: AnyObject {
 	
-	public subscript<O: ObservableConvertibleType>(_ value: O) -> C where O.Element == B {
+	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element == B {
 		subscribe(value.asObservable())
 		return chaining
 	}
 	
-	public subscript<O: ObservableConvertibleType>(_ value: O) -> C where O.Element == B? {
+	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element == B? {
 		subscribe(value.asObservable().compactMap { $0 })
 		return chaining
 	}
 	
-	public subscript<O: ObservableConvertibleType>(_ value: O) -> C where O.Element? == B {
+	public subscript<O: ObservableConvertibleType>(rx value: O) -> C where O.Element? == B {
 		subscribe(value.asObservable().map { $0 })
 		return chaining
 	}
