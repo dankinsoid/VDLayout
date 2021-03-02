@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 import VDKit
+import RxSwift
+import RxCocoa
 
 extension UIView {
 	
@@ -91,6 +93,16 @@ extension UILabel {
 	public convenience init(_ text: String) {
 		self.init()
 		self.text = text
+	}
+	
+	public convenience init<O: ObservableConvertibleType>(rx text: O) where O.Element == String {
+		self.init()
+		text.asDriver(onErrorDriveWith: .never()).drive(rx.text).disposed(by: rx.asDisposeBag)
+	}
+	
+	public convenience init<O: ObservableConvertibleType>(rx text: O) where O.Element == String? {
+		self.init()
+		text.asDriver(onErrorDriveWith: .never()).drive(rx.text).disposed(by: rx.asDisposeBag)
 	}
 	
 }
