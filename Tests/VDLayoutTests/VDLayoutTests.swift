@@ -6,15 +6,16 @@
 //
 
 import XCTest
-@testable import RxSwift
+import Combine
 @testable import Carbon
 @testable import VDKit
 @testable import VDLayout
 
+@available(iOS 13.0, *)
 final class VDTests: XCTestCase {
 	
 	func tests() {
-		let observable = Observable<[Int]>.from([[1, 2, 3, 4], [2, 3, 6, 8], [1, 3, 6]])
+		let observable = [[1, 2, 3, 4], [2, 3, 6, 8], [1, 3, 6]].publisher
 		UIList(observable, id: \.self) {
 			UILabel("\($0)")
 		}

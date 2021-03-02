@@ -8,12 +8,11 @@
 import Foundation
 import UIKit
 import Carbon
-import RxSwift
+import Combine
 
 open class UICollection: UICollectionView, RenderableView {
 	
 	open var renderer = Renderer(adapter: UICollectionAdapter(), updater: UICollectionViewUpdater())
-	fileprivate let bag = DisposeBag()
 	
 	open weak var scrollDelegate: UIScrollViewDelegate? {
 		get { renderer.adapter.scrollDelegate }

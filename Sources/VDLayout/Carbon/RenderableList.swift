@@ -7,8 +7,9 @@
 
 import UIKit
 import VDKit
-import RxSwift
+import Combine
 import Carbon
+import CombineOperators
 import ConstraintsOperators
 
 public typealias UISectionsBuilder = ArrayBuilder<Section>
@@ -47,31 +48,6 @@ extension RenderableView {
 	public init<C: Collection>(cells: C) where C.Element == CellNode {
 		self.init()
 		render(cells: cells)
-	}
-	
-	public init<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
-		self.init()
-		bind(binder, sections: sections)
-	}
-	
-	public init<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element.Element) -> [Section]) where O.Element: Collection {
-		self.init()
-		bind(binder, sections: sections)
-	}
-	
-	public init<O: ObservableConvertibleType, ID: Hashable>(_ binder: O, id: KeyPath<O.Element.Element, ID>, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection {
-		self.init()
-		bind(binder, id: id, cells: cells)
-	}
-	
-	public init<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection, O.Element.Element: Hashable {
-		self.init()
-		bind(binder, cells: cells)
-	}
-	
-	public init<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
-		self.init()
-		bind(binder, cells: cells)
 	}
 	
 	public init<C: Swift.Collection>(_ data: C, @UISectionsBuilder sections: (C.Element) -> [Section]) {
@@ -139,51 +115,63 @@ extension RenderableView {
 		render(data, id: \.self, cells: cells)
 	}
 	
-	public func bind<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
-		disposeBag = DisposeBag()
-		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
+}
+
+@available(iOS 13.0, *)
+extension RenderableView {
+	
+	public init<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output) -> [Section]) {
+		self.init()
+		bind(binder, sections: sections)
+	}
+	
+	public init<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output.Element) -> [Section]) where O.Output: Collection {
+		self.init()
+		bind(binder, sections: sections)
+	}
+	
+	public init<O: Publisher, ID: Hashable>(_ binder: O, id: KeyPath<O.Output.Element, ID>, @UICellsBuilder cells: @escaping (O.Output.Element) -> CellsBuildable) where O.Output: Collection {
+		self.init()
+		bind(binder, id: id, cells: cells)
+	}
+	
+	public init<O: Publisher>(_ binder: O, @UICellsBuilder cells: @escaping (O.Output.Element) -> CellsBuildable) where O.Output: Collection, O.Output.Element: Hashable {
+		self.init()
+		bind(binder, cells: cells)
+	}
+	
+	public init<O: Publisher>(_ binder: O, @UICellsBuilder cells: @escaping (O.Output) -> CellsBuildable) {
+		self.init()
+		bind(binder, cells: cells)
+	}
+	
+	public func bind<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output) -> [Section]) {
+		binder.asDriver() => {[weak self] in
 			self?.render(sections($0))
-		}).disposed(by: disposeBag)
+		}
 	}
 	
-	public func bind<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element.Element) -> [Section]) where O.Element: Collection {
-		disposeBag = DisposeBag()
-		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
+	public func bind<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output.Element) -> [Section]) where O.Output: Collection {
+		binder.asDriver() => {[weak self] in
 			self?.render($0, sections: sections)
-		}).disposed(by: disposeBag)
+		}
 	}
 	
-	public func bind<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
+	public func bind<O: Publisher>(_ binder: O, @UICellsBuilder cells: @escaping (O.Output) -> CellsBuildable) {
 		bind(binder) {
 			Section(id: UniqueIdentifier(), cells: cells($0).buildCells())
 		}
 	}
 	
-	public func bind<O: ObservableConvertibleType, ID: Hashable>(_ binder: O, id: KeyPath<O.Element.Element, ID>, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection {
-		disposeBag = DisposeBag()
-		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
+	public func bind<O: Publisher, ID: Hashable>(_ binder: O, id: KeyPath<O.Output.Element, ID>, @UICellsBuilder cells: @escaping (O.Output.Element) -> CellsBuildable) where O.Output: Collection {
+		binder.asDriver() => {[weak self] in
 			self?.render($0, id: id, cells: cells)
-		}).disposed(by: disposeBag)
+		}
 	}
 	
-	public func bind<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element.Element) -> CellsBuildable) where O.Element: Collection, O.Element.Element: Hashable {
+	public func bind<O: Publisher>(_ binder: O, @UICellsBuilder cells: @escaping (O.Output.Element) -> CellsBuildable) where O.Output: Collection, O.Output.Element: Hashable {
 		bind(binder, id: \.self, cells: cells)
 	}
-	
-	private var disposeBag: DisposeBag {
-		get {
-			let current = objc_getAssociatedObject(self, &bagKey) as? DisposeBag
-			let bag = current ?? DisposeBag()
-			if current == nil {
-				objc_setAssociatedObject(self, &bagKey, bag, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-			}
-			return bag
-		}
-		set {
-			objc_setAssociatedObject(self, &bagKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-		}
-	}
-	
 }
 
 private var bagKey = "disposeBagKey043400"

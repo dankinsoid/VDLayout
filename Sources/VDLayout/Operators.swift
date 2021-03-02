@@ -7,7 +7,8 @@
 
 import UIKit
 import VDKit
-import RxSwift
+import Combine
+import CombineOperators
 import ConstraintsOperators
 
 extension SubviewProtocol {
@@ -18,12 +19,13 @@ extension SubviewProtocol {
 		}
 	}
 	
+	@available(iOS 13.0, *)
 	public func onMovedToWindow(_ action: @escaping (UIView) -> Void) -> DidAddedSubview<Self> {
 		DidAddedSubview(self) { view, superview in
-			view.rx.movedToWindow.subscribe(onSuccess: {[weak view] in
+			view?.cb.movedToWindow => {[weak view] in
 				guard let view = view else { return }
 				action(view)
-			}).disposed(by: superview.rx.asDisposeBag)
+			}
 		}
 	}
 	

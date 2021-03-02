@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 import VDKit
-import RxSwift
-import RxCocoa
+import Combine
+import CombineCocoa
 
 extension UIView {
 	
@@ -95,14 +95,16 @@ extension UILabel {
 		self.text = text
 	}
 	
-	public convenience init<O: ObservableConvertibleType>(rx text: O) where O.Element == String {
+	@available(iOS 13.0, *)
+	public convenience init<O: Publisher>(cb text: O) where O.Output == String {
 		self.init()
-		text.asDriver(onErrorDriveWith: .never()).drive(rx.text).disposed(by: rx.asDisposeBag)
+		text.map({ $0 }).asDriver().subscribe(cb.text)
 	}
 	
-	public convenience init<O: ObservableConvertibleType>(rx text: O) where O.Element == String? {
+	@available(iOS 13.0, *)
+	public convenience init<O: Publisher>(cb text: O) where O.Output == String? {
 		self.init()
-		text.asDriver(onErrorDriveWith: .never()).drive(rx.text).disposed(by: rx.asDisposeBag)
+		text.asDriver().subscribe(cb.text)
 	}
 	
 }

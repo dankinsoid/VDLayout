@@ -7,6 +7,7 @@
 
 import UIKit
 import VDKit
+import CombineOperators
 import ConstraintsOperators
 
 public typealias AttributableSubview = SubviewProtocol & Attributable
@@ -20,9 +21,11 @@ extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 	public func didAdded(view: UIView, to superview: UIView) {
 		item?.didAdded(view: view, to: superview)
 		view.ignoreAutoresizingMask()
-		view.rx.movedToWindow.subscribe(onSuccess: {
+		if #available(iOS 13.0, *) {
+			view.cb.movedToWindow => { self.isActive = true }
+		} else {
 			self.isActive = true
-		}).disposed(by: superview.rx.asDisposeBag)
+		}
 	}
 	
 }

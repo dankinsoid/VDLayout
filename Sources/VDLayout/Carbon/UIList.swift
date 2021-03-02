@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 import Carbon
-import RxSwift
+import Combine
 
 open class UIList: UITableView, RenderableView {
 	
 	open var renderer = Renderer(adapter: UIListAdapter(), updater: UITableViewUpdater())
-	fileprivate let bag = DisposeBag()
+//	fileprivate let bag = DisposeBag()
 	
 	open weak var scrollDelegate: UIScrollViewDelegate? {
 		get { renderer.adapter.scrollDelegate }

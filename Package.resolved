@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "CombineOperators",
+        "repositoryURL": "https://github.com/dankinsoid/CombineOperators.git",
+        "state": {
+          "branch": null,
+          "revision": "ae03e973aa4e3d67796f0e8dcd566a3f9fd45452",
+          "version": "1.37.0"
+        }
+      },
+      {
         "package": "ConstraintsOperators",
         "repositoryURL": "https://github.com/dankinsoid/ConstraintsOperators.git",
         "state": {
@@ -29,21 +38,12 @@
         }
       },
       {
-        "package": "RxSwift",
-        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
-        "state": {
-          "branch": null,
-          "revision": "7e01c05f25c025143073eaa3be3532f9375c614b",
-          "version": "6.1.0"
-        }
-      },
-      {
         "package": "VDKit",
         "repositoryURL": "https://github.com/dankinsoid/VDKit.git",
         "state": {
           "branch": null,
-          "revision": "32abaca0ef45484d7fe23c40abbf6fb6ad1967c4",
-          "version": "1.11.0"
+          "revision": "2a11f2ea1812045fc07bc4bb9e1b2dbd093adb7c",
+          "version": "1.13.0"
         }
       }
     ]
