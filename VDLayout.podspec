@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'VDLayout'
-  s.version          = '1.36.0'
+  s.version          = '1.37.0'
   s.summary          = 'A short description of VDLayout.'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
@@ -27,6 +27,6 @@ TODO: Add long description of the pod here.
   s.dependency 'ConstraintsOperators'
   s.dependency 'VD'
   s.dependency 'Carbon'
-  s.dependency 'RxSwift', '~> 5.0'
-  s.dependency 'RxCocoa', '~> 5.0'
+  s.dependency 'RxSwift', '~> 6.0'
+  s.dependency 'RxCocoa', '~> 6.0'
 end
