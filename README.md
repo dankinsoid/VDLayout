@@ -7,7 +7,7 @@
 
 
 ## Description
-This repository provides a declarative way to laoyut
+This repository provides a declarative way to layout in SwiftUI-style
 
 ## Example
 
