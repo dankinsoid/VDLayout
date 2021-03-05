@@ -7,6 +7,8 @@
 
 import UIKit
 import VDKit
+import RxSwift
+import RxCocoa
 import ConstraintsOperators
 
 public typealias AttributableSubview = SubviewProtocol & Attributable
@@ -14,15 +16,12 @@ public typealias AttributableSubview = SubviewProtocol & Attributable
 extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 	
 	public func createViewToAdd() -> UIView {
-		item?.createViewToAdd() ?? UIView()
-	}
-	
-	public func didAdded(view: UIView, to superview: UIView) {
-		item?.didAdded(view: view, to: superview)
+		let view = item?.createViewToAdd() ?? UIView()
 		view.ignoreAutoresizingMask()
-		view.rx.movedToWindow.subscribe(onSuccess: {
+		view.rx.movedToWindow.asObservable().take(1).subscribe(onNext: {
 			self.isActive = true
-		}).disposed(by: superview.rx.asDisposeBag)
+		}).disposed(by: view.rx.asDisposeBag)
+		return view
 	}
 	
 }

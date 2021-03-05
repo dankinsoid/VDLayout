@@ -39,7 +39,6 @@ extension UIView {
 		} else {
 			addSubview(view)
 		}
-		subview.didAdded(view: view, to: self)
 	}
 	
 }

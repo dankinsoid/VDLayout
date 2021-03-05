@@ -9,7 +9,7 @@ import UIKit
 import Carbon
 import ConstraintsOperators
 
-@_functionBuilder
+@resultBuilder
 public struct UICellsBuilder: CellsBuildable {
 
 	private var cells: [CellNode]
