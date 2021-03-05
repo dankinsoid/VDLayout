@@ -49,3 +49,24 @@ public struct UIKitViewController<V: UIViewController>: UIViewControllerRepresen
 	public func updateUIViewController(_ uiViewController: V, context: UIViewControllerRepresentableContext<UIKitViewController<V>>) {}
 	
 }
+
+@available(iOS 13.0, *)
+extension View {
+	public var uiKit: UIHostingController<Self> {
+		UIHostingController(rootView: self)
+	}
+}
+
+@available(iOS 13.0, *)
+extension NSObjectProtocol where Self: UIView {
+	public var swiftUI: UIKitView<Self> {
+		UIKitView(self)
+	}
+}
+
+@available(iOS 13.0, *)
+extension NSObjectProtocol where Self: UIViewController {
+	public var swiftUI: UIKitViewController<Self> {
+		UIKitViewController(self)
+	}
+}
