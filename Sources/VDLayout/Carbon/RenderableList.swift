@@ -5,6 +5,7 @@
 //  Created by Данил Войдилов on 19.02.2021.
 //
 
+#if canImport(Carbon)
 import UIKit
 import VDKit
 import RxSwift
@@ -49,9 +50,9 @@ extension RenderableView {
 		render(cells: cells)
 	}
 	
-	public init<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
+	public init<O: ObservableConvertibleType>(one binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
 		self.init()
-		bind(binder, sections: sections)
+		bind(one: binder, sections: sections)
 	}
 	
 	public init<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element.Element) -> [Section]) where O.Element: Collection {
@@ -69,9 +70,9 @@ extension RenderableView {
 		bind(binder, cells: cells)
 	}
 	
-	public init<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
+	public init<O: ObservableConvertibleType>(one binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
 		self.init()
-		bind(binder, cells: cells)
+		bind(one: binder, cells: cells)
 	}
 	
 	public init<C: Swift.Collection>(_ data: C, @UISectionsBuilder sections: (C.Element) -> [Section]) {
@@ -139,7 +140,7 @@ extension RenderableView {
 		render(data, id: \.self, cells: cells)
 	}
 	
-	public func bind<O: ObservableConvertibleType>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
+	public func bind<O: ObservableConvertibleType>(one binder: O, @UISectionsBuilder sections: @escaping (O.Element) -> [Section]) {
 		disposeBag = DisposeBag()
 		binder.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] in
 			self?.render(sections($0))
@@ -153,8 +154,8 @@ extension RenderableView {
 		}).disposed(by: disposeBag)
 	}
 	
-	public func bind<O: ObservableConvertibleType>(_ binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
-		bind(binder) {
+	public func bind<O: ObservableConvertibleType>(one binder: O, @UICellsBuilder cells: @escaping (O.Element) -> CellsBuildable) {
+		bind(one: binder) {
 			Section(id: UniqueIdentifier(), cells: cells($0).buildCells())
 		}
 	}
@@ -207,3 +208,5 @@ extension Section {
 }
 
 private struct UniqueIdentifier: Hashable {}
+
+#endif

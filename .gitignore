@@ -1,3 +1,5 @@
 .swiftpm
 *.resolved
 *.resolved
+Sources/VDLayout/TestView.swift
+Package.resolved~main

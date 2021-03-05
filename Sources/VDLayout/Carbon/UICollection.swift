@@ -5,6 +5,7 @@
 //  Created by Данил Войдилов on 09.02.2021.
 //
 
+#if canImport(Carbon)
 import Foundation
 import UIKit
 import Carbon
@@ -39,6 +40,12 @@ open class UICollection: UICollectionView, RenderableView {
 		renderer.target = self
 	}
 	
+}
+
+extension UICollectionView {
+	public var flowLayout: UICollectionViewFlowLayout? {
+		collectionViewLayout as? UICollectionViewFlowLayout
+	}
 }
 
 public final class UICollectionAdapter: UICollectionViewFlowLayoutAdapter {
@@ -102,3 +109,4 @@ public final class UICollectionAdapter: UICollectionViewFlowLayoutAdapter {
 	}
 	
 }
+#endif
