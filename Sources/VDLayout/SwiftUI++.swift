@@ -52,21 +52,35 @@ public struct UIKitViewController<V: UIViewController>: UIViewControllerRepresen
 
 @available(iOS 13.0, *)
 extension View {
-	public var uiKit: UIHostingController<Self> {
-		UIHostingController(rootView: self)
+	public var uiKit: _UIHostingView<Self> {
+		_UIHostingView(rootView: self)
 	}
 }
 
 @available(iOS 13.0, *)
-extension NSObjectProtocol where Self: UIView {
-	public var swiftUI: UIKitView<Self> {
-		UIKitView(self)
+extension SubviewProtocol {
+	public var swiftUI: SubviewView<Self> {
+		SubviewView(self)
 	}
 }
 
 @available(iOS 13.0, *)
-extension NSObjectProtocol where Self: UIViewController {
-	public var swiftUI: UIKitViewController<Self> {
-		UIKitViewController(self)
+public struct SubviewView<V: SubviewProtocol>: UIViewRepresentable {
+	
+	let make: () -> V
+	
+	public init(_ make: @escaping () -> V) {
+		self.make = make
 	}
+	
+	public init(_ make: @escaping @autoclosure () -> V) {
+		self.make = make
+	}
+	
+	public func makeUIView(context: UIViewRepresentableContext<SubviewView<V>>) -> UIView {
+		make().createViewToAdd()
+	}
+	
+	public func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<SubviewView<V>>) {}
+	
 }
