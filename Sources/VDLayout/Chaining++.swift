@@ -26,11 +26,7 @@ extension ValueChaining: UILayoutable where W: UILayoutable {
 extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
 	
 	public func createViewToAdd() -> UIView {
-		wrappedValue.createViewToAdd()
-	}
-	
-	public func didAdded(view: UIView, to superview: UIView) {
-		apply().didAdded(view: view, to: superview)
+		apply().createViewToAdd()
 	}
 	
 }

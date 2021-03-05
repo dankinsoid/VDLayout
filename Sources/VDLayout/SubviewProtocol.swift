@@ -8,15 +8,15 @@
 import UIKit
 import VDKit
 import ConstraintsOperators
+import CombineOperators
+import CombineCocoa
 
 public protocol SubviewProtocol {
 	func createViewToAdd() -> UIView
-	func didAdded(view: UIView, to superview: UIView)
 }
 
 extension UIView: SubviewProtocol {
 	public func createViewToAdd() -> UIView { self }
-	public func didAdded(view: UIView, to superview: UIView) {}
 }
 
 extension UIViewController: SubviewProtocol {
@@ -27,11 +27,10 @@ extension UIViewController: SubviewProtocol {
 	
 	public func createViewToAdd() -> UIView {
 		loadViewIfNeeded()
+		view.cb.movedToWindow.prefix(1) => {[weak self] in
+			self?.view.superview?.vc?.addChild(self!)
+		}
 		return view
-	}
-	
-	public func didAdded(view: UIView, to superview: UIView) {
-		superview.vc?.addChild(self)
 	}
 	
 }

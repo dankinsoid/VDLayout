@@ -23,12 +23,9 @@ public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtoc
 	}
 	
 	public func createViewToAdd() -> UIView {
-		parent.createViewToAdd()
-	}
-	
-	public func didAdded(view: UIView, to superview: UIView) {
-		parent.didAdded(view: view, to: superview)
-		view.add(subview: wrappedValue)
+		let result = parent.createViewToAdd()
+		result.add(subview: wrappedValue)
+		return result
 	}
 	
 	public func copy(with action: @escaping (W) -> W) -> WrappedView {
