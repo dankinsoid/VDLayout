@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,6 @@ import PackageDescription
 let package = Package(
     name: "VDLayout",
     platforms: [
-        .macOS(.v10_13),
         .iOS(.v11)
     ],
     products: [
@@ -14,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.13.0"),
-			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.11.0"),
+			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.13.0"),
 			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0"),
 			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "1.0.1")
     ],
