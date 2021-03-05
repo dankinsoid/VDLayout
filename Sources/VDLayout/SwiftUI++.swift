@@ -60,13 +60,6 @@ extension View {
 }
 
 @available(iOS 13.0, *)
-extension SubviewProtocol {
-	public var swiftUI: SubviewView<Self> {
-		SubviewView(self)
-	}
-}
-
-@available(iOS 13.0, *)
 public struct SubviewView<V: SubviewProtocol>: UIViewRepresentable {
 	
 	let make: () -> V
