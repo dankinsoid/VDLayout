@@ -7,8 +7,6 @@
 
 import XCTest
 import Combine
-@testable import Carbon
-@testable import VDKit
 @testable import VDLayout
 
 @available(iOS 13.0, *)
@@ -29,21 +27,4 @@ final class VDTests: XCTestCase {
 		("tests", tests),
 	]
 	
-}
-
-struct Cmp: IdentifiableComponent {
-	var id: String { "" }
-	func renderContent() -> UIView {
-		UIView()
-	}
-	func render(in content: UIView) {
-		
-	}
-}
-
-@UISectionsBuilder
-func cells(array: [Int]) -> [Section] {
-	Section(id: "", items: array) { i in
-		UILabel("\(i)")
-	}
 }

@@ -5,9 +5,13 @@
 //  Created by Данил Войдилов on 19.02.2021.
 //
 
+#if canImport(Carbon)
 import UIKit
 import Carbon
 import ConstraintsOperators
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
 
 @resultBuilder
 public struct UICellsBuilder: CellsBuildable {
@@ -61,6 +65,11 @@ public struct UICellsBuilder: CellsBuildable {
 	public static func buildExpression<C: SubviewProtocol>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
 		UICellsBuilder([CellNode(LazyComponent(id: UUID(), create: expression))])
 	}
+	
+	@inlinable
+	public static func buildExpression<C: View>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
+		UICellsBuilder([CellNode(ViewComponent(expression, id: UUID()))])
+	}
 
 }
 
@@ -83,6 +92,24 @@ public struct LazyComponent<ID: Hashable>: IdentifiableComponent {
 	
 }
 
+@available(iOS 13.0, *)
+public struct ViewComponent<ID: Hashable, Body: View>: IdentifiableComponent {
+	public var id: ID
+	public let body: () -> Body
+	
+	public init(_ body: @escaping () -> Body, id: ID) {
+		self.body = body
+		self.id = id
+	}
+	
+	public func renderContent() -> _UIHostingView<Body> {
+		_UIHostingView(rootView: body())
+	}
+	
+	public func render(in content: _UIHostingView<Body>) {}
+	
+}
+
 private final class CellView: UIView {
 	
 	override func addSubview(_ view: UIView) {
@@ -92,3 +119,4 @@ private final class CellView: UIView {
 	}
 	
 }
+#endif

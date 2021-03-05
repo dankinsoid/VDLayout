@@ -5,6 +5,7 @@
 //  Created by Данил Войдилов on 19.02.2021.
 //
 
+#if canImport(Carbon)
 import UIKit
 import VDKit
 import Combine
@@ -120,9 +121,9 @@ extension RenderableView {
 @available(iOS 13.0, *)
 extension RenderableView {
 	
-	public init<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output) -> [Section]) {
+	public init<O: Publisher>(one binder: O, @UISectionsBuilder sections: @escaping (O.Output) -> [Section]) {
 		self.init()
-		bind(binder, sections: sections)
+		bind(one: binder, sections: sections)
 	}
 	
 	public init<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output.Element) -> [Section]) where O.Output: Collection {
@@ -140,12 +141,12 @@ extension RenderableView {
 		bind(binder, cells: cells)
 	}
 	
-	public init<O: Publisher>(_ binder: O, @UICellsBuilder cells: @escaping (O.Output) -> CellsBuildable) {
+	public init<O: Publisher>(one binder: O, @UICellsBuilder cells: @escaping (O.Output) -> CellsBuildable) {
 		self.init()
-		bind(binder, cells: cells)
+		bind(one: binder, cells: cells)
 	}
 	
-	public func bind<O: Publisher>(_ binder: O, @UISectionsBuilder sections: @escaping (O.Output) -> [Section]) {
+	public func bind<O: Publisher>(one binder: O, @UISectionsBuilder sections: @escaping (O.Output) -> [Section]) {
 		binder.asDriver() => {[weak self] in
 			self?.render(sections($0))
 		}
@@ -157,8 +158,8 @@ extension RenderableView {
 		}
 	}
 	
-	public func bind<O: Publisher>(_ binder: O, @UICellsBuilder cells: @escaping (O.Output) -> CellsBuildable) {
-		bind(binder) {
+	public func bind<O: Publisher>(one binder: O, @UICellsBuilder cells: @escaping (O.Output) -> CellsBuildable) {
+		bind(one: binder) {
 			Section(id: UniqueIdentifier(), cells: cells($0).buildCells())
 		}
 	}
@@ -195,3 +196,5 @@ extension Section {
 }
 
 private struct UniqueIdentifier: Hashable {}
+
+#endif

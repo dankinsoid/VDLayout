@@ -9,6 +9,7 @@ import UIKit
 import CombineOperators
 import CombineCocoa
 import SwiftUI
+import ConstraintsOperators
 
 @available(iOS 13.0, *)
 public struct UIKitView<V: UIView>: UIViewRepresentable {
@@ -60,7 +61,7 @@ extension View {
 }
 
 @available(iOS 13.0, *)
-public struct SubviewView<V: SubviewProtocol>: UIViewRepresentable {
+public struct SubviewRepresentableView<V: SubviewProtocol>: UIViewRepresentable {
 	
 	let make: () -> V
 	
@@ -72,10 +73,12 @@ public struct SubviewView<V: SubviewProtocol>: UIViewRepresentable {
 		self.make = make
 	}
 	
-	public func makeUIView(context: UIViewRepresentableContext<SubviewView<V>>) -> UIView {
-		make().createViewToAdd()
+	public func makeUIView(context: UIViewRepresentableContext<SubviewRepresentableView<V>>) -> UIView {
+		let content = make().createViewToAdd()
+		content.contentPriority.both.both = .required
+		return content
 	}
 	
-	public func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<SubviewView<V>>) {}
+	public func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<SubviewRepresentableView<V>>) {}
 	
 }
