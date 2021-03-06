@@ -60,6 +60,12 @@ extension View {
 	}
 }
 
+extension SubviewProtocol {
+	public var swiftUI: SubviewRepresentableView<Self> {
+		SubviewRepresentableView(self)
+	}
+}
+
 @available(iOS 13.0, *)
 public struct SubviewRepresentableView<V: SubviewProtocol>: UIViewRepresentable {
 	
@@ -75,6 +81,7 @@ public struct SubviewRepresentableView<V: SubviewProtocol>: UIViewRepresentable 
 	
 	public func makeUIView(context: UIViewRepresentableContext<SubviewRepresentableView<V>>) -> UIView {
 		let content = make().createViewToAdd()
+		content.ignoreAutoresizingMask()
 		content.contentPriority.both.both = .required
 		return content
 	}
