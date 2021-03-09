@@ -158,22 +158,34 @@ extension ChainingProperty where C: ValueChainingProtocol, B: Publisher {
 	
 	public subscript<O: Subscriber>(_ observer: O) -> C where O.Input == B.Output, O.Failure == B.Failure {
 		subscribe(observer)
-		return chaining
 	}
 	
 	public subscript<O: Subscriber>(_ observer: O) -> C where O.Input == B.Output?, O.Failure == B.Failure {
 		subscribe(observer.mapSubscriber { $0 })
-		return chaining
 	}
 	
 	public subscript<O: Subscriber>(_ observer: O) -> C where O.Input? == B.Output, O.Failure == B.Failure {
 		subscribe(observer.ignoreNil())
-		return chaining
 	}
 	
-	private func subscribe<O: Subscriber>(_ value: O) where O.Input == B.Output, O.Failure == B.Failure {
+	private func subscribe<O: Subscriber>(_ value: O) -> C where O.Input == B.Output, O.Failure == B.Failure {
 		let result = chaining.wrappedValue
 		getter.get(result).subscribe(value)
+		return chaining
 	}
-	
+
+	public func on(_ action: @escaping (B.Output) -> Void) -> C {
+		subscribe(
+			AnySubscriber(
+				receiveSubscription: {
+					$0.request(.unlimited)
+				},
+				receiveValue: {
+					action($0)
+					return .unlimited
+				},
+				receiveCompletion: nil
+			)
+		)
+	}
 }
