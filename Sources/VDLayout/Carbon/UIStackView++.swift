@@ -10,14 +10,9 @@ import Carbon
 import VDKit
 import Combine
 
-open class StackView: UIStackView {
-	open var data: [CellNode] = [] {
-		didSet {
-			update()
-		}
-	}
+extension UIStackView {
 	
-	open func update() {
+	open func update(data: [CellNode]) {
 		let dif = arrangedSubviews.count - data.count
 		arrangedSubviews.suffix(max(0, dif)).reversed().forEach {
 			removeArrangedSubview($0)
@@ -36,16 +31,16 @@ open class StackView: UIStackView {
 	}
 	
 	open func update(@UICellsBuilder _ cells: () -> CellsBuildable) {
-		data = cells().buildCells()
+		update(data: cells().buildCells())
 	}
 	
 	open func update<C: Collection>(_ array: C, @UICellsBuilder _ cells: (C.Element) -> CellsBuildable) {
-		data = array.map { cells($0).buildCells() }.joinedArray()
+		update(data: array.map { cells($0).buildCells() }.joinedArray())
 	}
 }
 
 @available(iOS 13.0, *)
-extension StackView {
+extension UIStackView {
 	
 	public convenience init<P: Publisher>(_ publisher: P, @UICellsBuilder _ cells: @escaping (P.Output.Element) -> CellsBuildable) where P.Output: Collection {
 		self.init()
@@ -66,7 +61,7 @@ extension StackView {
 	
 	public func bind<P: Publisher>(one publisher: P, @UICellsBuilder _ cells: @escaping (P.Output) -> CellsBuildable) {
 		publisher.subscribe(on: DispatchQueue.main).subscribe {[weak self] element in
-			self?.data = cells(element).buildCells()
+			self?.update(data: cells(element).buildCells())
 		}
 	}
 	
