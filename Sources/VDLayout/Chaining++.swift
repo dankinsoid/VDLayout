@@ -18,7 +18,7 @@ extension ValueChaining: UILayoutableArray where W: UILayoutableArray {
 }
 
 extension ValueChaining: UILayoutable where W: UILayoutable {
-	public var itemForConstraint: Any {
+	public var itemForConstraint: ConstraintItem {
 		wrappedValue.itemForConstraint
 	}
 }

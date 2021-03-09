@@ -42,7 +42,7 @@ extension WrappedView: UILayoutableArray where P: UILayoutableArray {
 }
 
 extension WrappedView: UILayoutable where P: UILayoutable {
-	public var itemForConstraint: Any { parent.itemForConstraint }
+	public var itemForConstraint: ConstraintItem { parent.itemForConstraint }
 }
 
 extension WrappedView: Attributable where P: Attributable {

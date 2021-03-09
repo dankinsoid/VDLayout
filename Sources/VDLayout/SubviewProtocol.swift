@@ -21,7 +21,7 @@ extension UIView: SubviewProtocol {
 
 extension UIViewController: SubviewProtocol {
 	
-	public var itemForConstraint: Any {
+	public var itemForConstraint: ConstraintItem {
 		view.itemForConstraint
 	}
 	
