@@ -83,7 +83,25 @@ public struct LazyComponent<ID: Hashable>: IdentifiableComponent {
 	public func referenceSize(in bounds: CGRect) -> CGSize? {
 		size?(bounds)
 	}
+}
+
+public struct CellSubview<View: SubviewProtocol>: Component {
 	
+	let render: () -> View
+	
+	public init(_ create: @escaping () -> View) {
+		render = create
+	}
+	
+	public func renderContent() -> UIView {
+		render().createViewToAdd()
+	}
+	
+	public func render(in content: UIView) {}
+}
+
+extension Component {
+//	public func 
 }
 
 extension SubviewProtocol {

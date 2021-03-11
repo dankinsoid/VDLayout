@@ -8,8 +8,10 @@
 #if canImport(Carbon)
 import Foundation
 import UIKit
+import VDKit
 import Carbon
 import Combine
+import CombineOperators
 
 open class UICollection: UICollectionView, RenderableView {
 	
@@ -35,10 +37,60 @@ open class UICollection: UICollectionView, RenderableView {
 		afterInit()
 	}
 	
+	public convenience init<C: Collection>(sectionsLayout: Layout, _ data: C) where C.Element == LayoutedSection {
+		self.init()
+		render(sectionsLayout: sectionsLayout, data)
+	}
+	
+	public convenience init(sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: () -> [LayoutedSection]) {
+		self.init()
+		render(sectionsLayout: sectionsLayout, sections: sections)
+	}
+	
+	public convenience init<C: Swift.Collection>(_ data: C, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: (C.Element) -> [LayoutedSection]) {
+		self.init()
+		render(data, sectionsLayout: sectionsLayout, sections: sections)
+	}
+	
+	public convenience init<O: Publisher>(one binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output) -> [LayoutedSection]) {
+		self.init()
+		bind(one: binder, sectionsLayout: sectionsLayout, sections: sections)
+	}
+	
+	public convenience init<O: Publisher>(_ binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection>sections: @escaping (O.Output.Element) -> [LayoutedSection]) where O.Output: Collection {
+		self.init()
+		bind(binder, sectionsLayout: sectionsLayout, sections: sections)
+	}
+	
 	private func afterInit() {
 		renderer.target = self
 	}
 	
+	public func render<C: Collection>(sectionsLayout: Layout, _ data: C) where C.Element == LayoutedSection {
+		render(data.map { $0.section })
+		let layouts = data.map { $0.layout }
+		layout = SectionedLayout(sectionsLayout, section: { layouts[$0 % layouts.count] }, for: self)
+	}
+	
+	public func render(sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: () -> [LayoutedSection]) {
+		render(sectionsLayout: sectionsLayout, sections())
+	}
+	
+	public func render<C: Swift.Collection>(_ data: C, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: (C.Element) -> [LayoutedSection]) {
+		render(sectionsLayout: sectionsLayout, data.map(sections).joined())
+	}
+	
+	public func bind<O: Publisher>(one binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output) -> [LayoutedSection]) {
+		binder.asDriver() => {[weak self] in
+			self?.render(sectionsLayout: sectionsLayout, sections($0))
+		}
+	}
+	
+	public func bind<O: Publisher>(_ binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output.Element) -> [LayoutedSection]) where O.Output: Collection {
+		binder.asDriver() => {[weak self] in
+			self?.render($0, sectionsLayout: sectionsLayout, sections: sections)
+		}
+	}
 }
 
 extension UICollectionView {
