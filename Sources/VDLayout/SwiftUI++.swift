@@ -61,6 +61,7 @@ extension View {
 }
 
 extension SubviewProtocol {
+	@available(iOS 13.0, *)
 	public var swiftUI: SubviewRepresentableView<Self> {
 		SubviewRepresentableView(self)
 	}

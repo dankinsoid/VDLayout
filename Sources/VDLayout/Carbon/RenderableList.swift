@@ -191,20 +191,58 @@ private var bagKey = "disposeBagKey043400"
 
 extension Section {
 	
-	public init<I: Hashable, ID: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, footer: ViewNode? = nil, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
-		self = Section(id: id, header: header, cells: items.map { item in
+	public init<I: Hashable, ID: Hashable, C: Swift.Collection>(id: I, headerNode: ViewNode?, footerNode: ViewNode?, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
+		self = Section(id: id, header: headerNode, cells: items.map { item in
 			cells(item).buildCells().map { CellNode($0.component.identified(by: item[keyPath: cellId])) }
-		}.joined(), footer: footer)
+		}.joined(), footer: footerNode)
 	}
 	
-	public init<I: Hashable, C: Swift.Collection>(id: I, header: ViewNode? = nil, footer: ViewNode? = nil, items: C, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) where C.Element: Hashable {
-		self = Section(id: id, header: header, footer: footer, items: items, cellId: \.self, cells: cells)
+	public init<I: Hashable, ID: Hashable, C: Swift.Collection>(id: I, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
+		self = Section(id: id, headerNode: nil, footerNode: nil, items: items, cellId: cellId, cells: cells)
+	}
+	
+	public init<I: Hashable, ID: Hashable, C: Swift.Collection, H: SubviewProtocol>(id: I, header: @escaping @autoclosure () -> H, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
+		self = Section(id: id, headerNode: ViewNode(subview: header), footerNode: nil, items: items, cellId: cellId, cells: cells)
+	}
+	
+	public init<I: Hashable, ID: Hashable, C: Swift.Collection, F: SubviewProtocol>(id: I, footer: @escaping @autoclosure () -> F, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
+		self = Section(id: id, headerNode: nil, footerNode: ViewNode(subview: footer), items: items, cellId: cellId, cells: cells)
+	}
+	
+	public init<I: Hashable, ID: Hashable, C: Swift.Collection, H: SubviewProtocol, F: SubviewProtocol>(id: I, header: @escaping @autoclosure () -> H, footer: @escaping @autoclosure () -> F, items: C, cellId: KeyPath<C.Element, ID>, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) {
+		self = Section(id: id, headerNode: ViewNode(subview: header), footerNode: ViewNode(subview: footer), items: items, cellId: cellId, cells: cells)
+	}
+	
+	public init<I: Hashable, C: Swift.Collection>(id: I, items: C, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		self = Section(id: id, headerNode: nil, footerNode: nil, items: items, cellId: \.self, cells: cells)
+	}
+	
+	public init<I: Hashable, C: Swift.Collection, H: SubviewProtocol>(id: I, items: C, header: @escaping @autoclosure () -> H, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		self = Section(id: id, headerNode: ViewNode(subview: header), footerNode: nil, items: items, cellId: \.self, cells: cells)
+	}
+	
+	public init<I: Hashable, C: Swift.Collection, F: SubviewProtocol>(id: I, items: C, footer: @escaping @autoclosure () -> F, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		self = Section(id: id, headerNode: nil, footerNode: ViewNode(subview: footer), items: items, cellId: \.self, cells: cells)
+	}
+	
+	public init<I: Hashable, C: Swift.Collection, H: SubviewProtocol, F: SubviewProtocol>(id: I, items: C, header: @escaping @autoclosure () -> H, footer: @escaping @autoclosure () -> F, @UICellsBuilder cells: @escaping (C.Element) -> CellsBuildable) where C.Element: Hashable {
+		self = Section(id: id, headerNode: ViewNode(subview: header), footerNode: ViewNode(subview: footer), items: items, cellId: \.self, cells: cells)
 	}
 	
 	public static func `static`<I: Hashable>(id: I, header: ViewNode? = nil, footer: ViewNode? = nil, @UICellsBuilder cells: @escaping () -> CellsBuildable) -> Section {
 		Section(id: id, header: header, cells: cells().buildCells(), footer: footer)
 	}
 
+}
+
+extension ViewNode {
+	public init<S: SubviewProtocol>(subview: @escaping () -> S) {
+		self = ViewNode(LazyComponent(id: UUID(), create: subview))
+	}
+	
+	public init<S: SubviewProtocol>(subview: @escaping @autoclosure () -> S) {
+		self = ViewNode(LazyComponent(id: UUID(), create: subview))
+	}
 }
 
 private struct UniqueIdentifier: Hashable {}
