@@ -13,8 +13,8 @@ let package = Package(
     ],
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.20.0"),
-			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.15.0"),
-			.package(url: "https://github.com/dankinsoid/CombineOperators.git", from: "1.61.0"),
+			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.16.0"),
+			.package(url: "https://github.com/dankinsoid/CombineOperators.git", from: "1.65.0"),
 			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "1.0.1")
     ],
     targets: [
