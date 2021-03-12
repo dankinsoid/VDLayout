@@ -14,10 +14,31 @@ open class UIList: UITableView, RenderableView {
 	
 	open var renderer = Renderer(adapter: UIListAdapter(), updater: UITableViewUpdater())
 	fileprivate let bag = DisposeBag()
+	open var sizeDependsOnContent = false {
+		didSet {
+			invalidateIntrinsicContentSize()
+		}
+	}
 	
 	open weak var scrollDelegate: UIScrollViewDelegate? {
 		get { renderer.adapter.scrollDelegate }
 		set { renderer.adapter.scrollDelegate = newValue }
+	}
+	
+	override open var contentSize: CGSize {
+		didSet {
+			if sizeDependsOnContent {
+				invalidateIntrinsicContentSize()
+			}
+		}
+	}
+	
+	override open var intrinsicContentSize: CGSize {
+		if sizeDependsOnContent {
+			return CGSize(width: UIView.noIntrinsicMetric, height: contentSize.height)
+		} else {
+			return super.intrinsicContentSize
+		}
 	}
 	
 	required public init() {
@@ -40,6 +61,13 @@ open class UIList: UITableView, RenderableView {
 		rowHeight = UITableView.automaticDimension
 	}
 	
+	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		if sizeDependsOnContent {
+			return contentSize
+		} else {
+			return super.sizeThatFits(size)
+		}
+	}
 }
 
 public final class UIListAdapter: UITableViewAdapter {

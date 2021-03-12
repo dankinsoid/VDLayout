@@ -17,9 +17,31 @@ open class UICollection: UICollectionView, RenderableView {
 	open var renderer = Renderer(adapter: UICollectionAdapter(), updater: UICollectionViewUpdater())
 	fileprivate let bag = DisposeBag()
 	
+	open var sizeDependsOnContent = false {
+		didSet {
+			invalidateIntrinsicContentSize()
+		}
+	}
+	
 	open weak var scrollDelegate: UIScrollViewDelegate? {
 		get { renderer.adapter.scrollDelegate }
 		set { renderer.adapter.scrollDelegate = newValue }
+	}
+	
+	override open var contentSize: CGSize {
+		didSet {
+			if sizeDependsOnContent {
+				invalidateIntrinsicContentSize()
+			}
+		}
+	}
+	
+	override open var intrinsicContentSize: CGSize {
+		if sizeDependsOnContent {
+			return contentSize
+		} else {
+			return super.intrinsicContentSize
+		}
 	}
 	
 	required public init() {
