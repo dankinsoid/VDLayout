@@ -61,14 +61,26 @@ extension UIStackView {
 	}
 	
 	public func bind<P: ObservableConvertibleType>(one publisher: P, @UICellsBuilder _ cells: @escaping (P.Element) -> CellsBuildable) {
-		publisher.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] element in
-			self?.update(data: cells(element).buildCells())
+		publisher.subscribe(onNext: {[weak self] element in
+			if Thread.isMainThread {
+				self?.update(data: cells(element).buildCells())
+			} else {
+				DispatchQueue.main.async {
+					self?.update(data: cells(element).buildCells())
+				}
+			}
 		}).disposed(by: rx.asDisposeBag)
 	}
 	
 	public func bind<P: ObservableConvertibleType>(_ publisher: P, @UICellsBuilder _ cells: @escaping (P.Element.Element) -> CellsBuildable) where P.Element: Collection {
-		publisher.asDriver(onErrorDriveWith: .never()).drive(onNext: {[weak self] array in
-			self?.update(array, cells)
+		publisher.subscribe(onNext: {[weak self] array in
+			if Thread.isMainThread {
+				self?.update(array, cells)
+			} else {
+				DispatchQueue.main.async {
+					self?.update(array, cells)
+				}
+			}
 		}).disposed(by: rx.asDisposeBag)
 	}
 }
