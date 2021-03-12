@@ -61,7 +61,7 @@ extension UIStackView {
 	}
 	
 	public func bind<P: Publisher>(one publisher: P, @UICellsBuilder _ cells: @escaping (P.Output) -> CellsBuildable) {
-		publisher.subscribe(on: DispatchQueue.main).subscribe {[weak self] element in
+		publisher.subscribe {[weak self] element in
 			if Thread.isMainThread {
 				self?.update(data: cells(element).buildCells())
 			} else {
@@ -73,7 +73,7 @@ extension UIStackView {
 	}
 	
 	public func bind<P: Publisher>(_ publisher: P, @UICellsBuilder _ cells: @escaping (P.Output.Element) -> CellsBuildable) where P.Output: Collection {
-		publisher.subscribe(on: DispatchQueue.main).subscribe {[weak self] array in
+		publisher.subscribe {[weak self] array in
 			if Thread.isMainThread {
 				self?.update(array, cells)
 			} else {
