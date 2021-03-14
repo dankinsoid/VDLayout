@@ -14,59 +14,20 @@ import SwiftUI
 #endif
 import VDKit
 
-public typealias UICellsBuilder = ComposeBuilder<CellsCreator>
+public typealias UICellsBuilder = CellsBuilder
 
-public enum CellsCreator: ArrayInitable {
-	public static func create(from: [CellsBuildable]) -> CellsBuildable {
-		from.count == 1 ? from[0] : CellNodeArray(from.map { $0.buildCells() }.joined())
-	}
-}
-
-public struct CellNodeArray: CellsBuildable {
-	
-	private var cells: [CellNode]
-	
-	public init<C: Collection>(_ items: C) where C.Element == CellNode {
-		cells = Array(items)
-	}
-	
-	public func buildCells() -> [CellNode] {
-		cells
-	}
-	
-}
-
-extension ComposeBuilder where C == CellsCreator {
-
-	@inlinable
-	public static func buildExpression<C: CellsBuildable>(_ expression: C) -> CellsBuildable {
-		expression
-	}
-	
-	@inlinable
-	public static func buildExpression<C: SubviewProtocol>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
-		CellNodeArray([CellNode(LazyComponent(id: UUID(), create: expression))])
-	}
-	
-	@inlinable
-	public static func buildExpression(_ expression: @escaping @autoclosure () -> ComponentCellSize) -> CellsBuildable {
-		CellNodeArray([CellNode(LazyComponent(id: UUID(), create: { expression().subview }, size: { expression().size($0) }))])
-	}
-	
-	@available(iOS 13.0, *)
-	@inlinable
-	public static func buildExpression<C: View>(_ expression: @escaping @autoclosure () -> C) -> CellsBuildable {
-		CellNodeArray([CellNode(ViewComponent(expression, id: UUID()))])
-	}
-
-}
-
-public struct LazyComponent<ID: Hashable>: IdentifiableComponent {
+public struct LazyComponent<ID: Hashable, S: SubviewProtocol>: IdentifiableComponent {
 	public let id: ID
-	var create: () -> SubviewProtocol
+	var create: () -> S
 	var size: ((CGRect) -> CGSize)?
 	
-	public init(id: ID, create: @escaping () -> SubviewProtocol, size: ((CGRect) -> CGSize)? = nil) {
+	public init(id: ID, create: @escaping () -> S, size: ((CGRect) -> CGSize)? = nil) {
+		self.id = id
+		self.create = create
+		self.size = size
+	}
+	
+	public init(id: ID, create: @escaping @autoclosure () -> S, size: ((CGRect) -> CGSize)? = nil) {
 		self.id = id
 		self.create = create
 		self.size = size

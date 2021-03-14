@@ -23,12 +23,16 @@ extension ValueChaining: UILayoutable where W: UILayoutable {
 	}
 }
 
+extension ValueChaining: SubviewListProtocol where W: SubviewProtocol {
+	public func asSubviews() -> [SubviewProtocol] {
+		[self]
+	}
+}
+
 extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
-	
 	public func createViewToAdd() -> UIView {
 		apply().createViewToAdd()
 	}
-	
 }
 
 extension ValueChaining: Attributable where W: Attributable {

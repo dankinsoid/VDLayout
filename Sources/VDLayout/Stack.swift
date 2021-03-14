@@ -9,21 +9,21 @@ import UIKit
 
 extension UIStackView {
 	
-	public static func V(alignment: VAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol]) -> Self {
+	public static func V(alignment: VAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> SubviewList) -> Self {
 		let result = Self.init()
 		result.axis = .vertical
 		result.alignment = alignment.origin
 		result.distribution = distribution
-		subviews().forEach(result.add)
+		subviews().asSubviews().forEach(result.add)
 		return result
 	}
 	
-	public static func H(alignment: HAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol]) -> Self {
+	public static func H(alignment: HAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> SubviewList) -> Self {
 		let result = Self.init()
 		result.axis = .horizontal
 		result.alignment = alignment.origin
 		result.distribution = distribution
-		subviews().forEach(result.add)
+		subviews().asSubviews().forEach(result.add)
 		return result
 	}
 	

@@ -11,8 +11,18 @@ import ConstraintsOperators
 import CombineOperators
 import CombineCocoa
 
-public protocol SubviewProtocol {
+public protocol SubviewListProtocol {
+	func asSubviews() -> [SubviewProtocol]
+}
+
+public protocol SubviewProtocol: SubviewListProtocol {
 	func createViewToAdd() -> UIView
+}
+
+extension SubviewListProtocol where Self: SubviewProtocol {
+	public func asSubviews() -> [SubviewProtocol] {
+		[self]
+	}
 }
 
 extension UIView: SubviewProtocol {

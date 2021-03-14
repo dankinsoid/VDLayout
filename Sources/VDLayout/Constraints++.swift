@@ -13,6 +13,12 @@ import ConstraintsOperators
 
 public typealias AttributableSubview = SubviewProtocol & Attributable
 
+extension Constraints: SubviewListProtocol where Item: SubviewProtocol {
+	public func asSubviews() -> [SubviewProtocol] {
+		[self]
+	}
+}
+
 extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 	
 	public func createViewToAdd() -> UIView {
