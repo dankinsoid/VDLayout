@@ -16,7 +16,7 @@ final class VDTests: XCTestCase {
 	}
 	
 	@SubviewsBuilder
-	func subview() -> SubviewList {
+	func subview() -> SubviewListProtocol {
 		UIView()
 			.chain
 			.backgroundColor[.red]

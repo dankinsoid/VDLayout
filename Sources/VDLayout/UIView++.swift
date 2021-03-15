@@ -13,12 +13,12 @@ import CombineCocoa
 
 extension UIView {
 	
-	public convenience init(@SubviewsBuilder _ subviews: () -> SubviewList) {
+	public convenience init(@SubviewsBuilder _ subviews: () -> SubviewListProtocol) {
 		self.init()
 		subviews().asSubviews().forEach(add)
 	}
 	
-	public func add(@SubviewsBuilder _ subviews: () -> SubviewList) {
+	public func add(@SubviewsBuilder _ subviews: () -> SubviewListProtocol) {
 		subviews().asSubviews().forEach(add)
 	}
 	
@@ -27,7 +27,7 @@ extension UIView {
 		return self
 	}
 	
-	public func with(@SubviewsBuilder _ subviews: () -> SubviewList) -> Self {
+	public func with(@SubviewsBuilder _ subviews: () -> SubviewListProtocol) -> Self {
 		with(subviews().asSubviews())
 	}
 	
