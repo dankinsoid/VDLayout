@@ -12,14 +12,13 @@ import ConstraintsOperators
 extension ValueChaining: UILayoutableArray where W: UILayoutableArray {
 	
 	public func asLayoutableArray() -> [UILayoutable] {
-		wrappedValue.asLayoutableArray()
+		apply().asLayoutableArray()
 	}
-	
 }
 
 extension ValueChaining: UILayoutable where W: UILayoutable {
 	public var itemForConstraint: ConstraintItem {
-		wrappedValue.itemForConstraint
+		apply().itemForConstraint
 	}
 }
 
@@ -28,7 +27,6 @@ extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
 	public func createViewToAdd() -> UIView {
 		apply().createViewToAdd()
 	}
-	
 }
 
 extension ValueChaining: Attributable where W: Attributable {
@@ -36,7 +34,6 @@ extension ValueChaining: Attributable where W: Attributable {
 	public typealias Att = W.Att
 	
 	public var target: W.Target {
-		wrappedValue.target
+		apply().target
 	}
-	
 }
