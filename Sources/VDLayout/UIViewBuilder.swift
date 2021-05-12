@@ -36,8 +36,8 @@ extension ViewBuilder {
 	}
 	
 	@inline(__always)
-	public static func buildExpression<V: SubviewProtocol>(_ expression: @escaping @autoclosure () -> V) -> SubviewRepresentableView<V> {
-		SubviewRepresentableView(expression)
+	public static func buildExpression<V: SubviewProtocol>(_ expression: @escaping @autoclosure () -> V) -> some View {
+		SubviewRepresentableView(expression).edgesIgnoringSafeArea(.all)
 	}
 	
 }
