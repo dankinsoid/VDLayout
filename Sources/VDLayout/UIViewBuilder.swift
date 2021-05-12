@@ -23,7 +23,7 @@ extension ArrayBuilder where T == SubviewProtocol {
 	@available(iOS 13.0, *)
 	@inline(__always)
 	public static func buildExpression<S: View>(_ expression: S) -> [T] {
-		[expression.uiKit.edges().equal(to: 0)]
+		[expression.uiKit]
 	}
 }
 
