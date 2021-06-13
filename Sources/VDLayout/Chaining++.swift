@@ -9,31 +9,31 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
-extension ValueChaining: UILayoutableArray where W: UILayoutableArray {
+extension Chain: UILayoutableArray where Value: UILayoutableArray {
 	
 	public func asLayoutableArray() -> [UILayoutable] {
 		apply().asLayoutableArray()
 	}
 }
 
-extension ValueChaining: UILayoutable where W: UILayoutable {
+extension Chain: UILayoutable where Value: UILayoutable {
 	public var itemForConstraint: ConstraintItem {
 		apply().itemForConstraint
 	}
 }
 
-extension ValueChaining: SubviewProtocol where W: SubviewProtocol {
+extension Chain: SubviewProtocol where Value: SubviewProtocol {
 	
 	public func createViewToAdd() -> UIView {
 		apply().createViewToAdd()
 	}
 }
 
-extension ValueChaining: Attributable where W: Attributable {
-	public typealias Target = W.Target
-	public typealias Att = W.Att
+extension Chain: Attributable where Value: Attributable {
+	public typealias Target = Value.Target
+	public typealias Att = Value.Att
 	
-	public var target: W.Target {
+	public var target: Value.Target {
 		apply().target
 	}
 }
