@@ -16,18 +16,18 @@ view.add {
 	UIStackView.V {
 		UILabel("1")
 			.chain
-			.textAlignment[.center]
-			.textColor[.red]
-			.contentPriority.horizontal.compression[.required]
-		UILabel().chain.text["2"]
-		UIButton().chain.title["Button"]
+			.textAlignment(.center)
+			.textColor(.red)
+			.contentPriority.horizontal.compression(.required)
+		UILabel().chain.text("2")
+		UIButton().chain.title("Button")
 	}
 	.chain
-	.alignment[.center]
-	.distribution[.equalSpacing]
-	.spacing[3]
+	.alignment(.center)
+	.distribution(.equalSpacing)
+	.spacing(3)
 	.edges().equal(to: 0)
-	.width[8]
+	.width(8)
 	.width.equal(to: { $0.height / 2 })
 }
 ```
