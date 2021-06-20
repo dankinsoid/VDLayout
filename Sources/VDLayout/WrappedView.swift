@@ -26,7 +26,7 @@ public struct WrappedView<Value: SubviewProtocol, P: SubviewProtocol>: SubviewPr
 		return result
 	}
 	
-	public func apply(_ value: Value) -> Value { value }
+	public var apply: (Value) -> Value = { $0 }
 }
 
 extension WrappedView: UILayoutableArray where P: UILayoutableArray {
