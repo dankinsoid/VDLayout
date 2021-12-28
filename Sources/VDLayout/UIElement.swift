@@ -23,7 +23,9 @@ public struct UIElement<UIViewType: UIElementsUpdatable>: Chaining, UIElementTyp
 	}
 	
 	public func createUIView() -> UIViewType {
-		create()
+		var view = create()
+		apply(&view)
+		return view
 	}
 	
 	public func updateUIView(_ view: UIViewType) {

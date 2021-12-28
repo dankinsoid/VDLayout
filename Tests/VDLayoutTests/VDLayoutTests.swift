@@ -6,14 +6,35 @@
 //
 
 import XCTest
+import VDChain
 import Combine
-import VDKit
 @testable import VDLayout
 
 @available(iOS 13.0, *)
 final class VDTests: XCTestCase {
 	
+	@BindingPublisher var text = ""
+	
 	func tests() {
+		let text = CurrentValueSubject<String, Never>("")
+		
+		UIView().update {
+			UILabel()§
+				.textColor(.red)
+				.text(text)
+				.tag(0)
+				.do {
+					$0.tag = 0
+				}
+																																								
+			UIViewController()§
+				.tabBarItem(UITabBarItem(title: "", image: nil, selectedImage: nil))
+				.environment(for: UILabel.self)
+					.textColor(UIColor.red)
+			
+			UILabel()§
+				.text($text)
+		}
 	}
 	
 //	@SubviewsBuilder

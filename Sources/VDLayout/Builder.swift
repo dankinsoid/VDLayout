@@ -46,7 +46,7 @@ public struct UIViewNodesBuilder {
 	}
 	
 	@inlinable
-	public static func buildExpression<T: UIView>(_ expression: @escaping @autoclosure () -> T, file: String = #filePath, line: UInt = #line, column: UInt = #column) -> [UIElementNode] {
+	public static func buildExpression<T: UIElementsUpdatable>(_ expression: @escaping @autoclosure () -> T, file: String = #filePath, line: UInt = #line, column: UInt = #column) -> [UIElementNode] {
 		[UIElementNode(UIElement(expression), file: file, line: line, column: column)]
 	}
 }
