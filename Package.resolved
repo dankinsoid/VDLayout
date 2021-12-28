@@ -2,48 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "Carbon",
-        "repositoryURL": "https://github.com/dankinsoid/Carbon.git",
+        "package": "VDChain",
+        "repositoryURL": "https://github.com/dankinsoid/VDChain",
         "state": {
           "branch": null,
-          "revision": "9e572593e02ce77e54932d46d130054a13e2a056",
-          "version": "1.0.1"
-        }
-      },
-      {
-        "package": "CombineOperators",
-        "repositoryURL": "https://github.com/dankinsoid/CombineOperators.git",
-        "state": {
-          "branch": null,
-          "revision": "5ea37804e23b61e5e38e4b7fed44dc0007a21262",
-          "version": "1.65.0"
-        }
-      },
-      {
-        "package": "ConstraintsOperators",
-        "repositoryURL": "https://github.com/dankinsoid/ConstraintsOperators.git",
-        "state": {
-          "branch": null,
-          "revision": "3b2ac1ec5e9facb3ef4b186b8a60699da8b76ce2",
-          "version": "2.27.0"
-        }
-      },
-      {
-        "package": "DifferenceKit",
-        "repositoryURL": "https://github.com/ra1028/DifferenceKit.git",
-        "state": {
-          "branch": null,
-          "revision": "14c66681e12a38b81045f44c6c29724a0d4b0e72",
-          "version": "1.1.5"
-        }
-      },
-      {
-        "package": "VDKit",
-        "repositoryURL": "https://github.com/dankinsoid/VDKit.git",
-        "state": {
-          "branch": null,
-          "revision": "413dd8444adf77a2a9b95b6c635168632917e266",
-          "version": "1.64.0"
+          "revision": "ae381e7c626286cf100d11f690415167549a73e0",
+          "version": "1.0.0"
         }
       }
     ]

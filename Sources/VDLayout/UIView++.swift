@@ -1,127 +1,82 @@
 //
-//  UIKit++.swift
-//  TestUI (iOS)
+//  File.swift
+//  
 //
-//  Created by Данил Войдилов on 09.02.2021.
+//  Created by Данил Войдилов on 28.12.2021.
 //
 
-import Foundation
 import UIKit
-import VDKit
-import Combine
-import CombineCocoa
 
-extension UIView {
+extension UIView: UIElementsUpdatable {
 	
-	public convenience init(@SubviewsBuilder _ subviews: () -> [SubviewProtocol]) {
-		self.init()
-		subviews().forEach(add)
+	private(set) public var nodes: [UIElementNode] {
+		get { associated.nodes }
+		set { associated.nodes = newValue }
 	}
 	
-	public func add(@SubviewsBuilder _ subviews: () -> [SubviewProtocol]) {
-		subviews().forEach(add)
+	private var uiElements: [UIElementsUpdatable] {
+		get { associated.uiElements }
+		set { associated.uiElements = newValue }
 	}
 	
-	public func with(_ subviews: [SubviewProtocol]) -> Self {
-		subviews.forEach(add)
-		return self
+	public func updateUIElements() {
+		updateNodes(nodes)
 	}
 	
-	public func with(@SubviewsBuilder _ subviews: () -> [SubviewProtocol]) -> Self {
-		with(subviews())
+	public func update(_ nodes: UIElementNode...) {
+		updateNodes(nodes)
 	}
 	
-	public func add(subview: SubviewProtocol) {
-		let view = subview.createViewToAdd()
-		view.translatesAutoresizingMaskIntoConstraints = false
-		if let stack = self as? UIStackView {
-			stack.addArrangedSubview(view)
+	public func update(@UIViewNodesBuilder _ nodes: () -> [UIElementNode]) {
+		updateNodes(nodes())
+	}
+	
+	public func updateNodes(_ nodes: [UIElementNode]) {
+		self.nodes = nodes
+		var subviewNodes = Dictionary(
+			uiElements.compactMap { view in view.nodeID.map { ($0, view) } }
+		) { _, new in
+			new
+		}
+		for node in nodes {
+			if let view = subviewNodes[node.id] {
+				node.update(view)
+			} else {
+				let view = node.create()
+				view.add(to: self)
+				node.update(view)
+			}
+			subviewNodes[node.id] = nil
+		}
+		for (_, view) in subviewNodes {
+			view.remove(from: self)
+		}
+	}
+	
+	public func add(subview: UIView) {
+		if let custom = self as? CustomSubviewAddable {
+			custom.customAddSubview(subview)
 		} else {
-			addSubview(view)
+			addSubview(subview)
 		}
 	}
 	
+	var vc: UIViewController? {
+		(next as? UIViewController) ?? (next as? UIView)?.vc
+	}
 }
 
-extension UIButton {
-	
-	public var title: String? {
-		get { title(for: .normal) }
-		set { setTitle(newValue, for: .normal) }
+extension AssociatedValues {
+	var nodeID: UIViewNodeID? {
+		get { self[\.nodeID] ?? nil }
+		set { self[\.nodeID] = newValue }
 	}
-	
-	public var titles: UIControl.States<String> {
-		UIControl.States(get: title, set: setTitle)
+	var nodes: [UIElementNode] {
+		get { self[\.nodes] ?? [] }
+		set { self[\.nodes] = newValue }
 	}
-	
-	public var image: UIImage? {
-		get { image(for: .normal) }
-		set { setImage(newValue, for: .normal) }
+	var uiElements: [UIElementsUpdatable] {
+		get { self[\.uiElements] ?? [] }
+		set { self[\.uiElements] = newValue }
 	}
-	
-	public var images: UIControl.States<UIImage> {
-		UIControl.States(get: image, set: setImage)
-	}
-	
-	public var backgroundImage: UIImage? {
-		get { backgroundImage(for: .normal) }
-		set { setBackgroundImage(newValue, for: .normal) }
-	}
-	
-	public var backgroundImages: UIControl.States<UIImage> {
-		UIControl.States(get: backgroundImage, set: setBackgroundImage)
-	}
-	
-	public var titleColor: UIColor? {
-		get { titleColor(for: .normal) }
-		set { setTitleColor(newValue, for: .normal) }
-	}
-	
-	public var titleColors: UIControl.States<UIColor> {
-		UIControl.States(get: titleColor, set: setTitleColor)
-	}
-	
-}
-
-extension UIControl {
-	
-	public struct States<Value> {
-		private let get: (State) -> Value?
-		private let set: (Value?, State) -> Void
-		
-		public subscript(_ key: State) -> Value? {
-			get { get(key) }
-			nonmutating set { set(newValue, key) }
-		}
-		
-		public init(get: @escaping (State) -> Value?, set: @escaping (Value?, State) -> Void) {
-			self.get = get
-			self.set = set
-		}
-		
-	}
-	
-}
-
-extension UIControl.State: Hashable {}
-
-extension UILabel {
-	
-	public convenience init(_ text: String) {
-		self.init()
-		self.text = text
-	}
-	
-	@available(iOS 13.0, *)
-	public convenience init<O: Publisher>(cb text: O) where O.Output == String {
-		self.init()
-		text.map({ $0 }).asDriver().subscribe(cb.text)
-	}
-	
-	@available(iOS 13.0, *)
-	public convenience init<O: Publisher>(cb text: O) where O.Output == String? {
-		self.init()
-		text.asDriver().subscribe(cb.text)
-	}
-	
 }
