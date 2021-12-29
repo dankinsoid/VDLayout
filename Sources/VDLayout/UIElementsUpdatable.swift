@@ -8,14 +8,14 @@
 import UIKit
 
 public protocol UIElementsUpdatable {
-	var nodeID: UIViewNodeID? { get nonmutating set }
+	var nodeID: CodeID? { get nonmutating set }
 	func updateUIElements()
 	func add(to parent: UIView)
 	func remove(from parent: UIView)
 }
 
 extension UIElementsUpdatable where Self: NSObject {
-	public var nodeID: UIViewNodeID? {
+	public var nodeID: CodeID? {
 		get { associated.nodeID }
 		set { associated.nodeID = newValue }
 	}

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UIViewNodeID: Hashable {
+public struct CodeID: Hashable {
 	public var file: String
 	public var line: UInt
 	public var column: UInt

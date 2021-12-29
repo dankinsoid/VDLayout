@@ -8,12 +8,12 @@
 import UIKit
 
 public struct UIElementNode: Identifiable {
-	public var id: UIViewNodeID
+	public var id: CodeID
 	public var viewCreator: AnyUIElementType
 	
 	public init(_ viewCreator: AnyUIElementType, file: String, line: UInt, column: UInt) {
 		self.viewCreator = viewCreator
-		id = UIViewNodeID(file: file, line: line, column: column)
+		id = CodeID(file: file, line: line, column: column)
 	}
 	
 	public init<UIViewType: UIElementsUpdatable>(file: String = #filePath, line: UInt = #line, column: UInt = #column, _ create: @escaping @autoclosure () -> UIViewType) {

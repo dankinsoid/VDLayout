@@ -9,7 +9,7 @@ import UIKit
 import VDChain
 import Combine
 																									
-extension ChainProperty where Base.Value: NSObject, Base: UIElementType, Base.UIViewType == Base.Value {
+extension ChainProperty where Base.Value: NSObject {
 	
 	public func callAsFunction<P: Publisher>(_ publisher: P, file: String = #filePath, line: UInt = #line, column: UInt = #column) -> Base where P.Output == Value {
 		guard let kp = getter as? ReferenceWritableKeyPath<Base.Value, Value> else { return chaining }
@@ -27,7 +27,7 @@ extension ChainProperty where Base.Value: NSObject, Base: UIElementType, Base.UI
 	
 	private func subscribe<P: Publisher>(_ value: P, file: String, line: UInt, column: UInt, set: @escaping (Base.Value?, P.Output) -> Void) -> Base {
 		var result = chaining
-		let id = UIViewNodeID(file: file, line: line, column: column)
+		let id = CodeID(file: file, line: line, column: column)
 		let apply = result.apply
 		result.apply = {
 			apply(&$0)
@@ -43,7 +43,7 @@ extension ChainProperty where Base.Value: NSObject, Base: UIElementType, Base.UI
 }
 
 extension AssociatedValues {
-	var bags: [UIViewNodeID: AnyCancellable] {
+	var bags: [CodeID: AnyCancellable] {
 		get { self[\.bags] ?? [:] }
 		set { self[\.bags] = newValue }
 	}

@@ -74,7 +74,7 @@ extension UIElementsUpdatable where Self: NSObject {
 }
 
 extension AssociatedValues {
-	var nodeID: UIViewNodeID? {
+	var nodeID: CodeID? {
 		get { self[\.nodeID] ?? nil }
 		set { self[\.nodeID] = newValue }
 	}

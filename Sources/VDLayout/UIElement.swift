@@ -23,12 +23,12 @@ public struct UIElement<UIViewType: UIElementsUpdatable>: Chaining, UIElementTyp
 	}
 	
 	public func createUIView() -> UIViewType {
-		var view = create()
-		apply(&view)
-		return view
+		create()
 	}
 	
 	public func updateUIView(_ view: UIViewType) {
+		var view = view
+		apply(&view)
 		update(view)
 	}
 	

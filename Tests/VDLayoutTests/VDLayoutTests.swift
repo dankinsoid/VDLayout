@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import UIKit
 import VDChain
 import Combine
 @testable import VDLayout
@@ -23,14 +24,14 @@ final class VDTests: XCTestCase {
 				.textColor(.red)
 				.text(text)
 				.tag(0)
-				.do {
-					$0.tag = 0
-				}
 																																								
 			UIViewController()§
 				.tabBarItem(UITabBarItem(title: "", image: nil, selectedImage: nil))
 				.environment(for: UILabel.self)
 					.textColor(UIColor.red)
+			
+			UITextField()§
+				.on(event: .valueChanged) { _ in }
 			
 			UILabel()§
 				.text($text)
@@ -53,4 +54,10 @@ final class VDTests: XCTestCase {
 	static var allTests = [
 		("tests", tests),
 	]
+}
+
+postfix operator %
+
+public postfix func %<T: BinaryFloatingPoint>(_ lhs: T) -> T {
+	lhs / 100
 }
