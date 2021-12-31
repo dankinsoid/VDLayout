@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol UI {
-	@UIViewNodesBuilder var layout: UILayout { get }
+	@UIBuilder var layout: UILayout { get }
 }
 
 extension UI where Self: AnyUIElementType {

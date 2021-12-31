@@ -17,7 +17,7 @@ extension UIView: UIViewConvertable {
 		updateUILayout(UILayout(flat: layouts))
 	}
 	
-	public func update(@UIViewNodesBuilder _ layout: () -> UILayout) {
+	public func update(@UIBuilder _ layout: () -> UILayout) {
 		updateUILayout(layout())
 	}
 	

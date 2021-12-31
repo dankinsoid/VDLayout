@@ -8,7 +8,7 @@
 import UIKit
 
 @resultBuilder
-public struct UIViewNodesBuilder {
+public struct UIBuilder {
 
 	@inlinable
 	public static func buildBlock(_ components: UILayout...) -> UILayout {
