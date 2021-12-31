@@ -5,14 +5,12 @@
 //  Created by Данил Войдилов on 28.12.2021.
 //
 
-#if canImport(UIKit)
-import UIKit
 import VDChain
 
 postfix operator §
 
 @dynamicMemberLookup
-public struct UIElement<UIViewType: UIElementsUpdatable>: Chaining, UIElementType {
+public struct UIElement<UIViewType: UIViewConvertable>: Chaining, UIElementType {
 	public var apply: (inout UIViewType) -> Void = { _ in }
 	public var create: () -> UIViewType
 	private var update: (UIViewType) -> Void
@@ -60,5 +58,4 @@ extension UIElement {
 	}
 }
 
-public postfix func §<T: UIElementsUpdatable>(_ lhs: @escaping @autoclosure () -> T) -> UIElement<T> { UIElement(lhs) }
-#endif
+public postfix func §<T: UIViewConvertable>(_ lhs: @escaping @autoclosure () -> T) -> UIElement<T> { UIElement(lhs) }

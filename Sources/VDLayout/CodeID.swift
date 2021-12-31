@@ -8,6 +8,8 @@
 import Foundation
 
 public struct CodeID: Hashable {
+	public static var none: CodeID { CodeID(file: "", line: 0, column: 0) }
+	
 	public var file: String
 	public var line: UInt
 	public var column: UInt

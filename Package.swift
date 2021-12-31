@@ -13,11 +13,13 @@ let package = Package(
     ],
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/VDChain", from: "1.0.0"),
+			.package(url: "https://github.com/dankinsoid/NSMethodsObservation", from: "1.1.0"),
+			.package(url: "https://github.com/layoutBox/PinLayout", from: "1.10.0")
     ],
     targets: [
 			.target(
 				name: "VDLayout",
-				dependencies: ["VDChain"]
+				dependencies: ["VDChain", "NSMethodsObservation", "PinLayout"]
 			),
 			.testTarget(
 				name: "VDLayoutTests",

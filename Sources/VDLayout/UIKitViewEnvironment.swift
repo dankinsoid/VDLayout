@@ -9,7 +9,7 @@ import Foundation
 import VDChain
 
 extension UIElementType {
-	public func environment<T: UIElementsUpdatable>(for type: T.Type) -> UIKitViewEnvironment<T, Self> {
+	public func environment<T: UIViewConvertable>(for type: T.Type) -> UIKitViewEnvironment<T, Self> {
 		UIKitViewEnvironment(content: self)
 	}
 }
@@ -26,7 +26,7 @@ extension UIElementType {
 //}
 
 @dynamicMemberLookup
-public struct UIKitViewEnvironment<Value: UIElementsUpdatable, Content: UIElementType>: Chaining, UIElementType {
+public struct UIKitViewEnvironment<Value: UIViewConvertable, Content: UIElementType>: Chaining, UIElementType {
 	public var apply: (inout Value) -> Void = { _ in }
 	public let content: Content
 

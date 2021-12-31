@@ -7,22 +7,22 @@
 
 import UIKit
 
-extension UIView: UIElementsUpdatable {
+extension UIView: UIViewConvertable {
 	
 	public func updateUIElements() {
-		updateNodes(nodes)
-	}
-	
-	public func update(_ nodes: UIElementNode...) {
-		updateNodes(nodes)
-	}
-	
-	public func update(@UIViewNodesBuilder _ nodes: () -> [UIElementNode]) {
-		updateNodes(nodes())
-	}
-	
-	public func updateNodes(_ nodes: [UIElementNode]) {
 		updateNodes(nodes: nodes, for: self)
+	}
+	
+	public func update(_ layouts: UILayout...) {
+		updateUILayout(UILayout(flat: layouts))
+	}
+	
+	public func update(@UIViewNodesBuilder _ layout: () -> UILayout) {
+		updateUILayout(layout())
+	}
+	
+	public func updateUILayout(_ layout: UILayout) {
+		updateNodes(nodes: layout.nodes, for: self)
 	}
 	
 	public func add(subview: UIView) {
@@ -38,14 +38,14 @@ extension UIView: UIElementsUpdatable {
 	}
 }
 
-extension UIElementsUpdatable where Self: NSObject {
+extension UIViewConvertable {
 	
-	private(set) public var nodes: [UIElementNode] {
+	private(set) var nodes: [UIElementNode] {
 		get { associated.nodes }
 		set { associated.nodes = newValue }
 	}
 	
-	private var uiElements: [UIElementsUpdatable] {
+	private var uiElements: [UIViewConvertable] {
 		get { associated.uiElements }
 		set { associated.uiElements = newValue }
 	}
@@ -74,7 +74,7 @@ extension UIElementsUpdatable where Self: NSObject {
 }
 
 extension AssociatedValues {
-	var nodeID: CodeID? {
+	var nodeID: UIIdentity? {
 		get { self[\.nodeID] ?? nil }
 		set { self[\.nodeID] = newValue }
 	}
@@ -82,7 +82,7 @@ extension AssociatedValues {
 		get { self[\.nodes] ?? [] }
 		set { self[\.nodes] = newValue }
 	}
-	var uiElements: [UIElementsUpdatable] {
+	var uiElements: [UIViewConvertable] {
 		get { self[\.uiElements] ?? [] }
 		set { self[\.uiElements] = newValue }
 	}

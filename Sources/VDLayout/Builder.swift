@@ -11,42 +11,47 @@ import UIKit
 public struct UIViewNodesBuilder {
 
 	@inlinable
-	public static func buildBlock(_ components: [UIElementNode]...) -> [UIElementNode] {
-		components.reduce(into: [], +=)
+	public static func buildBlock(_ components: UILayout...) -> UILayout {
+		UILayout(flat: components)
 	}
 	
 	@inlinable
-	public static func buildArray(_ components: [UIElementNode]) -> [UIElementNode] {
-		components
+	public static func buildArray(_ components: [UILayout]) -> UILayout {
+		UILayout(flat: components)
 	}
 	
 	@inlinable
-	public static func buildEither(first component: [UIElementNode]) -> [UIElementNode] {
+	public static func buildEither(first component: UILayout) -> UILayout {
+		UILayout(flat: [component])
+	}
+	
+	@inlinable
+	public static func buildEither(second component: UILayout) -> UILayout {
 		component
 	}
 	
 	@inlinable
-	public static func buildEither(second component: [UIElementNode]) -> [UIElementNode] {
+	public static func buildOptional(_ component: UILayout?) -> UILayout {
+		component ?? UILayout()
+	}
+	
+	@inlinable
+	public static func buildLimitedAvailability(_ component: UILayout) -> UILayout {
 		component
 	}
 	
 	@inlinable
-	public static func buildOptional(_ component: [UIElementNode]?) -> [UIElementNode] {
-		component ?? []
+	public static func buildExpression(_ expression: UILayout) -> UILayout {
+		expression
 	}
 	
 	@inlinable
-	public static func buildExpression(_ expression: UIElementNode) -> [UIElementNode] {
-		[expression]
+	public static func buildExpression<T: UI>(_ expression: T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
+		expression.layout(codeID: codeID)
 	}
 	
 	@inlinable
-	public static func buildExpression<T: UIElementType>(_ expression: T, file: String = #filePath, line: UInt = #line, column: UInt = #column) -> [UIElementNode] {
-		[UIElementNode(expression, file: file, line: line, column: column)]
-	}
-	
-	@inlinable
-	public static func buildExpression<T: UIElementsUpdatable>(_ expression: @escaping @autoclosure () -> T, file: String = #filePath, line: UInt = #line, column: UInt = #column) -> [UIElementNode] {
-		[UIElementNode(UIElement(expression), file: file, line: line, column: column)]
+	public static func buildExpression<T: UIViewConvertable>(_ expression: @escaping @autoclosure () -> T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
+		UIElement(expression).layout(codeID: codeID)
 	}
 }

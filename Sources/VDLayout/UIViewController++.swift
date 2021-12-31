@@ -7,21 +7,7 @@
 
 import UIKit
 
-extension UIViewController: UIElementsUpdatable {
+extension UIViewController: UIViewConvertable {
 	
-	public func updateUIElements() {
-		updateNodes(nodes)
-	}
 	
-	public func update(_ nodes: UIElementNode...) {
-		updateNodes(nodes)
-	}
-	
-	public func update(@UIViewNodesBuilder _ nodes: () -> [UIElementNode]) {
-		updateNodes(nodes())
-	}
-	
-	public func updateNodes(_ nodes: [UIElementNode]) {
-		updateNodes(nodes: nodes, for: view)
-	}
 }

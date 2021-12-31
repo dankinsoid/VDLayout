@@ -7,36 +7,21 @@
 
 import UIKit
 
-public protocol UIElementsUpdatable {
-	var nodeID: CodeID? { get nonmutating set }
-	func updateUIElements()
+public protocol UIViewConvertable: UIResponder {
+	var asUIView: UIView { get }
 	func add(to parent: UIView)
 	func remove(from parent: UIView)
 }
 
-extension UIElementsUpdatable where Self: NSObject {
-	public var nodeID: CodeID? {
+extension UIViewConvertable {
+	var nodeID: UIIdentity? {
 		get { associated.nodeID }
 		set { associated.nodeID = newValue }
 	}
 }
 
-extension UIElementsUpdatable where Self: Collection, Element: UIElementsUpdatable {
-	
-	public func add(to parent: UIView) {
-		forEach {
-			$0.add(to: parent)
-		}
-	}
-	
-	public func remove(from parent: UIView) {
-		forEach {
-			$0.remove(from: parent)
-		}
-	}
-}
-
-extension UIElementsUpdatable where Self: UIView {
+extension UIViewConvertable where Self: UIView {
+	public var asUIView: UIView { self }
 	
 	public func add(to parent: UIView) {
 		parent.add(subview: self)
@@ -47,7 +32,8 @@ extension UIElementsUpdatable where Self: UIView {
 	}
 }
 
-extension UIElementsUpdatable where Self: UIViewController {
+extension UIViewConvertable where Self: UIViewController {
+	public var asUIView: UIView { view }
 	
 	public func add(to parent: UIView) {
 		loadViewIfNeeded()

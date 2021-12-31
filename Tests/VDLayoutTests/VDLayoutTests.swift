@@ -56,8 +56,28 @@ final class VDTests: XCTestCase {
 	]
 }
 
-postfix operator %
+class MyView: UIView {
+	@UIEnvironment(\.self) var environment
+	
+	func tt() {
+		environment.someString = ""
+	}
+}
 
-public postfix func %<T: BinaryFloatingPoint>(_ lhs: T) -> T {
-	lhs / 100
+struct MyStructView: UI {
+	@UIEnvironment(\.self) var environment
+	
+	var layout: UILayout {
+		UITextField()§
+			.on(event: .valueChanged) { _ in
+				environment.someString = ""
+			}
+	}
+}
+
+extension UIEnvironmentValues {
+	public var someString: String {
+		get { self[\.someString] ?? "" }
+		set { self[\.someString] = newValue }
+	}
 }

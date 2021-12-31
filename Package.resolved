@@ -2,6 +2,24 @@
   "object": {
     "pins": [
       {
+        "package": "NSMethodsObservation",
+        "repositoryURL": "https://github.com/dankinsoid/NSMethodsObservation",
+        "state": {
+          "branch": null,
+          "revision": "cd541c51b7993d98a9c88bf6252dc64509a389c7",
+          "version": "1.1.0"
+        }
+      },
+      {
+        "package": "PinLayout",
+        "repositoryURL": "https://github.com/layoutBox/PinLayout",
+        "state": {
+          "branch": null,
+          "revision": "93feb9f10c669033b52e6fd9589152036fcbd809",
+          "version": "1.10.0"
+        }
+      },
+      {
         "package": "VDChain",
         "repositoryURL": "https://github.com/dankinsoid/VDChain",
         "state": {

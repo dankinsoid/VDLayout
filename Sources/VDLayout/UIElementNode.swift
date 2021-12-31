@@ -7,29 +7,30 @@
 
 import UIKit
 
-public struct UIElementNode: Identifiable {
-	public var id: CodeID
-	public var viewCreator: AnyUIElementType
+struct UIElementNode: Identifiable {
+	var id: UIIdentity
+	var element: AnyUIElementType
 	
-	public init(_ viewCreator: AnyUIElementType, file: String, line: UInt, column: UInt) {
-		self.viewCreator = viewCreator
-		id = CodeID(file: file, line: line, column: column)
+	init(_ element: AnyUIElementType, id: UIIdentity) {
+		self.element = element
+		self.id = id
 	}
 	
-	public init<UIViewType: UIElementsUpdatable>(file: String = #filePath, line: UInt = #line, column: UInt = #column, _ create: @escaping @autoclosure () -> UIViewType) {
-		self.init(UIElement(create), file: file, line: line, column: column)
+	func create() -> UIViewConvertable {
+		element._createUIView()
 	}
 	
-	public init<UIViewType: UIElementsUpdatable>(file: String = #filePath, line: UInt = #line, column: UInt = #column, _ create: @escaping () -> UIViewType) {
-		self.init(UIElement(create), file: file, line: line, column: column)
+	func update(_ view: UIViewConvertable) {
+		UIElementContext.current = view.context
+		let pin = UIElementContext.current.environments.pin
+		view.subscribeLayout {[weak view] in
+			view?.layout(pin: pin)
+		}
+		view.asUIView.updateUIElements()
+		element._updateUIView(view)
 	}
 	
-	public func create() -> UIElementsUpdatable {
-		viewCreator._createUIView()
-	}
-	
-	public func update(_ view: UIElementsUpdatable) {
-		view.updateUIElements()
-		viewCreator._updateUIView(view)
+	func `in`(element: UI.Type, codeID: CodeID) -> UIElementNode {
+		UIElementNode(self.element, id: id.in(element: element, codeID: codeID))
 	}
 }
