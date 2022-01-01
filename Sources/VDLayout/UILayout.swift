@@ -7,11 +7,12 @@
 
 import UIKit
 
-public struct UILayout: MutableCollection, ExpressibleByArrayLiteral {
+public struct UILayout: MutableCollection, ExpressibleByArrayLiteral, UI {
 	var nodes: [UIElementNode]
 	public var count: Int { nodes.count }
 	public var startIndex: Int { nodes.startIndex }
 	public var endIndex: Int { nodes.endIndex }
+	public var layout: UILayout { self }
 	
 	init(nodes: [UIElementNode]) {
 		self.nodes = nodes
@@ -23,6 +24,10 @@ public struct UILayout: MutableCollection, ExpressibleByArrayLiteral {
 	
 	public init(arrayLiteral elements: UILayout...) {
 		self.init(flat: elements)
+	}
+	
+	public init(@UIBuilder layout: () -> UILayout) {
+		self = layout()
 	}
 	
 	public init() {
@@ -48,7 +53,25 @@ public struct UILayout: MutableCollection, ExpressibleByArrayLiteral {
 		})
 	}
 	
+	public func id<T: Hashable>(_ id: T) -> UILayout {
+		UILayout(nodes: nodes.map {
+			$0.id(id)
+		})
+	}
+	
 	public func index(after i: Int) -> Int {
 		nodes.index(after: i)
 	}
+	
+	public var elements: [AnyUIElementType] {
+		nodes.map { $0.element }
+	}
 }
+
+//import SwiftUI
+//
+//extension UILayout: View {
+//	public var body: some View {
+//		ForEach(nodes) { $0 }
+//	}
+//}

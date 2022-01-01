@@ -58,20 +58,40 @@ final class VDTests: XCTestCase {
 
 class MyView: UIView {
 	@UIEnvironment(\.self) var environment
+	@UIState var string = ""
 	
 	func tt() {
-		environment.someString = ""
+		update {
+			EmptyUI()
+		}
+	}
+}
+
+
+class MyUIView: UIView, UILayoutable {
+	@UIEnvironment(\.self) var environment
+	@UIState var string = ""
+	
+	var layout: UILayout {
+		EmptyUI()
 	}
 }
 
 struct MyStructView: UI {
 	@UIEnvironment(\.self) var environment
+	@UIState var string = ""
 	
 	var layout: UILayout {
-		UITextField()§
-			.on(event: .valueChanged) { _ in
-				environment.someString = ""
-			}
+		EmptyUI()
+		
+		UILayout {
+			
+		}
+	
+		UIView()§
+			.tintColor(.red)
+		
+		
 	}
 }
 

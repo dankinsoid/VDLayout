@@ -46,8 +46,11 @@ public struct BindingPublisher<Output> {
 	}
 	
 	public init(wrappedValue: Output) {
-		let subject = CurrentValueSubject<Output, Never>(wrappedValue)
-		self.init(publisher: subject, get: { subject.value }, set: subject.send)
+		self.init(valueSubject: CurrentValueSubject<Output, Never>(wrappedValue))
+	}
+	
+	public init(valueSubject: CurrentValueSubject<Output, Never>) {
+		self.init(publisher: valueSubject, get: { valueSubject.value }, set: valueSubject.send)
 	}
 	
 	public subscript<T>(dynamicMember keyPath: WritableKeyPath<Output, T>) -> BindingPublisher<T> {

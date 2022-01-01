@@ -22,13 +22,13 @@ public struct UIEnvironment<Value> {
 		set {
 			let keyPath = observed[keyPath: storageKeyPath].keyPath
 			observed.context.environments[keyPath: keyPath] = newValue
-			observed.asUIView.updateUIElements()
+			observed.updateUILayout()
 		}
 	}
 	
 	public var wrappedValue: Value {
-		get { UIElementContext.current.environments[keyPath: keyPath] }
-		nonmutating set { UIElementContext.current.environments[keyPath: keyPath] = newValue }
+		get { UIContext.current.environments[keyPath: keyPath] }
+		nonmutating set { UIContext.current.environments[keyPath: keyPath] = newValue }
 	}
 	
 	private let keyPath: WritableKeyPath<UIEnvironmentValues, Value>

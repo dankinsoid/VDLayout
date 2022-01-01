@@ -17,20 +17,44 @@ struct UIElementNode: Identifiable {
 	}
 	
 	func create() -> UIViewConvertable {
-		element._createUIView()
+		let result = element._createUIView()
+		result.nodeID = id
+		return result
 	}
 	
-	func update(_ view: UIViewConvertable) {
-		UIElementContext.current = view.context
-		let pin = UIElementContext.current.environments.pin
-		view.subscribeLayout {[weak view] in
-			view?.layout(pin: pin)
+	func update(for view: UIView, current: UIViewConvertable?) {
+		if let view = current {
+			update(view)
+		} else {
+			let new = create()
+			new.add(to: view)
+			update(new)
 		}
-		view.asUIView.updateUIElements()
-		element._updateUIView(view)
+	}
+	
+	private func update(_ view: UIViewConvertable) {
+		view.updateUILayout {
+			element._updateUIView(view)
+		}
 	}
 	
 	func `in`(element: UI.Type, codeID: CodeID) -> UIElementNode {
 		UIElementNode(self.element, id: id.in(element: element, codeID: codeID))
 	}
+	
+	func id<T: Hashable>(_ id: T) -> UIElementNode {
+		UIElementNode(self.element, id: self.id.id(id))
+	}
 }
+
+//import SwiftUI
+//
+//extension UIElementNode: UIViewRepresentable {
+//	func makeUIView(context: Context) -> UIView {
+//		element._createUIView().asUIView
+//	}
+//
+//	func updateUIView(_ uiView: UIView, context: Context) {
+//		element._updateUIView(<#T##view: UIViewConvertable##UIViewConvertable#>)
+//	}
+//}

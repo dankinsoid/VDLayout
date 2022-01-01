@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 @resultBuilder
 public struct UIBuilder {
@@ -17,12 +18,12 @@ public struct UIBuilder {
 	
 	@inlinable
 	public static func buildArray(_ components: [UILayout]) -> UILayout {
-		UILayout(flat: components)
+		UILayout(flat: components.enumerated().map { $0.element.id($0.offset) })
 	}
 	
 	@inlinable
 	public static func buildEither(first component: UILayout) -> UILayout {
-		UILayout(flat: [component])
+		component
 	}
 	
 	@inlinable
@@ -53,5 +54,10 @@ public struct UIBuilder {
 	@inlinable
 	public static func buildExpression<T: UIViewConvertable>(_ expression: @escaping @autoclosure () -> T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
 		UIElement(expression).layout(codeID: codeID)
+	}
+	
+	@inlinable
+	public static func buildExpression<T: View>(_ expression: T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
+		SwiftUIElement(expression).layout(codeID: codeID)
 	}
 }
