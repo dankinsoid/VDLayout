@@ -58,6 +58,7 @@ final class VDTests: XCTestCase {
 
 class MyView: UIView {
 	@UIEnvironment(\.self) var environment
+	@UIEnvironment(\UILabel.textColor) var textColor
 	@UIState var string = ""
 	
 	func tt() {

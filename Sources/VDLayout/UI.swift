@@ -18,10 +18,10 @@ extension UI where Self: AnyUIElementType {
 }
 
 extension UI {
-	public func layout(codeID: CodeID = CodeID(file: #file, line: #line, column: #column), embed: Bool = true) -> UILayout {
+	public func layout(codeID: CodeID = CodeID(file: #file, line: #line, column: #column), embeded: Bool = true) -> UILayout {
 		if let element = self as? AnyUIElementType {
 			return UILayout(element: element, id: UIIdentity(codeID: codeID, type: Self.self))
-		} else if embed {
+		} else if embeded {
 			return layout.in(element: Self.self, codeID: codeID)
 		} else {
 			return layout

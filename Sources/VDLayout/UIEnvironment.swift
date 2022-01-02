@@ -36,4 +36,12 @@ public struct UIEnvironment<Value> {
 	public init(_ keyPath: WritableKeyPath<UIEnvironmentValues, Value>) {
 		self.keyPath = keyPath
 	}
+	
+	public init<T: UIViewConvertable, Wrapped>(_ keyPath: ReferenceWritableKeyPath<T, Wrapped>) where Value == Wrapped? {
+		self.keyPath = \UIEnvironmentValues.uiElement[keyPath]
+	}
+	
+	public init<T: UIViewConvertable, Wrapped>(_ keyPath: ReferenceWritableKeyPath<T, Wrapped?>) where Value == Wrapped? {
+		self.keyPath = \UIEnvironmentValues.uiElement[keyPath]
+	}
 }

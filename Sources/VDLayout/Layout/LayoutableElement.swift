@@ -22,13 +22,13 @@ extension UIViewConvertable {
 }
 
 extension UIElementType where UIViewType: Layoutable {
-	public func top() -> UIEnvironmentElement<Self> {
+	public func top() -> some UI {
 		pin {
 			$0.top()
 		}
 	}
 	
-	public func pin(_ action: @escaping (PinLayout<UIView>) -> PinLayout<UIView>) -> UIEnvironmentElement<Self> {
+	public func pin(_ action: @escaping (PinLayout<UIView>) -> PinLayout<UIView>) -> some UI {
 		environment.pin(action)
 	}
 }

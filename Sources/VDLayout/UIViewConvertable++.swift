@@ -95,6 +95,10 @@ extension UIViewConvertable {
 		get { associated.updaters }
 		set { associated.updaters = newValue }
 	}
+	
+	public func applyEnvironments() {
+		context.environments.uiElement.apply(for: self)
+	}
 }
 
 extension AssociatedValues {
