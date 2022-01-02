@@ -67,11 +67,3 @@ public struct UILayout: MutableCollection, ExpressibleByArrayLiteral, UI {
 		nodes.map { $0.element }
 	}
 }
-
-//import SwiftUI
-//
-//extension UILayout: View {
-//	public var body: some View {
-//		ForEach(nodes) { $0 }
-//	}
-//}

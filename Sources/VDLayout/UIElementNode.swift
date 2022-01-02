@@ -22,17 +22,20 @@ struct UIElementNode: Identifiable {
 		return result
 	}
 	
-	func update(for view: UIView, current: UIViewConvertable?) {
+	func update(superview: UIView?, current: UIViewConvertable?) {
 		if let view = current {
 			update(view)
 		} else {
 			let new = create()
-			new.add(to: view)
+			if let view = superview {
+				new.add(to: view)
+			}
 			update(new)
 		}
 	}
 	
 	private func update(_ view: UIViewConvertable) {
+		view.applyEnvironments()
 		view.updateUILayout {
 			element._updateUIView(view)
 		}
@@ -46,15 +49,3 @@ struct UIElementNode: Identifiable {
 		UIElementNode(self.element, id: self.id.id(id))
 	}
 }
-
-//import SwiftUI
-//
-//extension UIElementNode: UIViewRepresentable {
-//	func makeUIView(context: Context) -> UIView {
-//		element._createUIView().asUIView
-//	}
-//
-//	func updateUIView(_ uiView: UIView, context: Context) {
-//		element._updateUIView(<#T##view: UIViewConvertable##UIViewConvertable#>)
-//	}
-//}

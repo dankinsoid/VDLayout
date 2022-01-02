@@ -27,7 +27,6 @@ public struct UIElement<UIViewType: UIViewConvertable>: Chaining, UIElementType 
 	public func updateUIView(_ view: UIViewType) {
 		var view = view
 		apply(&view)
-		view.applyEnvironments()
 		update(view)
 	}
 	

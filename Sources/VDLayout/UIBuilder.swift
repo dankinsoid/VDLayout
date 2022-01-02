@@ -42,11 +42,6 @@ public struct UIBuilder {
 	}
 	
 	@inlinable
-	public static func buildExpression(_ expression: UILayout) -> UILayout {
-		expression
-	}
-	
-	@inlinable
 	public static func buildExpression<T: UI>(_ expression: T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
 		expression.layout(codeID: codeID)
 	}
@@ -54,10 +49,5 @@ public struct UIBuilder {
 	@inlinable
 	public static func buildExpression<T: UIViewConvertable>(_ expression: @escaping @autoclosure () -> T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
 		UIElement(expression).layout(codeID: codeID)
-	}
-	
-	@inlinable
-	public static func buildExpression<T: View>(_ expression: T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayout {
-		SwiftUIElement(expression).layout(codeID: codeID)
 	}
 }

@@ -74,7 +74,7 @@ extension UIViewConvertable {
 			new
 		}
 		for node in uiLayout.nodes {
-			node.update(for: uiView, current: subviewNodes[node.id])
+			node.update(superview: uiView, current: subviewNodes[node.id])
 			subviewNodes[node.id] = nil
 		}
 		for (_, view) in subviewNodes {

@@ -11,4 +11,6 @@ public struct EmptyUI: UI {
 	public var layout: UILayout {
 		UILayout()
 	}
+	
+	public init() {}
 }
