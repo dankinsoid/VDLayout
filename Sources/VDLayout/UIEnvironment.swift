@@ -10,7 +10,7 @@ import Foundation
 @propertyWrapper
 public struct UIEnvironment<Value> {
 	
-	public static subscript<EnclosingType: UIViewConvertable>(
+	public static subscript<EnclosingType: UIUpdatableStorage>(
 		_enclosingInstance observed: EnclosingType,
 		wrapped wrappedKeyPath: KeyPath<EnclosingType, Value>,
 		storage storageKeyPath: KeyPath<EnclosingType, Self>

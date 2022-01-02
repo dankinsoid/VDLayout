@@ -11,22 +11,22 @@ import VDChain
 extension Chaining where Value: UIControl {
 	public func on(event: UIControl.Event, action: @escaping (Value) -> Void, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> Self {
 	self.do { value in
-			if let target = value.associated.targets[codeID]?[event] {
+			if let target = value.targets[codeID]?[event] {
 				target.set(value, action: action)
 			} else {
 				let target = Target()
 				target.set(value, action: action)
-				value.associated.targets[codeID, default: [:]][event] = target
+				value.targets[codeID, default: [:]][event] = target
 				value.addTarget(target, action: #selector(Target.handler), for: event)
 			}
 		}
 	}
 }
 
-private extension AssociatedValues {
+private extension UIControl {
 	var targets: [CodeID: [UIControl.Event: Target]] {
-		get { self[\.targets] ?? [:] }
-		set { self[\.targets] = newValue }
+		get { associated.targets ?? [:] }
+		set { associated.targets = newValue }
 	}
 }
 

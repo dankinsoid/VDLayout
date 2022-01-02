@@ -57,13 +57,8 @@ extension UIViewConvertable {
 	}
 	
 	private(set) var _layout: UILayout {
-		get { associated.layout }
-		set { associated.layout = newValue }
-	}
-	
-	private var uiElements: [UIViewConvertable] {
-		get { associated.uiElements }
-		set { associated.uiElements = newValue }
+		get { associated._layout ?? [] }
+		set { associated._layout = newValue }
 	}
 	
 	func update(uiLayout: UILayout, for uiView: UIView) {
@@ -94,40 +89,22 @@ extension UIViewConvertable {
 		}
 	}
 	
-	public var isUpdating: Bool {
-		associated.isUpdating
+	internal(set) public var isUpdating: Bool {
+		get { associated.isUpdating ?? false }
+		set { associated.isUpdating = newValue }
 	}
 	
 	public var updaters: [CodeID: Any] {
-		get { associated.updaters }
+		get { associated.updaters ?? [:] }
 		set { associated.updaters = newValue }
 	}
 	
 	public func applyEnvironments() {
 		context.environments.uiElement.apply(for: self)
 	}
-}
-
-extension AssociatedValues {
-	var nodeID: UIIdentity? {
-		get { self[\.nodeID] ?? nil }
-		set { self[\.nodeID] = newValue }
-	}
-	var layout: UILayout {
-		get { self[\.layout] ?? [] }
-		set { self[\.layout] = newValue }
-	}
-	var isUpdating: Bool {
-		get { self[\.isUpdating] ?? false }
-		set { self[\.isUpdating] = newValue }
-	}
-	var uiElements: [UIViewConvertable] {
-		get { self[\.uiElements] ?? [] }
-		set { self[\.uiElements] = newValue }
-	}
 	
-	var updaters: [CodeID: Any] {
-		get { self[\.updaters] ?? [:] }
-		set { self[\.updaters] = newValue }
+	var uiElements: [UIViewConvertable] {
+		get { associated.uiElements ?? [] }
+		set { associated.uiElements = newValue }
 	}
 }

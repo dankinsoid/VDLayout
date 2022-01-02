@@ -15,7 +15,7 @@ public protocol UIViewConvertable: UIUpdatableStorage {
 
 extension UIViewConvertable {
 	var nodeID: UIIdentity? {
-		get { associated.nodeID }
+		get { associated.nodeID ?? nil }
 		set { associated.nodeID = newValue }
 	}
 }

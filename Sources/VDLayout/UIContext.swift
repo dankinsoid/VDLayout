@@ -21,17 +21,10 @@ public protocol UIUpdatableStorage: UIResponder {
 	var updaters: [CodeID: Any] { get set }
 }
 
-extension AssociatedValues {
-	fileprivate var context: UIContext {
-		get { self[\.context] ?? UIContext() }
-		set { self[\.context] = newValue }
-	}
-}
-
 extension UIUpdatableStorage {
 	public var context: UIContext {
 		get {
-			var result = associated.context
+			var result = associated.context ?? UIContext()
 			if let parent = next as? UIUpdatableStorage {
 				result.environments.link = {[weak parent] in parent?.context.environments }
 			}

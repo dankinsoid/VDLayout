@@ -12,26 +12,27 @@ import NSMethodsObservation
 extension UIViewConvertable {
 	
 	func subscribeLayout(_ action: @escaping () -> Void) {
-		if asUIView.associated.observeLayout == nil {
+		if asUIView.observeLayout == nil {
 			_ = try? asUIView.onMethodInvoked(#selector(UIView.layoutSubviews)) {[weak self] _ in
 				self?.layoutPins()
 			}
 		}
-		asUIView.associated.observeLayout = LayoutObservation(action: action)
+		asUIView.observeLayout = LayoutObservation(action: action)
 	}
 	
 	func layoutPins() {
-		asUIView.associated.observeLayout?.action()
+		asUIView.observeLayout?.action()
+	}
+}
+
+private extension UIView {
+	
+	var observeLayout: LayoutObservation? {
+		get { associated.observeLayout ?? nil }
+		set { associated.observeLayout = newValue }
 	}
 }
 
 private struct LayoutObservation {
 	var action: () -> Void
-}
-
-private extension AssociatedValues {
-	var observeLayout: LayoutObservation? {
-		get { self[\.observeLayout] ?? nil }
-		set { self[\.observeLayout] = newValue }
-	}
 }

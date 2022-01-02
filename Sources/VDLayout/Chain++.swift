@@ -31,7 +31,7 @@ extension ChainProperty where Base.Value: NSObject {
 		let apply = result.apply
 		result.apply = {
 			apply(&$0)
-			var bags = $0.associated.bags
+			var bags = $0.bags
 			guard bags[id] == nil else { return }
 			bags[id] = value.sink(receiveCompletion: { _ in }) {[weak base = $0] value in
 				set(base, value)
@@ -42,9 +42,9 @@ extension ChainProperty where Base.Value: NSObject {
 	}
 }
 
-extension AssociatedValues {
+extension NSObject {
 	var bags: [CodeID: AnyCancellable] {
-		get { self[\.bags] ?? [:] }
-		set { self[\.bags] = newValue }
+		get { associated.bags ?? [:] }
+		set { associated.bags = newValue }
 	}
 }

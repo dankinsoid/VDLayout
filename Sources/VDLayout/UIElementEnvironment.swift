@@ -8,7 +8,7 @@
 import Foundation
 import VDChain
 
-extension UIElementType {
+extension UI {
 	public func environment<T: UIViewConvertable>(for type: T.Type) -> UIElementEnvironment<T, Self> {
 		UIElementEnvironment(content: self)
 	}

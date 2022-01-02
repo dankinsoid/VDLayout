@@ -7,12 +7,13 @@
 
 import Foundation
 
-public final class AssociatedValues {
-	private var values: [PartialKeyPath<AssociatedValues>: Any] = [:]
+@dynamicMemberLookup
+public final class AssociatedValues<Base: AnyObject> {
+	private var values: [PartialKeyPath<Base>: Any] = [:]
 	
 	public init() {}
 	
-	public subscript<T>(_ keyPath: WritableKeyPath<AssociatedValues, T>) -> T? {
+	public subscript<T>(_ keyPath: KeyPath<Base, T>) -> T? {
 		get {
 			if let any = values[keyPath], type(of: any) == T.self {
 				return any as? T
@@ -24,15 +25,24 @@ public final class AssociatedValues {
 			values[keyPath] = newValue
 		}
 	}
+	
+	public subscript<T>(dynamicMember keyPath: KeyPath<Base, T>) -> T? {
+		get {
+			self[keyPath]
+		}
+		set {
+			self[keyPath] = newValue
+		}
+	}
 }
 
-extension NSObject {
-	public var associated: AssociatedValues {
+extension NSObjectProtocol {
+	public var associated: AssociatedValues<Self> {
 		get {
-			if let result = objc_getAssociatedObject(self, &key) as? AssociatedValues {
+			if let result = objc_getAssociatedObject(self, &key) as? AssociatedValues<Self> {
 				return result
 			}
-			let result = AssociatedValues()
+			let result = AssociatedValues<Self>()
 			objc_setAssociatedObject(self, &key, result, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 			return result
 		}
