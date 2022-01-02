@@ -7,6 +7,18 @@
 
 import Foundation
 
+struct MapUI: UI {
+	let base: UILayout
+	var layout: UILayout {
+		UILayout(nodes: base.nodes.map({
+			UIElementNode(
+				MapComponent(base: $0.element, map: , update: <#T##(UIViewConvertable) -> Void#>),
+				id: $0.id
+			)
+		}))
+	}
+}
+
 struct MapComponent: AnyUIElementType {
 	let base: AnyUIElementType
 	let map: (UIViewConvertable) -> UIViewConvertable
@@ -17,6 +29,7 @@ struct MapComponent: AnyUIElementType {
 	}
 	
 	func _updateUIView(_ view: UIViewConvertable) {
-		
+		base._updateUIView(<#T##view: UIViewConvertable##UIViewConvertable#>)
+		update(view)
 	}
 }
