@@ -11,9 +11,14 @@ public struct UIContext {
 	public static var current = UIContext()
 	
 	public var environments = UIEnvironmentValues()
-	public weak var updating: UIViewConvertable?
+	public weak var updating: UIUpdatableStorage?
 	
 	public init() {}
+}
+
+public protocol UIUpdatableStorage: UIResponder {
+	func updateUILayout()
+	var updaters: [CodeID: Any] { get set }
 }
 
 extension AssociatedValues {
@@ -23,11 +28,11 @@ extension AssociatedValues {
 	}
 }
 
-extension UIViewConvertable {
+extension UIUpdatableStorage {
 	public var context: UIContext {
 		get {
 			var result = associated.context
-			if let parent = next as? UIViewConvertable {
+			if let parent = next as? UIUpdatableStorage {
 				result.environments.link = {[weak parent] in parent?.context.environments }
 			}
 			return result

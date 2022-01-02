@@ -7,10 +7,7 @@
 
 import UIKit
 
-extension UIViewConvertable {
-	var uiLayout: UILayout {
-		(self as? UILayoutable)?.layout ?? _layout
-	}
+extension UIUpdatableStorage {
 	
 	public func updating<T>(action: () -> T) -> T {
 		UIContext.current = context
@@ -19,8 +16,18 @@ extension UIViewConvertable {
 		UIContext.current.updating = nil
 		return result
 	}
+}
+
+extension UIViewConvertable {
+	var uiLayout: UILayout {
+		(self as? UILayoutable)?.layout ?? _layout
+	}
 	
-	public func updateUILayout(action: () -> Void = {}) {
+	public func updateUILayout() {
+		updateUILayout() {}
+	}
+	
+	public func updateUILayout(action: () -> Void) {
 		updating {
 			update(uiLayout: uiLayout, for: asUIView)
 			action()
@@ -91,7 +98,7 @@ extension UIViewConvertable {
 		associated.isUpdating
 	}
 	
-	var updaters: [CodeID: Any] {
+	public var updaters: [CodeID: Any] {
 		get { associated.updaters }
 		set { associated.updaters = newValue }
 	}

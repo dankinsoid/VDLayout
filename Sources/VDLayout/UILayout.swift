@@ -12,7 +12,10 @@ public struct UILayout: MutableCollection, ExpressibleByArrayLiteral, UI {
 	public var count: Int { nodes.count }
 	public var startIndex: Int { nodes.startIndex }
 	public var endIndex: Int { nodes.endIndex }
-	public var layout: UILayout { self }
+	public var layout: UILayout {
+		Logs.print("don`t call layout directly for UILayout, call layout()")
+		return self
+	}
 	
 	init(nodes: [UIElementNode]) {
 		self.nodes = nodes

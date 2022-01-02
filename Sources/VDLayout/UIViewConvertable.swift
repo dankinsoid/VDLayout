@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol UIViewConvertable: UIResponder {
+public protocol UIViewConvertable: UIUpdatableStorage {
 	var asUIView: UIView { get }
 	func add(to parent: UIView)
 	func remove(from parent: UIView)

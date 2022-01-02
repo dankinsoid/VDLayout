@@ -58,7 +58,7 @@ public struct UIState<Value>: Identifiable {
 		return UIState.subject(view: view, state: self)
 	}
 	
-	private static func subject(view: UIViewConvertable, state: UIState) -> CurrentValueSubject<Value, Never> {
+	private static func subject(view: UIUpdatableStorage, state: UIState) -> CurrentValueSubject<Value, Never> {
 		guard let subject = view.updaters[state.id] as? CurrentValueSubject<Value, Never> else {
 			let subject = CurrentValueSubject<Value, Never>(state.defaultValue)
 			view.updaters[state.id] = subject
@@ -69,9 +69,9 @@ public struct UIState<Value>: Identifiable {
 }
 
 private final class View {
-	weak var view: UIViewConvertable?
+	weak var view: UIUpdatableStorage?
 	
-	init(_ view: UIViewConvertable?) {
+	init(_ view: UIUpdatableStorage?) {
 		self.view = view
 	}
 }

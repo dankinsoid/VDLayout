@@ -39,30 +39,41 @@ extension ViewBuilder {
 		expression
 	}
 	
-	@inlinable
-	public static func buildExpression<T: UI>(_ expression: T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayoutView {
-		UILayoutView(expression.layout(codeID: codeID))
+	public static func buildExpression<T: UI>(_ expression: @escaping @autoclosure () -> T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayoutView {
+		UILayoutView { expression().layout(codeID: codeID) }
 	}
 	
-	@inlinable
 	public static func buildExpression<T: UIViewConvertable>(_ expression: @escaping @autoclosure () -> T, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> UILayoutView {
-		UILayoutView(UIElement(expression).layout(codeID: codeID))
+		UILayoutView { UIElement(expression).layout(codeID: codeID) }
 	}
 }
 
 public struct UILayoutView: View {
-	public let layout: UILayout
+	public let layout: () -> UILayout
+	@StateObject private var storage = ViewModel()
 	
-	public init(_ layout: UILayout) {
+	public init(_ layout: @escaping () -> UILayout) {
 		self.layout = layout
 	}
 	
 	public var body: some View {
-		ForEach(layout.nodes) { $0 }
+		storage.updating {
+			ForEach(layout().nodes) { $0 }
+		}
+	}
+}
+
+private final class ViewModel: UIResponder, UIUpdatableStorage, ObservableObject {
+	var updaters: [CodeID: Any] = [:]
+	@Published var update = false
+	
+	func updateUILayout() {
+		update.toggle()
 	}
 }
 
 extension UIElementNode: UIViewRepresentable {
+	
 	func makeUIView(context: Context) -> UIView {
 		let convertable = element._createUIView()
 		if let view = convertable as? UIView {
@@ -74,9 +85,9 @@ extension UIElementNode: UIViewRepresentable {
 
 	func updateUIView(_ uiView: UIView, context: Context) {
 		if let viewType = uiView as? _UIViewType {
-			element._updateUIView(viewType.convertable)
+			update(superview: nil, current: viewType.convertable)
 		} else {
-			element._updateUIView(uiView)
+			update(superview: nil, current: uiView)
 		}
 	}
 	
