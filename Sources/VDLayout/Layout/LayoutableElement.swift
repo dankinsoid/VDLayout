@@ -29,6 +29,6 @@ extension UIElementType where UIViewType: Layoutable {
 	}
 	
 	public func pin(_ action: @escaping (PinLayout<UIView>) -> PinLayout<UIView>) -> some UI {
-		environment.pin(action)
+		environment(\.pin, action)
 	}
 }
