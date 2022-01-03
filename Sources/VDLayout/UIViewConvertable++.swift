@@ -64,7 +64,7 @@ extension UIViewConvertable {
 			self._layout = uiLayout
 		}
 		var subviewNodes = Dictionary(
-			uiElements.compactMap { view in view.nodeID.map { ($0, view) } }
+			uiElements.compactMap { view in view.associated.nodeID.map { ($0, view) } }
 		) { _, new in
 			new
 		}
@@ -83,12 +83,12 @@ extension UIViewConvertable {
 	}
 	
 	internal(set) public var isUpdating: Bool {
-		get { associated.isUpdating ?? false }
+		get { associated.isUpdating }
 		set { associated.isUpdating = newValue }
 	}
 	
 	public var updaters: [CodeID: Any] {
-		get { associated.updaters ?? [:] }
+		get { associated.updaters }
 		set { associated.updaters = newValue }
 	}
 	
@@ -97,12 +97,42 @@ extension UIViewConvertable {
 	}
 	
 	private(set) var _layout: UILayout {
-		get { associated._layout ?? [] }
+		get { associated._layout }
 		set { associated._layout = newValue }
 	}
 	
 	var uiElements: [UIViewConvertable] {
-		get { associated.uiElements ?? [] }
+		get { associated.uiElements }
 		set { associated.uiElements = newValue }
+	}
+}
+
+private extension AssociatedValues {
+	
+	var isUpdating: Bool {
+		get { self[\.isUpdating] ?? false }
+		set { self[\.isUpdating] = newValue }
+	}
+	
+	var updaters: [CodeID: Any] {
+		get { self[\.updaters] ?? [:] }
+		set { self[\.updaters] = newValue }
+	}
+	
+	var _layout: UILayout {
+		get { self[\._layout] ?? [] }
+		set { self[\._layout] = newValue }
+	}
+	
+	var uiElements: [UIViewConvertable] {
+		get { self[\.uiElements] ?? [] }
+		set { self[\.uiElements] = newValue }
+	}
+}
+
+extension AssociatedValues {
+	var nodeID: UIIdentity? {
+		get { self[\.nodeID] ?? nil }
+		set { self[\.nodeID] = newValue }
 	}
 }

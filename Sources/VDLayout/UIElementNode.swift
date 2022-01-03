@@ -18,7 +18,7 @@ public struct UIElementNode: Identifiable {
 	
 	public func create() -> UIViewConvertable {
 		let result = element._createUIView()
-		result.nodeID = id
+		result.associated.nodeID = id
 		return result
 	}
 	

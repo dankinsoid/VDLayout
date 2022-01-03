@@ -12,10 +12,3 @@ public protocol UIViewConvertable: UIUpdatableStorage {
 	func add(to parent: UIView)
 	func remove(from parent: UIView)
 }
-
-extension UIViewConvertable {
-	var nodeID: UIIdentity? {
-		get { associated.nodeID ?? nil }
-		set { associated.nodeID = newValue }
-	}
-}
