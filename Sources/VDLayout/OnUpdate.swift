@@ -40,5 +40,3 @@ private struct OnUpdateComponent: AnyUIElementType {
 		base._updateUIView(view)
 	}
 }
-
-

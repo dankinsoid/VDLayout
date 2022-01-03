@@ -27,8 +27,7 @@ final class VDTests: XCTestCase {
 																																								
 			UIViewController()§
 				.tabBarItem(UITabBarItem(title: "", image: nil, selectedImage: nil))
-				.environment(for: UILabel.self)
-					.textColor(UIColor.red)
+				.environment(\UILabel.textColor, .red)
 			
 			UITextField()§
 				.on(event: .valueChanged) { _ in }

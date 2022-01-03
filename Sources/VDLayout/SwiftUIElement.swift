@@ -74,7 +74,7 @@ private final class ViewModel: UIResponder, UIUpdatableStorage, ObservableObject
 
 extension UIElementNode: UIViewRepresentable {
 	
-	func makeUIView(context: Context) -> UIView {
+	public func makeUIView(context: Context) -> UIView {
 		let convertable = element._createUIView()
 		if let view = convertable as? UIView {
 			return view
@@ -83,7 +83,7 @@ extension UIElementNode: UIViewRepresentable {
 		}
 	}
 
-	func updateUIView(_ uiView: UIView, context: Context) {
+	public func updateUIView(_ uiView: UIView, context: Context) {
 		if let viewType = uiView as? _UIViewType {
 			update(superview: nil, current: viewType.convertable)
 		} else {

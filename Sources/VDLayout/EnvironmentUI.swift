@@ -53,7 +53,7 @@ private struct EnvironmentValueUI: UI {
 		content
 			.layout()
 			.updateUIViewConvertable { view in
-				apply(&view.asUIView.context.environments)
+				apply(&view.context.environments)
 			}
 	}
 }

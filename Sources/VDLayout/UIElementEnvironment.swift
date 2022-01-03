@@ -9,11 +9,11 @@ import Foundation
 import VDChain
 
 extension UI {
-	public func environment<T: UIViewConvertable>(for type: T.Type) -> UIElementEnvironment<T, Self> {
-		UIElementEnvironment(content: self)
+	public func environment<T: UIViewConvertable, Value>(_ keyPath: ReferenceWritableKeyPath<T, Value>, _ value: Value) -> some UI {
+		environment(\.uiElement[keyPath], value)
 	}
 	
-	public func transformEnvironment<T: UIViewConvertable, Value>(for type: T.Type, _ keyPath: ReferenceWritableKeyPath<T, Value>, transform: @escaping (inout Value?) -> Void) -> some UI {
+	public func transformEnvironment<T: UIViewConvertable, Value>(_ keyPath: ReferenceWritableKeyPath<T, Value>, transform: @escaping (inout Value?) -> Void) -> some UI {
 		transformEnvironment(\.uiElement[keyPath], transform: transform)
 	}
 }

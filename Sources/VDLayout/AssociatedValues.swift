@@ -9,7 +9,7 @@ import Foundation
 
 @dynamicMemberLookup
 public final class AssociatedValues<Base: AnyObject> {
-	private var values: [PartialKeyPath<Base>: Any] = [:]
+	private var values: [AnyKeyPath: Any] = [:]
 	
 	public init() {}
 	

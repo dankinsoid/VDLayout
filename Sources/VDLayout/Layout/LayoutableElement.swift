@@ -9,8 +9,8 @@ import UIKit
 import PinLayout
 
 extension UIEnvironmentValues {
-	var pin: (PinLayout<UIView>) -> PinLayout<UIView> {
-		get { self[\.pin] ?? { $0 } }
+	var pin: ((PinLayout<UIView>) -> PinLayout<UIView>)? {
+		get { self[\.pin] ?? nil }
 		set { self[\.pin] = newValue }
 	}
 }
@@ -21,7 +21,7 @@ extension UIViewConvertable {
 	}
 }
 
-extension UIElementType where UIViewType: Layoutable {
+extension UI {
 	public func top() -> some UI {
 		pin {
 			$0.top()
@@ -29,6 +29,11 @@ extension UIElementType where UIViewType: Layoutable {
 	}
 	
 	public func pin(_ action: @escaping (PinLayout<UIView>) -> PinLayout<UIView>) -> some UI {
-		environment(\.pin, action)
+		transformEnvironment(\.pin) { pin in
+			let p = pin
+			pin = {
+				action(p?($0) ?? $0)
+			}
+		}
 	}
 }

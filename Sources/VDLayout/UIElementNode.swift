@@ -7,22 +7,22 @@
 
 import UIKit
 
-struct UIElementNode: Identifiable {
-	var id: UIIdentity
-	var element: AnyUIElementType
+public struct UIElementNode: Identifiable {
+	public var id: UIIdentity
+	public var element: AnyUIElementType
 	
-	init(_ element: AnyUIElementType, id: UIIdentity) {
+	public init(_ element: AnyUIElementType, id: UIIdentity) {
 		self.element = element
 		self.id = id
 	}
 	
-	func create() -> UIViewConvertable {
+	public func create() -> UIViewConvertable {
 		let result = element._createUIView()
 		result.nodeID = id
 		return result
 	}
 	
-	func update(superview: UIView?, current: UIViewConvertable?) {
+	public func update(superview: UIView?, current: UIViewConvertable?) {
 		if let view = current {
 			update(view)
 		} else {
@@ -41,11 +41,11 @@ struct UIElementNode: Identifiable {
 		}
 	}
 	
-	func `in`(element: UI.Type, codeID: CodeID) -> UIElementNode {
+	public func `in`(element: UI.Type, codeID: CodeID) -> UIElementNode {
 		UIElementNode(self.element, id: id.in(element: element, codeID: codeID))
 	}
 	
-	func id<T: Hashable>(_ id: T) -> UIElementNode {
+	public func id<T: Hashable>(_ id: T) -> UIElementNode {
 		UIElementNode(self.element, id: self.id.id(id))
 	}
 }

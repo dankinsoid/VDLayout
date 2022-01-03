@@ -29,8 +29,8 @@ extension UIViewConvertable {
 	
 	public func updateUILayout(action: () -> Void) {
 		updating {
-			update(uiLayout: uiLayout, for: asUIView)
 			action()
+			update(uiLayout: uiLayout, for: asUIView)
 		}
 	}
 	
@@ -38,9 +38,7 @@ extension UIViewConvertable {
 		update {
 			UILayout(
 				flat: elements().enumerated().map {
-					var code = codeID
-					code.line += UInt($0.offset) + 1
-					return UILayout(element: $0.element, id: UIIdentity(codeID: code, type: type(of: $0.element)))
+					UILayout(element: $0.element, id: UIIdentity(codeID: codeID, type: type(of: $0.element)).id($0.offset))
 				}
 			)
 		}
@@ -54,11 +52,6 @@ extension UIViewConvertable {
 		updating {
 			update(uiLayout: layout(), for: asUIView)
 		}
-	}
-	
-	private(set) var _layout: UILayout {
-		get { associated._layout ?? [] }
-		set { associated._layout = newValue }
 	}
 	
 	func update(uiLayout: UILayout, for uiView: UIView) {
@@ -82,10 +75,10 @@ extension UIViewConvertable {
 		for (_, view) in subviewNodes {
 			view.remove(from: uiView)
 		}
-		
-		let pin = self.context.environments.pin
-		subscribeLayout {[weak self] in
-			self?.layout(pin: pin)
+		if let pin = self.context.environments.pin {
+			subscribeLayout {[weak self] in
+				self?.layout(pin: pin)
+			}
 		}
 	}
 	
@@ -101,6 +94,11 @@ extension UIViewConvertable {
 	
 	public func applyEnvironments() {
 		context.environments.uiElement.apply(for: self)
+	}
+	
+	private(set) var _layout: UILayout {
+		get { associated._layout ?? [] }
+		set { associated._layout = newValue }
 	}
 	
 	var uiElements: [UIViewConvertable] {
