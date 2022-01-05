@@ -282,6 +282,16 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 		}
 	}
 	
+	public static func offset(_ point: CGPoint) -> UIViewTransition {
+		UIViewTransition(\.transform) { progress, view, transform in
+			view.transform = transform.translatedBy(x: point.x, y: point.y)
+		}
+	}
+	
+	public static func offset(x: CGFloat = 0, y: CGFloat = 0) -> UIViewTransition {
+		.offset(CGPoint(x: x, y: y))
+	}
+	
 	public static func move(edge: Edge) -> UIViewTransition {
 		UIViewTransition(\.transform) { progress, view, transform in
 			switch edge {
@@ -393,11 +403,15 @@ extension UIView {
 	}
 	
 	public func removeFromSuperview(transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
-		set(hidden: true, set: { if $1 { $0.removeFromSuperview() } }, transition: transition, animation: animation, completion: completion)
+		addOrRemove(to: superview, add: false, transition: transition, animation: animation, completion: completion)
 	}
 	
 	public func add(subview: UIView, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
-		subview.set(hidden: false, set: { if $1 { $0.removeFromSuperview() } else { self.add(subview: $0) } }, transition: transition, animation: animation, completion: completion)
+		subview.addOrRemove(to: self, add: true, transition: transition, animation: animation, completion: completion)
+	}
+	
+	public func addOrRemove(to superview: UIView?, add: Bool, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
+		set(hidden: !add, set: { if $1 { $0.removeFromSuperview() } else { superview?.add(subview: self) } }, transition: transition, animation: animation, completion: completion)
 	}
 	
 	private func set(hidden: Bool, set: @escaping (UIView, Bool) -> Void, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
