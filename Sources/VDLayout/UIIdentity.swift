@@ -20,7 +20,7 @@ public struct UIIdentity: Hashable {
 	
 	public func id<T: Hashable>(_ id: T) -> UIIdentity {
 		var result = self
-		result.id = id.combined(with: id)
+		result.id = result.id.combined(with: id)
 		return result
 	}
 }

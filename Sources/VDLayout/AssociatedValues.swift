@@ -7,7 +7,6 @@
 
 import Foundation
 
-@dynamicMemberLookup
 public final class AssociatedValues {
 	private var values: [AnyKeyPath: Any] = [:]
 	
@@ -23,15 +22,6 @@ public final class AssociatedValues {
 		set {
 			guard let newValue = newValue else { return }
 			values[keyPath] = newValue
-		}
-	}
-	
-	public subscript<T>(dynamicMember keyPath: KeyPath<AssociatedValues, T>) -> T? {
-		get {
-			self[keyPath]
-		}
-		set {
-			self[keyPath] = newValue
 		}
 	}
 }

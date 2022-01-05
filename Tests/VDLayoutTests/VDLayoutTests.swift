@@ -79,7 +79,7 @@ class MyUIView: UIView, UILayoutable {
 
 struct MyStructView: UI {
 	@UIEnvironment(\.self) var environment
-	@UIEnvironment(\.someString) var someString
+//	@UIEnvironment(\.someString) var someString
 	@UIState var string = ""
 	
 	var layout: UILayout {
@@ -95,9 +95,9 @@ struct MyStructView: UI {
 		
 	}
 }
-
-extension UI {
-	public var someString: UIEnvironmentValue<String> {
-		environments.value(\.someString, default: "")
-	}
-}
+//
+//extension UI {
+//	public var someString: UIEnvironmentValue<String> {
+//		environments.value(\.someString, default: "")
+//	}
+//}

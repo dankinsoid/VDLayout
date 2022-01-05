@@ -22,15 +22,18 @@ public struct UIElementNode: Identifiable {
 		return result
 	}
 	
-	public func update(superview: UIView?, current: UIViewConvertable?) {
+	@discardableResult
+	public func update(superview: UIView?, current: UIViewConvertable?) -> UIViewConvertable {
 		if let view = current {
 			update(view)
+			return view
 		} else {
 			let new = create()
 			if let view = superview {
 				new.add(to: view)
 			}
 			update(new)
+			return new
 		}
 	}
 	

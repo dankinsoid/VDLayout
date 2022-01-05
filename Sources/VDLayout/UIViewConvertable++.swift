@@ -10,10 +10,11 @@ import UIKit
 extension UIUpdatableStorage {
 	
 	public func updating<T>(action: () -> T) -> T {
+		let current = UIContext.current
 		UIContext.current = context
 		UIContext.current.updating = self
 		let result = action()
-		UIContext.current.updating = nil
+		UIContext.current = current
 		return result
 	}
 }
@@ -58,18 +59,20 @@ extension UIViewConvertable {
 		guard !isUpdating, Thread.isMainThread else {
 			return
 		}
-		associated.isUpdating = true
-		defer { associated.isUpdating = false }
+		isUpdating = true
+		defer { isUpdating = false }
 		if !(self is UILayoutable) {
 			self._layout = uiLayout
 		}
+		let uiLayout = UILayout(flat: [uiLayout] + associated._layouts.map { $0.value })
 		var subviewNodes = Dictionary(
 			uiElements.compactMap { view in view.associated.nodeID.map { ($0, view) } }
 		) { _, new in
 			new
 		}
+		uiElements = []
 		for node in uiLayout.nodes {
-			node.update(superview: uiView, current: subviewNodes[node.id])
+			uiElements.append(node.update(superview: uiView, current: subviewNodes[node.id]))
 			subviewNodes[node.id] = nil
 		}
 		for (_, view) in subviewNodes {

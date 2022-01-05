@@ -7,13 +7,17 @@
 
 import Foundation
 
-public struct CombinedHashable<L: Hashable, R: Hashable>: Hashable {
+public struct CombinedHashable<L: Hashable, R: Hashable>: Hashable, CustomStringConvertible {
 	public var first: L
 	public var second: R
 	
 	public init(_ first: L, _ second: R) {
 		self.first = first
 		self.second = second
+	}
+	
+	public var description: String {
+		"(\(first) \(second))"
 	}
 }
 

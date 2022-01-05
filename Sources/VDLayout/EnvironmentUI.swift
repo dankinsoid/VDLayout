@@ -10,9 +10,9 @@ import VDChain
 import SwiftUI
 
 extension UI {
-	public var environments: EnvironmentsUI {
-		EnvironmentsUI(content: self)
-	}
+//	public var environments: EnvironmentsUI {
+//		EnvironmentsUI(content: self)
+//	}
 	
 	public func environment<T>(_ keyPath: WritableKeyPath<UIEnvironmentValues, T>, _ value: T) -> some UI {
 		EnvironmentValueUI(content: self) {
@@ -25,33 +25,33 @@ extension UI {
 	}
 }
 
-public struct EnvironmentsUI {
-	public let content: UI
-	
-	public func value<A>(_ keyPath: KeyPath<UI, UIEnvironmentValue<A>>, default defaultValue: A) -> UIEnvironmentValue<A> {
-		UIEnvironmentValue(content: content, keyPath: keyPath, defaultValue: defaultValue)
-	}
-}
+//public struct EnvironmentsUI<Content: UI>: UI {
+//	public let content: Content
+//
+//	public func value<A>(_ keyPath: KeyPath<Content, UIEnvironmentValue<Content, A>>, default defaultValue: A) -> UIEnvironmentValue<Content, A> {
+//		UIEnvironmentValue(content: content, keyPath: keyPath, defaultValue: defaultValue)
+//	}
+//}
 
-public struct UIEnvironmentValue<Value> {
-	public let content: UI
-	let keyPath: KeyPath<UI, UIEnvironmentValue<Value>>
-	let defaultValue: Value
-	
-	public func callAsFunction(_ value: Value) -> some UI {
-		EnvironmentValueUI(content: content) {
-			$0[keyPath] = value
-		}
-	}
-}
+//public struct UIEnvironmentValue<Content: UI, Value> {
+//	public let content: Content
+//	let keyPath: KeyPath<Content, UIEnvironmentValue<Content, Value>>
+//	let defaultValue: Value
+//	
+//	public func callAsFunction(_ value: Value) -> some UI {
+//		EnvironmentValueUI(content: content) {
+//			$0[keyPath] = value
+//		}
+//	}
+//}
 
-private struct EnvironmentValueUI: UI {
-	let content: UI
+private struct EnvironmentValueUI<Content: UI>: UI {
+	let content: Content
+//	let codeID: CodeID
 	let apply: (inout UIEnvironmentValues) -> Void
 	
 	var layout: UILayout {
 		content
-			.layout()
 			.updateUIViewConvertable { view in
 				apply(&view.context.environments)
 			}

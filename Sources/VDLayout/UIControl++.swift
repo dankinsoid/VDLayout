@@ -9,8 +9,9 @@ import UIKit
 import VDChain
 
 extension Chaining where Value: UIControl {
-	public func on(event: UIControl.Event, action: @escaping (Value) -> Void, codeID: CodeID = CodeID(file: #filePath, line: #line, column: #column)) -> Self {
-	self.do { value in
+	public func on(event: UIControl.Event, action: @escaping (Value) -> Void, file: String = #filePath, line: UInt = #line, column: UInt = #column) -> Self {
+	let codeID = CodeID(file: file, line: line, column: column)
+	return self.do { value in
 		if let target = value.associated.targets[codeID]?[event] {
 				target.set(value, action: action)
 			} else {

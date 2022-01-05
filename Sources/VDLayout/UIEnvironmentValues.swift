@@ -23,14 +23,14 @@ public struct UIEnvironmentValues {
 		}
 	}
 	
-	public subscript<T>(_ keyPath: KeyPath<UI, UIEnvironmentValue<T>>) -> T {
-		get {
-			self[keyPath: keyPath] ?? EmptyUI()[keyPath: keyPath].defaultValue
-		}
-		set {
-			self[keyPath: keyPath] = newValue
-		}
-	}
+//	public subscript<T>(_ keyPath: KeyPath<UI, UIEnvironmentValue<T>>) -> T {
+//		get {
+//			self[keyPath: keyPath] ?? EmptyUI()[keyPath: keyPath].defaultValue
+//		}
+//		set {
+//			self[keyPath: keyPath] = newValue
+//		}
+//	}
 	
 	private subscript<T>(keyPath keyPath: AnyKeyPath) -> T? {
 		get {
