@@ -134,7 +134,7 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 	}
 	
 	public static func asymmetric(insertion: UIViewTransition, removal: UIViewTransition) -> UIViewTransition {
-		insertion.filter(\.isInsertion).combined(with: removal.filter({ !$0.isInsertion }))
+		insertion.filter({ $0.isInsertion || $0.progress == 1 }).combined(with: removal.filter({ !$0.isInsertion || $0.progress == 1 }))
 	}
 	
 	public static var opacity: UIViewTransition {
@@ -160,8 +160,27 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 		.scale(CGPoint(x: scale, y: scale))
 	}
 		
+	public static func scale(_ scale: CGPoint, anchor: CGPoint) -> UIViewTransition {
+		UIViewTransition(\.transform) { progress, view, transform in
+			let scaleX = scale.x != 0 ? scale.x : 0.0001
+			let scaleY = scale.y != 0 ? scale.y : 0.0001
+			let xPadding = 1 / scaleX * (anchor.x - view.layer.anchorPoint.x) * view.bounds.width
+			let yPadding = 1 / scaleY * (anchor.y - view.layer.anchorPoint.y) * view.bounds.height
+			
+			view.transform = transform
+				.scaledBy(
+					x: progress.value(identity: 1, transformed: scaleX),
+					y: progress.value(identity: 1, transformed: scaleY)
+				)
+				.translatedBy(
+					x: progress.value(identity: 0, transformed: xPadding),
+					y: progress.value(identity: 0, transformed: yPadding)
+				)
+		}
+	}
+	
 	public static func scale(_ scale: CGFloat = 0.0001, anchor: CGPoint) -> UIViewTransition {
-		.combined(.scale(scale), .anchor(point: anchor, withoutMoving: true))
+		.scale(CGPoint(x: scale, y: scale), anchor: anchor)
 	}
 	
 	public static var scale: UIViewTransition { .scale(0.0001) }
@@ -257,6 +276,32 @@ extension UIView {
 	fileprivate subscript(keyPathes keyPathes: [PartialKeyPath<UIView>]) -> [Any] {
 		keyPathes.map {
 			self[keyPath: $0]
+		}
+	}
+}
+
+extension UIView {
+	
+	public func set(hidden: Bool, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
+		guard !transition.isIdentity else {
+			isHidden = hidden
+			completion?()
+			return
+		}
+		var transition = transition
+		transition.beforeInteractiveTransition(view: self)
+		transition(progress: hidden ? .removal(.start) : .insertion(.start), view: self)
+		if !hidden {
+			isHidden = false
+		}
+		UIView.animate(with: animation) {
+			transition(progress: hidden ? .removal(.end) : .insertion(.end), view: self)
+		} completion: { _ in
+			if hidden {
+				self.isHidden = true
+				transition(progress: .removal(.start), view: self)
+			}
+			completion?()
 		}
 	}
 }
