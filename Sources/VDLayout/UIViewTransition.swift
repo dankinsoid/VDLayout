@@ -10,24 +10,24 @@ import UIKit
 import SwiftUI
 
 public struct UIViewTransition: ExpressibleByArrayLiteral {
-	private var transitions: [(Progress, UIView, Any?) -> Void]
-	private var keyPathes: [PartialKeyPath<UIView>]
-	private var initialStates: [Any]
+	public var transitions: [(Progress, UIView, Any?) -> Void]
+	public var keyPathes: [(PartialKeyPath<UIView>, set: (UIView, Any) -> Void)]
+	public var initialStates: [Any]
 	
 	public var isIdentity: Bool {
 		transitions.isEmpty
 	}
 	
-	public init<T>(_ keyPath: KeyPath<UIView, T>, initialState: T? = nil, transition: @escaping (Progress, UIView, T) -> Void) {
+	public init<T>(_ keyPath: ReferenceWritableKeyPath<UIView, T>, initialState: T? = nil, transition: @escaping (Progress, UIView, T) -> Void) {
 		self.transitions = [{ progress, view, value in
 			let value = (value as? T) ?? view[keyPath: keyPath]
 			transition(progress, view, value)
 		}]
-		self.keyPathes = [keyPath]
+		self.keyPathes = [(keyPath, { if let value = $1 as? T { $0[keyPath: keyPath] = value } })]
 		initialStates = initialState.map { [$0] } ?? []
 	}
 	
-	private init(transitions: [(UIViewTransition.Progress, UIView, Any?) -> Void], keyPathes: [PartialKeyPath<UIView>], initialStates: [Any]) {
+	public init(transitions: [(UIViewTransition.Progress, UIView, Any?) -> Void], keyPathes: [(PartialKeyPath<UIView>, set: (UIView, Any) -> Void)], initialStates: [Any]) {
 		self.transitions = transitions
 		self.keyPathes = keyPathes
 		self.initialStates = initialStates
@@ -37,14 +37,20 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 		self = .combined(elements)
 	}
 	
-	public mutating func beforeInteractiveTransition(view: UIView) {
-		initialStates = keyPathes.map { view[keyPath: $0] }
+	public mutating func beforeTransition(view: UIView) {
+		initialStates = keyPathes.map { view[keyPath: $0.0] }
+	}
+	
+	public func setInitialState(view: UIView) {
+		zip(initialStates, keyPathes).forEach {
+			$0.1.set(view, $0.0)
+		}
 	}
 	
 	public func callAsFunction(progress: Progress, view: UIView) {
 		var initialStates = initialStates
 		if initialStates.isEmpty {
-			initialStates = keyPathes.map { view[keyPath: $0] }
+			initialStates = keyPathes.map { view[keyPath: $0.0] }
 		}
 		zip(transitions, initialStates).forEach {
 			$0.0(progress, view, $0.1)
@@ -55,24 +61,83 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 		case insertion(CGFloat), removal(CGFloat)
 		
 		public var value: CGFloat {
-			switch self {
-			case .insertion(let float): return float
-			case .removal(let float): return float
+			get {
+				switch self {
+				case .insertion(let float): return float
+				case .removal(let float): return float
+				}
+			}
+			set {
+				switch self {
+				case .insertion: self = .insertion(newValue)
+				case .removal: self = .removal(newValue)
+				}
 			}
 		}
 		
 		public var progress: CGFloat {
+			get {
+				switch self {
+				case .insertion(let float): return float
+				case .removal(let float): return 1 - float
+				}
+			}
+			set {
+				switch self {
+				case .insertion: self = .insertion(newValue)
+				case .removal: self = .removal(1 - newValue)
+				}
+			}
+		}
+		
+		public var inverted: Progress {
 			switch self {
-			case .insertion(let float): return float
-			case .removal(let float): return 1 - float
+			case .insertion(let float): return .removal(1 - float)
+			case .removal(let float): return .insertion(1 - float)
+			}
+		}
+		
+		public var reversed: Progress {
+			switch self {
+			case .insertion(let float): return .insertion(1 - float)
+			case .removal(let float): return .removal(1 - float)
+			}
+		}
+		
+		public var direction: Direction {
+			get {
+				switch self {
+				case .insertion: return .insertion
+				case .removal: return .removal
+				}
+			}
+			set {
+				self = newValue(value)
+			}
+		}
+		
+		public var isRemoval: Bool {
+			get {
+				if case .removal = self {
+					return true
+				}
+				return false
+			}
+			set {
+				direction = newValue ? .removal : .insertion
 			}
 		}
 		
 		public var isInsertion: Bool {
-			if case .insertion = self {
-				return true
+			get {
+				if case .insertion = self {
+					return true
+				}
+				return false
 			}
-			return false
+			set {
+				direction = newValue ? .insertion : .removal
+			}
 		}
 		
 		public func value<T: VectorArithmetic>(identity: T, transformed: T) -> T {
@@ -99,6 +164,24 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 				}
 			}
 		}
+		
+		public enum Direction: String, Hashable, CaseIterable {
+			case insertion, removal
+			
+			public func callAsFunction(_ value: CGFloat) -> Progress {
+				switch self {
+				case .insertion:	return .insertion(value)
+				case .removal: 		return .removal(value)
+				}
+			}
+			
+			public func callAsFunction(_ value: Edge) -> Progress {
+				switch self {
+				case .insertion:	return .insertion(value)
+				case .removal: 		return .removal(value)
+				}
+			}
+		}
 	}
 	
 	public static var identity: UIViewTransition {
@@ -111,11 +194,11 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 		var result = UIViewTransition.identity
 		
 		for transition in transitions.flatMap({ $0.flat }) {
-			if let i = result.keyPathes.firstIndex(of: transition.keyPathes[0]) {
+			if let i = result.keyPathes.firstIndex(where: { transition.keyPathes[0].0 == $0.0 }) {
 				let current = result.transitions[i]
 				result.transitions[i] = {
 					current($0, $1, $2)
-					transition.transitions[0]($0, $1, $1[keyPath: transition.keyPathes[0]])
+					transition.transitions[0]($0, $1, $1[keyPath: transition.keyPathes[0].0])
 				}
 			} else {
 				result.transitions += transition.transitions
@@ -134,11 +217,15 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 	}
 	
 	public static func asymmetric(insertion: UIViewTransition, removal: UIViewTransition) -> UIViewTransition {
-		insertion.filter({ $0.isInsertion || $0.progress == 1 }).combined(with: removal.filter({ !$0.isInsertion || $0.progress == 1 }))
+		insertion.filter(\.isInsertion).combined(with: removal.filter({ !$0.isInsertion }))
 	}
 	
 	public static var opacity: UIViewTransition {
 		.value(\.alpha, 0)
+	}
+	
+	public static func cornerRadius(_ radius: CGFloat) -> UIViewTransition {
+		.value(\.layer.cornerRadius, radius)
 	}
 	
 	public static func scale(_ scale: CGPoint) -> UIViewTransition {
@@ -185,18 +272,13 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 	
 	public static var scale: UIViewTransition { .scale(0.0001) }
 	
-	public static func anchor(point: CGPoint, withoutMoving: Bool = false) -> UIViewTransition {
-		UIViewTransition(\.[keyPathes: [\.layer.anchorPoint, \.layer.position]]) { progress, view, values in
-			let anchor = (values[0] as? CGPoint) ?? CGPoint(x: 0.5, y: 0.5)
+	public static func anchor(point: CGPoint) -> UIViewTransition {
+		UIViewTransition(\.layer.anchorPoint) { progress, view, anchor in
 			let anchorPoint = CGPoint(
 				x: progress.value(identity: anchor.x, transformed: point.x),
 				y: progress.value(identity: anchor.y, transformed: point.y)
 			)
-			if withoutMoving {
-				view.setAnchorPoint(anchorPoint)
-			} else {
-				view.layer.anchorPoint = anchorPoint
-			}
+			view.layer.anchorPoint = anchorPoint
 		}
 	}
 	
@@ -245,6 +327,30 @@ public struct UIViewTransition: ExpressibleByArrayLiteral {
 				{
 					guard type($0) else { return }
 					transition($0, $1, $2)
+				}
+			},
+			keyPathes: keyPathes,
+			initialStates: initialStates
+		)
+	}
+	
+	public var inverted: UIViewTransition {
+		UIViewTransition(
+			transitions: transitions.map { transition in
+				{
+					transition($0.inverted, $1, $2)
+				}
+			},
+			keyPathes: keyPathes,
+			initialStates: initialStates
+		)
+	}
+	
+	public var reversed: UIViewTransition {
+		UIViewTransition(
+			transitions: transitions.map { transition in
+				{
+					transition($0.reversed, $1, $2)
 				}
 			},
 			keyPathes: keyPathes,
@@ -301,18 +407,19 @@ extension UIView {
 			return
 		}
 		var transition = transition
-		transition.beforeInteractiveTransition(view: self)
-		transition(progress: hidden ? .removal(.start) : .insertion(.start), view: self)
+		transition.beforeTransition(view: self)
+		let direction: UIViewTransition.Progress.Direction = hidden ? .removal : .insertion
+		transition(progress: direction(.start), view: self)
 		if !hidden {
 			set(self, false)
 		}
 		UIView.animate(with: animation) {
-			transition(progress: hidden ? .removal(.end) : .insertion(.end), view: self)
+			transition(progress: direction(.end), view: self)
 		} completion: { _ in
 			if hidden {
 				set(self, true)
-				transition(progress: .removal(.start), view: self)
 			}
+			transition.setInitialState(view: self)
 			completion?()
 		}
 	}

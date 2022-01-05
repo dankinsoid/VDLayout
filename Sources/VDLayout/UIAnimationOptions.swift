@@ -28,7 +28,7 @@ public struct UIAnimationOptions: ExpressibleByArrayLiteral {
 	}
 	
 	public static var `default`: UIAnimationOptions {
-		UIAnimationOptions(options: [.curveEaseInOut])
+		.default()
 	}
 	
 	public static func `default`(_ duration: Double = UIAnimationOptions.defaultDuration, delay: Double = 0, options: UIView.AnimationOptions = [.curveEaseInOut]) -> UIAnimationOptions {
