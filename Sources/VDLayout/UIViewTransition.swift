@@ -283,8 +283,20 @@ extension UIView {
 extension UIView {
 	
 	public func set(hidden: Bool, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
+		set(hidden: hidden, set: { $0.isHidden = $1 }, transition: transition, animation: animation, completion: completion)
+	}
+	
+	public func removeFromSuperview(transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
+		set(hidden: true, set: { if $1 { $0.removeFromSuperview() } }, transition: transition, animation: animation, completion: completion)
+	}
+	
+	public func add(subview: UIView, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
+		subview.set(hidden: false, set: { if $1 { $0.removeFromSuperview() } else { self.add(subview: $0) } }, transition: transition, animation: animation, completion: completion)
+	}
+	
+	private func set(hidden: Bool, set: @escaping (UIView, Bool) -> Void, transition: UIViewTransition, animation: UIAnimationOptions = .default, completion: (() -> Void)? = nil) {
 		guard !transition.isIdentity else {
-			isHidden = hidden
+			set(self, hidden)
 			completion?()
 			return
 		}
@@ -292,13 +304,13 @@ extension UIView {
 		transition.beforeInteractiveTransition(view: self)
 		transition(progress: hidden ? .removal(.start) : .insertion(.start), view: self)
 		if !hidden {
-			isHidden = false
+			set(self, false)
 		}
 		UIView.animate(with: animation) {
 			transition(progress: hidden ? .removal(.end) : .insertion(.end), view: self)
 		} completion: { _ in
 			if hidden {
-				self.isHidden = true
+				set(self, true)
 				transition(progress: .removal(.start), view: self)
 			}
 			completion?()

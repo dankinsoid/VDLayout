@@ -36,7 +36,7 @@ public struct UIAnimationOptions: ExpressibleByArrayLiteral {
 	}
 	
 	public static func spring(_ duration: Double = UIAnimationOptions.defaultDuration, delay: Double = 0, damping: CGFloat = UIAnimationOptions.defaultDamping, initialVelocity: CGFloat = 0, options: UIView.AnimationOptions = []) -> UIAnimationOptions {
-		UIAnimationOptions(duration: duration, delay: delay, options: options)
+		UIAnimationOptions(duration: duration, delay: delay, spring: Spring(damping: damping, initialVelocity: initialVelocity), options: options)
 	}
 	
 	public struct Spring {
