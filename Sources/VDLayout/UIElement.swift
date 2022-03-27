@@ -10,22 +10,24 @@ import VDChain
 postfix operator §
 
 @dynamicMemberLookup
-public struct UIElement<UIViewType: UIViewConvertable>: Chaining, UIElementType {
+public struct UIElement<UIViewType: UIRender>: Chaining, UIStructure where UIViewType.Parent == UIViewType {
 	public var apply: (inout UIViewType) -> Void = { _ in }
 	public var create: () -> UIViewType
 	private var update: (UIViewType) -> Void
+	
+	public var children: [AnyUIStructure<UIViewType.Parent>] { [] }
 	
 	public init(_ create: @escaping () -> UIViewType, update: @escaping (UIViewType) -> Void) {
 		self.create = create
 		self.update = update
 	}
 	
-	public func createUIView() -> UIViewType {
+	public func createRender() -> UIViewType {
 		create()
 	}
 	
-	public func updateUIView(_ view: UIViewType) {
-		var view = view
+	public func updateRender(_ render: UIViewType) {
+		var view = render
 		apply(&view)
 		update(view)
 	}
@@ -58,4 +60,4 @@ extension UIElement {
 	}
 }
 
-public postfix func §<T: UIViewConvertable>(_ lhs: @escaping @autoclosure () -> T) -> UIElement<T> { UIElement(lhs) }
+public postfix func §<T: UIRender>(_ lhs: @escaping @autoclosure () -> T) -> UIElement<T> { UIElement(lhs) }
