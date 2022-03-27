@@ -10,7 +10,7 @@ import VDChain
 postfix operator §
 
 @dynamicMemberLookup
-public struct UIElement<UIViewType: UIRender>: Chaining, UIStructure where UIViewType.Parent == UIViewType {
+public struct UIElement<UIViewType: UIRender>: Chaining, UIStructure {
 	public var apply: (inout UIViewType) -> Void = { _ in }
 	public var create: () -> UIViewType
 	private var update: (UIViewType) -> Void

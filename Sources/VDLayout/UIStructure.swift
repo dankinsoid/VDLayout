@@ -17,6 +17,10 @@ extension UIStructure {
 	public func asAnyUIStructure() -> AnyUIStructure<UIRenderType.Parent> {
 		AnyUIStructure(structure: self)
 	}
+	
+	public func asAnyUIStructure(id: AnyHashable) -> AnyUIStructure<UIRenderType.Parent> {
+		AnyUIStructure(structure: self, id: id)
+	}
 }
 
 public struct AnyUIStructure<Parent: UIRender>: UIStructure where Parent.Parent == Parent {
@@ -32,9 +36,15 @@ public struct AnyUIStructure<Parent: UIRender>: UIStructure where Parent.Parent 
 		self = structure.asAnyUIStructure()
 	}
 	
-	fileprivate init<T: UIStructure>(structure: T) where T.UIRenderType.Parent == Parent {
+	fileprivate init<T: UIStructure>(structure: T, id: AnyHashable? = nil) where T.UIRenderType.Parent == Parent {
 		base = structure
-		_id = { structure.id }
+		_id = {
+			if let id = id {
+				return structure.id.combined(with: id)
+			} else {
+				return structure.id
+			}
+		}
 		_children = { structure.children }
 		_createRender = { structure.createRender().asAnyUIRender() }
 		_updateRender = {
