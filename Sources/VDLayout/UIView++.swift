@@ -5,11 +5,14 @@
 //  Created by Данил Войдилов on 28.12.2021.
 //
 
+#if canImport(UIKit)
 import UIKit
 
-extension UIView: UIViewConvertable {
+extension UIView: UIRender {
 	
-	public var asUIView: UIView { self }
+	public func exists(on parent: UIView) -> Bool {
+		isDescendant(of: parent)
+	}
 	
 	public func add(to parent: UIView) {
 		parent.add(subview: self)
@@ -31,3 +34,4 @@ extension UIView: UIViewConvertable {
 		}
 	}
 }
+#endif

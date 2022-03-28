@@ -16,25 +16,25 @@ public struct UIEnvironmentValues {
 	
 	public subscript<T>(_ keyPath: WritableKeyPath<UIEnvironmentValues, T>) -> T? {
 		get {
-			self[keyPath: keyPath]
+			self[key: keyPath]
 		}
 		set {
-			self[keyPath: keyPath] = newValue
+			self[key: keyPath] = newValue
 		}
 	}
 	
 //	public subscript<T>(_ keyPath: KeyPath<UI, UIEnvironmentValue<T>>) -> T {
 //		get {
-//			self[keyPath: keyPath] ?? EmptyUI()[keyPath: keyPath].defaultValue
+//			self[key: keyPath] ?? EmptyUI()[keyPath: keyPath].defaultValue
 //		}
 //		set {
-//			self[keyPath: keyPath] = newValue
+//			self[key: keyPath] = newValue
 //		}
 //	}
 	
-	private subscript<T>(keyPath keyPath: AnyKeyPath) -> T? {
+	private subscript<T>(key keyPath: AnyKeyPath) -> T? {
 		get {
-			if let any = values[keyPath] ?? link?()?[keyPath: keyPath], type(of: any) == T.self {
+			if let any = values[keyPath] ?? link?()?[key: keyPath] {
 				return any as? T
 			}
 			return nil

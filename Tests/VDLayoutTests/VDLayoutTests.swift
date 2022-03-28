@@ -72,7 +72,7 @@ class MyUIView: UIView, UILayoutable {
 	@UIEnvironment(\.self) var environment
 	@UIState var string = ""
 	
-	var layout: UILayout {
+	var layout: UI {
 		EmptyUI()
 	}
 }
@@ -82,17 +82,15 @@ struct MyStructView: UI {
 //	@UIEnvironment(\.someString) var someString
 	@UIState var string = ""
 	
-	var layout: UILayout {
+	var layout: UI {
 		EmptyUI()
 		
-		UILayout {
+		UI {
 			
 		}
 	
 		UIView()§
 			.tintColor(.red)
-		
-		
 	}
 }
 //

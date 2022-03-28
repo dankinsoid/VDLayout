@@ -8,37 +8,17 @@
 import UIKit
 
 public struct UIContext {
-	public static var current = UIContext()
+	public static var current = UIContext(updating: DummyUpdatable())
 	
-	public var environments = UIEnvironmentValues()
-	public weak var updating: UIUpdatableStorage?
-	
-	public init() {}
-}
-
-public protocol UIUpdatableStorage: UIResponder {
-	func updateUILayout()
-	var updaters: [CodeID: Any] { get set }
-}
-
-extension UIUpdatableStorage {
-	public var context: UIContext {
-		get {
-			var result = associated.context
-			if let parent = next as? UIUpdatableStorage {
-				result.environments.link = {[weak parent] in parent?.context.environments }
-			}
-			return result
-		}
-		set {
-			associated.context = newValue
-		}
+	public var environments: UIEnvironmentValues {
+		get { updating.environments }
+		nonmutating set { updating.environments = newValue }
 	}
+	public var updating: UIUpdatable
+	public var isUpadting = false
 }
 
-private extension AssociatedValues {
-	var context: UIContext {
-		get { self[\.context] ?? UIContext() }
-		set { self[\.context] = newValue }
-	}
+private final class DummyUpdatable: UIUpdatable {
+	var uiStorage = UIStorage()
+	var updatableParent: UIUpdatable? { nil }
 }
