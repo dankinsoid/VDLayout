@@ -56,7 +56,7 @@ extension UIViewConvertable {
 	}
 	
 	func update(uiLayout: UILayout, for uiView: UIView) {
-		guard !isUpdating, Thread.isMainThread else {
+		guard !isUpdating else {
 			return
 		}
 		isUpdating = true

@@ -14,12 +14,13 @@ let package = Package(
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/VDChain", from: "1.0.0"),
 			.package(url: "https://github.com/dankinsoid/NSMethodsObservation", from: "1.1.0"),
-			.package(url: "https://github.com/layoutBox/PinLayout", from: "1.10.0")
+			.package(url: "https://github.com/layoutBox/PinLayout", from: "1.10.0"),
+			.package(url: "https://github.com/CodeEagle/Texture", from: "3.0.0")
     ],
     targets: [
 			.target(
 				name: "VDLayout",
-				dependencies: ["VDChain", "NSMethodsObservation", "PinLayout"]
+				dependencies: ["VDChain", "NSMethodsObservation", "PinLayout", .product(name: "AsyncDisplayKit", package: "Texture")]
 			),
 			.testTarget(
 				name: "VDLayoutTests",

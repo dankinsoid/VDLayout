@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "AsyncDisplayKit",
+        "repositoryURL": "https://github.com/CodeEagle/Texture",
+        "state": {
+          "branch": null,
+          "revision": "1130031fc8bb97cc0541b1f7d018dffd8839efb9",
+          "version": "3.0.0"
+        }
+      },
+      {
         "package": "VDChain",
         "repositoryURL": "https://github.com/dankinsoid/VDChain",
         "state": {
