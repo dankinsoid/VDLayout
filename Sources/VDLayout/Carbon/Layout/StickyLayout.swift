@@ -8,8 +8,8 @@
 
 import UIKit
 
-public struct StickyLayout: Layout {
-	let rootLayout: Layout
+public struct StickyLayout: CollectionLayout {
+	let rootLayout: CollectionLayout
   public var isStickyFn: (Int) -> Bool
   var stickyFrames: [(index: Int, frame: CGRect)] = []
   var visibleFrame: CGRect = .zero
@@ -19,12 +19,12 @@ public struct StickyLayout: Layout {
 		rootLayout.contentSize
 	}
 
-  public init(_ rootLayout: Layout, isStickyFn: @escaping (Int) -> Bool = { $0 % 2 == 0 }) {
+  public init(_ rootLayout: CollectionLayout, isStickyFn: @escaping (Int) -> Bool = { $0 % 2 == 0 }) {
     self.isStickyFn = isStickyFn
 		self.rootLayout = rootLayout
   }
 
-  public func layout(context: LayoutContext) -> Layout {
+  public func layout(context: LayoutContext) -> CollectionLayout {
     let stickyFrames = (0..<context.numberOfItems).filter {
       isStickyFn($0)
     }.map {

@@ -128,5 +128,4 @@ public final class UIListAdapter: UITableViewAdapter {
 	public func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
 		scrollDelegate?.scrollViewDidChangeAdjustedContentInset?(scrollView)
 	}
-	
 }

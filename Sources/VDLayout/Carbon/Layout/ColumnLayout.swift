@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct ColumnLayout: Layout {
+public struct ColumnLayout: CollectionLayout {
 	public var contentSize: CGSize { row.contentSize }
 	private let row: TransposeLayout
 	
@@ -32,7 +32,7 @@ public struct ColumnLayout: Layout {
 								 justifyContent: justifyContent, alignItems: alignItems, alwaysFillEmptySpaces: alwaysFillEmptySpaces)
 	}
 
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		columnLayout(context: context)
 	}
 	

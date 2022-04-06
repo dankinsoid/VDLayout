@@ -59,27 +59,27 @@ open class UICollection: UICollectionView, RenderableView {
 		afterInit()
 	}
 	
-	public convenience init<C: Collection>(sectionsLayout: Layout, _ data: C) where C.Element == LayoutedSection {
+	public convenience init<C: Collection>(sectionsLayout: CollectionLayout, _ data: C) where C.Element == LayoutedSection {
 		self.init()
 		render(sectionsLayout: sectionsLayout, data)
 	}
 	
-	public convenience init(sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: () -> [LayoutedSection]) {
+	public convenience init(sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: () -> [LayoutedSection]) {
 		self.init()
 		render(sectionsLayout: sectionsLayout, sections: sections)
 	}
 	
-	public convenience init<C: Swift.Collection>(_ data: C, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: (C.Element) -> [LayoutedSection]) {
+	public convenience init<C: Swift.Collection>(_ data: C, sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: (C.Element) -> [LayoutedSection]) {
 		self.init()
 		render(data, sectionsLayout: sectionsLayout, sections: sections)
 	}
 	
-	public convenience init<O: Publisher>(one binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output) -> [LayoutedSection]) {
+	public convenience init<O: Publisher>(one binder: O, sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output) -> [LayoutedSection]) {
 		self.init()
 		bind(one: binder, sectionsLayout: sectionsLayout, sections: sections)
 	}
 	
-	public convenience init<O: Publisher>(_ binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection>sections: @escaping (O.Output.Element) -> [LayoutedSection]) where O.Output: Collection {
+	public convenience init<O: Publisher>(_ binder: O, sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection>sections: @escaping (O.Output.Element) -> [LayoutedSection]) where O.Output: Collection {
 		self.init()
 		bind(binder, sectionsLayout: sectionsLayout, sections: sections)
 	}
@@ -88,27 +88,27 @@ open class UICollection: UICollectionView, RenderableView {
 		renderer.target = self
 	}
 	
-	public func render<C: Collection>(sectionsLayout: Layout, _ data: C) where C.Element == LayoutedSection {
+	public func render<C: Collection>(sectionsLayout: CollectionLayout, _ data: C) where C.Element == LayoutedSection {
 		render(data.map { $0.section })
 		let layouts = data.map { $0.layout }
 		layout = SectionedLayout(sectionsLayout, section: { layouts[$0 % layouts.count] }, for: self)
 	}
 	
-	public func render(sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: () -> [LayoutedSection]) {
+	public func render(sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: () -> [LayoutedSection]) {
 		render(sectionsLayout: sectionsLayout, sections())
 	}
 	
-	public func render<C: Swift.Collection>(_ data: C, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: (C.Element) -> [LayoutedSection]) {
+	public func render<C: Swift.Collection>(_ data: C, sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: (C.Element) -> [LayoutedSection]) {
 		render(sectionsLayout: sectionsLayout, data.map(sections).joined())
 	}
 	
-	public func bind<O: Publisher>(one binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output) -> [LayoutedSection]) {
+	public func bind<O: Publisher>(one binder: O, sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output) -> [LayoutedSection]) {
 		binder.asDriver() => {[weak self] in
 			self?.render(sectionsLayout: sectionsLayout, sections($0))
 		}
 	}
 	
-	public func bind<O: Publisher>(_ binder: O, sectionsLayout: Layout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output.Element) -> [LayoutedSection]) where O.Output: Collection {
+	public func bind<O: Publisher>(_ binder: O, sectionsLayout: CollectionLayout, @ArrayBuilder<LayoutedSection> sections: @escaping (O.Output.Element) -> [LayoutedSection]) where O.Output: Collection {
 		binder.asDriver() => {[weak self] in
 			self?.render($0, sectionsLayout: sectionsLayout, sections: sections)
 		}

@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct OverlayLayout: Layout {
+public struct OverlayLayout: CollectionLayout {
 	public var contentSize: CGSize { simple.contentSize }
 	public let simple: SimpleLayout
 	
@@ -27,7 +27,7 @@ public struct OverlayLayout: Layout {
 		})
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		OverlayLayout(simple.simple(context: context))
 	}
 	

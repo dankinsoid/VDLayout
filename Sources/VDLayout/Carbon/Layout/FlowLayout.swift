@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct FlowLayout: Layout {
+public struct FlowLayout: CollectionLayout {
 	public var contentSize: CGSize { vertical.contentSize }
 	public var vertical: VerticalSimpleLayout
 	
@@ -46,7 +46,7 @@ public struct FlowLayout: Layout {
 		vertical.visibleIndexes(visibleFrame: visibleFrame)
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		FlowLayout(vertical: vertical.vertical(context: context))
 	}
 	

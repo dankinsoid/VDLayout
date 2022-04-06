@@ -8,17 +8,17 @@
 import UIKit
 import VDKit
 
-public struct ComposeLayout: Layout {
+public struct ComposeLayout: CollectionLayout {
 	public var contentSize: CGSize { layout.contentSize }
-	public var layout: Layout
-	public var new: (Int) -> [Layout]
-	public var layouts: [Layout]
+	public var layout: CollectionLayout
+	public var new: (Int) -> [CollectionLayout]
+	public var layouts: [CollectionLayout]
 	public var countAt: (_ index: Int, _ common: Int) -> Int
 	public var indexPathAt: (Int) -> IndexPath
 	public var indexAt: (IndexPath) -> Int
 	public var maxSizeAt: (Int, CGSize) -> CGSize
 	
-	public init(_ layout: Layout, new: @escaping (_ common: Int) -> [Layout], countAt: @escaping (_ index: Int, _ common: Int) -> Int, indexPath: @escaping (Int) -> IndexPath, index: @escaping (IndexPath) -> Int, maxSize: @escaping (Int, CGSize) -> CGSize) {
+	public init(_ layout: CollectionLayout, new: @escaping (_ common: Int) -> [CollectionLayout], countAt: @escaping (_ index: Int, _ common: Int) -> Int, indexPath: @escaping (Int) -> IndexPath, index: @escaping (IndexPath) -> Int, maxSize: @escaping (Int, CGSize) -> CGSize) {
 		self.layout = layout
 		self.layouts = []
 		self.countAt = countAt
@@ -39,11 +39,11 @@ public struct ComposeLayout: Layout {
 		)
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		_layout(context: context)
 	}
 	
-	public func layout(context: PathsLayoutContext) -> Layout {
+	public func layout(context: PathsLayoutContext) -> CollectionLayout {
 		_layout(context: context)
 	}
 	
@@ -112,7 +112,7 @@ public struct ComposeLayout: Layout {
 
 extension ComposeLayout {
 	
-	public static func one(_ layout: Layout) -> ComposeLayout {
+	public static func one(_ layout: CollectionLayout) -> ComposeLayout {
 		ComposeLayout(
 			SimpleLayout(),
 			new: { _ in [layout] },
@@ -123,7 +123,7 @@ extension ComposeLayout {
 		)
 	}
 	
-	public static func equal(_ layout: Layout, each: @escaping (Int) -> Layout, by count: Int, maxSize: @escaping (Int, CGSize) -> CGSize = { _, s in s }) -> ComposeLayout {
+	public static func equal(_ layout: CollectionLayout, each: @escaping (Int) -> CollectionLayout, by count: Int, maxSize: @escaping (Int, CGSize) -> CGSize = { _, s in s }) -> ComposeLayout {
 		ComposeLayout(
 			layout,
 			new: {
@@ -144,7 +144,7 @@ extension ComposeLayout {
 		)
 	}
 	
-	public static func sectioned(_ layout: Layout, section: @escaping (_ section: Int) -> Layout, for collection: UICollectionView) -> ComposeLayout {
+	public static func sectioned(_ layout: CollectionLayout, section: @escaping (_ section: Int) -> CollectionLayout, for collection: UICollectionView) -> ComposeLayout {
 		ComposeLayout(
 			layout,
 			new: {[weak collection] _ in

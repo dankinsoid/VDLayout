@@ -10,9 +10,9 @@ import Carbon
 import UIKit
 
 open class UICollectionLayout: UICollectionViewLayout {
-	open var layout: Layout
+	open var layout: CollectionLayout
 	
-	public init(_ layout: Layout) {
+	public init(_ layout: CollectionLayout) {
 		self.layout = layout
 		super.init()
 	}
@@ -165,7 +165,7 @@ private struct Context: LayoutContext {
 
 extension UICollectionView {
 	
-	public var layout: Layout {
+	public var layout: CollectionLayout {
 		get {
 			(collectionViewLayout as? UICollectionLayout)?.layout ?? FlowLayout()
 		}

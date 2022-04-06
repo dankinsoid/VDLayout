@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct RowLayout: Layout {
+public struct RowLayout: CollectionLayout {
 	public var contentSize: CGSize { horizontal.contentSize }
 	let horizontal: HorizontalSimpleLayout
 
@@ -35,7 +35,7 @@ public struct RowLayout: Layout {
 							justifyContent: justifyContent, alignItems: alignItems, alwaysFillEmptySpaces: alwaysFillEmptySpaces)
   }
 
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		rowLayout(context: context)
 	}
 	

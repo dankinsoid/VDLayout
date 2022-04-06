@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct SimpleLayout: Layout {
+public struct SimpleLayout: CollectionLayout {
 	public let contentSize: CGSize
   public let frames: [CGRect]
 	public let simpleLayout: (LayoutContext, SimpleLayout) -> [CGRect]
@@ -23,7 +23,7 @@ public struct SimpleLayout: Layout {
 		self.simpleLayout = simpleLayout
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		simple(context: context)
 	}
 	
@@ -51,7 +51,7 @@ public struct SimpleLayout: Layout {
   }
 }
 
-public struct VerticalSimpleLayout: Layout {
+public struct VerticalSimpleLayout: CollectionLayout {
 	let maxFrameLength: CGFloat
 	let simple: SimpleLayout
 	public var contentSize: CGSize { simple.contentSize }
@@ -66,7 +66,7 @@ public struct VerticalSimpleLayout: Layout {
 		return VerticalSimpleLayout(_simple)
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 	 	vertical(context: context)
 	}
 	
@@ -92,7 +92,7 @@ public struct VerticalSimpleLayout: Layout {
 	
 }
 
-open class HorizontalSimpleLayout: Layout {
+open class HorizontalSimpleLayout: CollectionLayout {
   private var maxFrameLength: CGFloat = 0
 	let simple: SimpleLayout
 	public var contentSize: CGSize { simple.contentSize }
@@ -107,7 +107,7 @@ open class HorizontalSimpleLayout: Layout {
 		return HorizontalSimpleLayout(_simple)
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		horizontal(context: context)
 	}
 	

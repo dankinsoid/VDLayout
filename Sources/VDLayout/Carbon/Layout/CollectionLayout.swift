@@ -8,14 +8,14 @@
 
 import UIKit
 
-public protocol Layout {
- 	func layout(context: LayoutContext) -> Layout
+public protocol CollectionLayout {
+ 	func layout(context: LayoutContext) -> CollectionLayout
 	var contentSize: CGSize { get }
 	func frame(at: Int) -> CGRect
 	func visibleIndexes(visibleFrame: CGRect) -> [Int]
 }
 
-extension Layout {
+extension CollectionLayout {
   public func transposed() -> TransposeLayout {
     return TransposeLayout(self)
   }

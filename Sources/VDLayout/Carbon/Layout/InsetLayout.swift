@@ -8,10 +8,10 @@
 
 import UIKit
 
-public struct InsetLayout: Layout {
+public struct InsetLayout: CollectionLayout {
   public var insets: UIEdgeInsets
   public var insetProvider: ((CGSize) -> UIEdgeInsets)?
-	private let rootLayout: Layout
+	private let rootLayout: CollectionLayout
 
   struct InsetLayoutContext: LayoutContext {
     var original: LayoutContext
@@ -31,12 +31,12 @@ public struct InsetLayout: Layout {
     }
   }
 
-  public init(_ rootLayout: Layout, insets: UIEdgeInsets = .zero) {
+  public init(_ rootLayout: CollectionLayout, insets: UIEdgeInsets = .zero) {
     self.insets = insets
 		self.rootLayout = rootLayout
   }
 
-  public init(_ rootLayout: Layout, insetProvider: @escaping ((CGSize) -> UIEdgeInsets)) {
+  public init(_ rootLayout: CollectionLayout, insetProvider: @escaping ((CGSize) -> UIEdgeInsets)) {
     self.insets = .zero
     self.insetProvider = insetProvider
 		self.rootLayout = rootLayout
@@ -46,7 +46,7 @@ public struct InsetLayout: Layout {
 		rootLayout.contentSize.insets(by: -insets)
   }
 
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		var insets = self.insets
     if let insetProvider = insetProvider {
       insets = insetProvider(context.collectionSize)

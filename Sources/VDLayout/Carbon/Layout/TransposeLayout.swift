@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct TransposeLayout: Layout {
+public struct TransposeLayout: CollectionLayout {
   struct TransposeLayoutContext: LayoutContext {
     var original: LayoutContext
 
@@ -26,9 +26,9 @@ public struct TransposeLayout: Layout {
     }
   }
 	
-	public let rootLayout: Layout
+	public let rootLayout: CollectionLayout
 	
-	public init(_ rootLayout: Layout) {
+	public init(_ rootLayout: CollectionLayout) {
 		self.rootLayout = rootLayout
 	}
 
@@ -42,7 +42,7 @@ public struct TransposeLayout: Layout {
 		)
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		transposeLayout(context: context)
   }
 

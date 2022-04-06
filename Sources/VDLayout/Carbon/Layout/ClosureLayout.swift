@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct ClosureLayout: Layout {
+public struct ClosureLayout: CollectionLayout {
 	public var contentSize: CGSize { simple.contentSize }
 	let simple: SimpleLayout
 
@@ -22,7 +22,7 @@ public struct ClosureLayout: Layout {
 		})
   }
 
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		ClosureLayout(simple: simple.simple(context: context))
 	}
 	

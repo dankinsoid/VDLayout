@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct WaterfallLayout: Layout {
+public struct WaterfallLayout: CollectionLayout {
 	public var contentSize: CGSize { vertical.contentSize }
 	public let vertical: VerticalSimpleLayout
 
@@ -22,7 +22,7 @@ public struct WaterfallLayout: Layout {
 		self.vertical = vertical
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		WaterfallLayout(vertical: vertical.vertical(context: context))
 	}
 	

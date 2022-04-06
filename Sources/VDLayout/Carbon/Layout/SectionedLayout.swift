@@ -9,7 +9,7 @@ import UIKit
 import VDKit
 import Carbon
 
-public struct SectionedLayout: Layout {
+public struct SectionedLayout: CollectionLayout {
 	private let compose: ComposeLayout
 	public var contentSize: CGSize { compose.contentSize }
 	
@@ -17,11 +17,11 @@ public struct SectionedLayout: Layout {
 		self.compose = compose
 	}
 	
-	public init(_ layout: Layout, section: @escaping (_ section: Int) -> Layout, for collection: UICollectionView) {
+	public init(_ layout: CollectionLayout, section: @escaping (_ section: Int) -> CollectionLayout, for collection: UICollectionView) {
 		self = .init(.sectioned(layout, section: section, for: collection))
 	}
 	
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		SectionedLayout(compose._layout(context: context))
 	}
 	
@@ -33,7 +33,7 @@ public struct SectionedLayout: Layout {
 		compose.visibleIndexes(visibleFrame: visibleFrame)
 	}
 	
-	public func layout(context: PathsLayoutContext) -> Layout {
+	public func layout(context: PathsLayoutContext) -> CollectionLayout {
 		SectionedLayout(compose._layout(context: context))
 	}
 	
@@ -48,16 +48,16 @@ public struct SectionedLayout: Layout {
 
 public struct LayoutedSection {
 	public var section: Section
-	public var layout: Layout
+	public var layout: CollectionLayout
 	
-	public init(layout: Layout, _ section: Section) {
+	public init(layout: CollectionLayout, _ section: Section) {
 		self.layout = layout
 		self.section = section
 	}
 }
 
 extension Section {
-	public func layouted(_ layout: Layout) -> LayoutedSection {
+	public func layouted(_ layout: CollectionLayout) -> LayoutedSection {
 		LayoutedSection(layout: layout, self)
 	}
 }

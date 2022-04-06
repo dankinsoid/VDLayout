@@ -8,24 +8,24 @@
 
 import UIKit
 
-public struct VisibleFrameInsetLayout: Layout {
+public struct VisibleFrameInsetLayout: CollectionLayout {
 	public var contentSize: CGSize { rootLayout.contentSize }
   public var insets: UIEdgeInsets
   public var insetProvider: ((CGSize) -> UIEdgeInsets)?
-	public var rootLayout: Layout
+	public var rootLayout: CollectionLayout
 	
-  public init(_ rootLayout: Layout, insets: UIEdgeInsets = .zero) {
+  public init(_ rootLayout: CollectionLayout, insets: UIEdgeInsets = .zero) {
     self.insets = insets
 		self.rootLayout = rootLayout
   }
 
-  public init(_ rootLayout: Layout, insetProvider: @escaping ((CGSize) -> UIEdgeInsets)) {
+  public init(_ rootLayout: CollectionLayout, insetProvider: @escaping ((CGSize) -> UIEdgeInsets)) {
     self.insets = .zero
     self.insetProvider = insetProvider
 		self.rootLayout = rootLayout
   }
 
-	public func layout(context: LayoutContext) -> Layout {
+	public func layout(context: LayoutContext) -> CollectionLayout {
 		var insets = self.insets
     if let insetProvider = insetProvider {
       insets = insetProvider(context.collectionSize)
