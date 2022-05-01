@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import VDKit
 
 open class LtView: UIView {
 	
