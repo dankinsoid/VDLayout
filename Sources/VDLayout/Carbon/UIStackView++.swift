@@ -61,7 +61,7 @@ extension UIStackView {
 	}
 	
 	public func bind<P: ObservableConvertibleType>(one publisher: P, @UICellsBuilder _ cells: @escaping (P.Element) -> CellsBuildable) {
-		publisher.subscribe(onNext: {[weak self] element in
+		publisher.asObservable().subscribe(onNext: {[weak self] element in
 			if Thread.isMainThread {
 				self?.update(data: cells(element).buildCells())
 			} else {
@@ -73,7 +73,7 @@ extension UIStackView {
 	}
 	
 	public func bind<P: ObservableConvertibleType>(_ publisher: P, @UICellsBuilder _ cells: @escaping (P.Element.Element) -> CellsBuildable) where P.Element: Collection {
-		publisher.subscribe(onNext: {[weak self] array in
+		publisher.asObservable().subscribe(onNext: {[weak self] array in
 			if Thread.isMainThread {
 				self?.update(array, cells)
 			} else {

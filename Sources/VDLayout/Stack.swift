@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import UIKitComposable
 
 extension UIStackView {
 	

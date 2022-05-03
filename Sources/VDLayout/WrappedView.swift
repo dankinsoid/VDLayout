@@ -10,27 +10,19 @@ import UIKit
 import VDKit
 import ConstraintsOperators
 
-public struct WrappedView<W: SubviewProtocol, P: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
-	
+public struct WrappedView<Value: SubviewProtocol, P: SubviewProtocol>: SubviewProtocol, ValueChainingProtocol {
 	let parent: P
-	public var wrappedValue: W
+	public var value: Value
+	public var apply: (inout Value) -> Void = { _ in }
 	
-	private(set) public var action: (W) -> W = { $0 }
-	
-	public init(_ child: W, parent: P) {
-		self.wrappedValue = child
+	public init(_ child: Value, parent: P) {
+		self.value = child
 		self.parent = parent
 	}
 	
 	public func createViewToAdd() -> UIView {
 		let result = parent.createViewToAdd()
-		result.add(subview: wrappedValue)
-		return result
-	}
-	
-	public func copy(with action: @escaping (W) -> W) -> WrappedView {
-		var result = WrappedView(wrappedValue, parent: parent)
-		result.action = action
+		result.add(subview: value)
 		return result
 	}
 }

@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import SwiftUI
 import ConstraintsOperators
+import UIKitComposable
 
 @available(iOS 13.0, *)
 public struct UIKitView<V: UIView>: UIViewRepresentable {

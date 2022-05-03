@@ -27,14 +27,14 @@ extension Constraints: SubviewProtocol where Item: SubviewProtocol {
 
 extension Observable: LayoutAttributeType where Element: LayoutAttributeType {
 	public typealias Attribute = Element.Attribute
-	
-	public func constraints<B, L: UILayoutableArray, Q: AttributeConvertable>(with first: LayoutAttribute<B, L, Q>?, relation: NSLayoutConstraint.Relation) -> Constraints<L> {
+
+	public func constraints<B, L: UILayoutableArray, Q: AttributeConvertable>(with info: LayoutAttributeInfo<B, L, Q>) -> Constraints<L> {
 		let result = Constraints<L>.empty
 		let constraints = result.onlyConstraints
 		let disposable = subscribe(onNext: { value in
-			constraints.update(value.constraints(with: first, relation: relation).onlyConstraints)
+			constraints.update(value.constraints(with: info).onlyConstraints)
 		})
-		if let item = first?.item.asLayoutableArray().first?.itemForConstraint.item {
+		if let item = info.first?.item.asLayoutableArray().first?.itemForConstraint.item {
 			disposable.disposed(by: Reactive(item).asDisposeBag)
 		}
 		return result
@@ -50,13 +50,13 @@ public struct LayoutAttributeObservable<A, C: UILayoutableArray>: ObservableType
 		subject.subscribe(observer)
 	}
 	
-	public func constraints<B, L, Q>(with first: LayoutAttribute<B, L, Q>?, relation: NSLayoutConstraint.Relation) -> Constraints<L> where L : UILayoutableArray, Q : AttributeConvertable {
+	public func constraints<B, L: UILayoutableArray, Q: AttributeConvertable>(with info: LayoutAttributeInfo<B, L, Q>) -> Constraints<L> {
 		let result = Constraints<L>.empty
 		let constraints = result.onlyConstraints
 		let disposable = subject.subscribe(onNext: { value in
-			constraints.update(value.constraints(with: first, relation: relation).onlyConstraints)
+			constraints.update(value.constraints(with: info).onlyConstraints)
 		})
-		if let item = first?.item.asLayoutableArray().first?.itemForConstraint.item {
+		if let item = info.first?.item.asLayoutableArray().first?.itemForConstraint.item {
 			disposable.disposed(by: Reactive(item).asDisposeBag)
 		}
 		return result
