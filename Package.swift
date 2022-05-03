@@ -12,8 +12,8 @@ let package = Package(
         .library(name: "VDLayout", targets: ["VDLayout"]),
     ],
     dependencies: [
-			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.27.0"),
-			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.64.0"),
+			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.30.0"),
+			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.189.0"),
 			.package(url: "https://github.com/dankinsoid/CombineOperators.git", from: "1.65.0"),
 			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "1.0.1")
     ],

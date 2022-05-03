@@ -1,52 +1,50 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Carbon",
-        "repositoryURL": "https://github.com/dankinsoid/Carbon.git",
-        "state": {
-          "branch": null,
-          "revision": "9e572593e02ce77e54932d46d130054a13e2a056",
-          "version": "1.0.1"
-        }
-      },
-      {
-        "package": "CombineOperators",
-        "repositoryURL": "https://github.com/dankinsoid/CombineOperators.git",
-        "state": {
-          "branch": null,
-          "revision": "5ea37804e23b61e5e38e4b7fed44dc0007a21262",
-          "version": "1.65.0"
-        }
-      },
-      {
-        "package": "ConstraintsOperators",
-        "repositoryURL": "https://github.com/dankinsoid/ConstraintsOperators.git",
-        "state": {
-          "branch": null,
-          "revision": "3b2ac1ec5e9facb3ef4b186b8a60699da8b76ce2",
-          "version": "2.27.0"
-        }
-      },
-      {
-        "package": "DifferenceKit",
-        "repositoryURL": "https://github.com/ra1028/DifferenceKit.git",
-        "state": {
-          "branch": null,
-          "revision": "14c66681e12a38b81045f44c6c29724a0d4b0e72",
-          "version": "1.1.5"
-        }
-      },
-      {
-        "package": "VDKit",
-        "repositoryURL": "https://github.com/dankinsoid/VDKit.git",
-        "state": {
-          "branch": null,
-          "revision": "413dd8444adf77a2a9b95b6c635168632917e266",
-          "version": "1.64.0"
-        }
+  "pins" : [
+    {
+      "identity" : "carbon",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dankinsoid/Carbon.git",
+      "state" : {
+        "revision" : "9e572593e02ce77e54932d46d130054a13e2a056",
+        "version" : "1.0.1"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "combineoperators",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dankinsoid/CombineOperators.git",
+      "state" : {
+        "revision" : "5ea37804e23b61e5e38e4b7fed44dc0007a21262",
+        "version" : "1.65.0"
+      }
+    },
+    {
+      "identity" : "constraintsoperators",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dankinsoid/ConstraintsOperators.git",
+      "state" : {
+        "revision" : "e997ee4fe80504c612991967977ace225fdd434b",
+        "version" : "2.30.0"
+      }
+    },
+    {
+      "identity" : "differencekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ra1028/DifferenceKit.git",
+      "state" : {
+        "revision" : "14c66681e12a38b81045f44c6c29724a0d4b0e72",
+        "version" : "1.1.5"
+      }
+    },
+    {
+      "identity" : "vdkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dankinsoid/VDKit.git",
+      "state" : {
+        "revision" : "a6be9dffbb1321e5837e1c8beb0043d5d7fb6e7e",
+        "version" : "1.189.0"
+      }
+    }
+  ],
+  "version" : 2
 }
