@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Carbon
+import CarbonTable
 import UIKit
 
 open class UICollectionLayout: UICollectionViewLayout {

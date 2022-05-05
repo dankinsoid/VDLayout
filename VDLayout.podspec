@@ -26,7 +26,7 @@ TODO: Add long description of the pod here.
   s.frameworks = 'UIKit'
   s.dependency 'ConstraintsOperators'
   s.dependency 'VD'
-  s.dependency 'Carbon'
+  s.dependency 'CarbonTable'
   s.dependency 'RxSwift', '~> 6.0'
   s.dependency 'RxCocoa', '~> 6.0'
 end

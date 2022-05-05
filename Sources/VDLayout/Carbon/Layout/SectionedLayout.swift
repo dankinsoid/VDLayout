@@ -7,7 +7,7 @@
 
 import UIKit
 import VDKit
-import Carbon
+import CarbonTable
 
 public struct SectionedLayout: Layout {
 	private let compose: ComposeLayout

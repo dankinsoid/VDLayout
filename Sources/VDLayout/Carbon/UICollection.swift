@@ -5,11 +5,11 @@
 //  Created by Данил Войдилов on 09.02.2021.
 //
 
-#if canImport(Carbon)
+#if canImport(CarbonTable)
 import Foundation
 import UIKit
 import VDKit
-import Carbon
+import CarbonTable
 import RxSwift
 
 open class UICollection: UICollectionView, RenderableView {

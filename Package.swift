@@ -15,12 +15,18 @@ let package = Package(
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.30.0"),
 			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.189.0"),
 			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0"),
-			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "1.0.1")
+			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "2.1.0")
     ],
     targets: [
         .target(
             name: "VDLayout",
-            dependencies: ["ConstraintsOperators", "VDKit", "RxSwift", .product(name: "RxCocoa", package: "RxSwift"), "Carbon"]
+            dependencies: [
+							"ConstraintsOperators",
+							"VDKit",
+							"RxSwift",
+								.product(name: "RxCocoa", package: "RxSwift"),
+								.product(name: "CarbonTable", package: "Carbon")
+						]
 				),
 			.testTarget(
 				name: "VDLayoutTests",

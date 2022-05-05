@@ -7,7 +7,7 @@
 
 import XCTest
 @testable import RxSwift
-@testable import Carbon
+@testable import CarbonTable
 @testable import VDKit
 @testable import VDLayout
 

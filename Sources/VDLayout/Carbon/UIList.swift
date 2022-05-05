@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import Carbon
+import CarbonTable
 import RxSwift
 
 open class UIList: UITableView, RenderableView {

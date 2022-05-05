@@ -55,7 +55,7 @@ view.add {
  You can use subscripts instead of `equal(to:...)` to shorten: `button.size[44]`
  
  ### Tables and collection
- For tables and collections this repo use `Carbon` dependency
+ For tables and collections this repo use `UIList` dependency
  `UIList` and `UICollection` - helper `UITableView` and `UICollectionView` subclasses
  
  ```swift

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Carbon
+import CarbonTable
 import VDKit
 import RxSwift
 import DifferenceKit

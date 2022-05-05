@@ -5,9 +5,9 @@
 //  Created by Данил Войдилов on 19.02.2021.
 //
 
-#if canImport(Carbon)
+#if canImport(CarbonTable)
 import UIKit
-import Carbon
+import CarbonTable
 import ConstraintsOperators
 #if canImport(SwiftUI)
 import SwiftUI

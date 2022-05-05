@@ -5,18 +5,18 @@
 //  Created by Данил Войдилов on 19.02.2021.
 //
 
-#if canImport(Carbon)
+#if canImport(CarbonTable)
 import UIKit
 import VDKit
 import RxSwift
-import Carbon
+import CarbonTable
 import ConstraintsOperators
 
 public typealias UISectionsBuilder = ArrayBuilder<Section>
 
 public protocol RenderableView: AnyObject {
 	init()
-	associatedtype Updater: Carbon.Updater
+	associatedtype Updater: CarbonTable.Updater
 	var renderer: Renderer<Updater> { get }
 }
 
