@@ -15,7 +15,7 @@ let package = Package(
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.30.0"),
 			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.189.0"),
 			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0"),
-			.package(url: "https://github.com/dankinsoid/Carbon.git", from: "2.1.0")
+			.package(url: "https://github.com/dankinsoid/CarbonTable.git", from: "2.1.0")
     ],
     targets: [
         .target(
@@ -24,8 +24,8 @@ let package = Package(
 							"ConstraintsOperators",
 							"VDKit",
 							"RxSwift",
-								.product(name: "RxCocoa", package: "RxSwift"),
-								.product(name: "CarbonTable", package: "Carbon")
+							.product(name: "RxCocoa", package: "RxSwift"),
+							"CarbonTable"
 						]
 				),
 			.testTarget(
