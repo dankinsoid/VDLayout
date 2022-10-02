@@ -4,3 +4,5 @@ Package.resolved~main
 Package.resolved~main_0
 Sources/.DS_Store
 .DS_Store
+.build
+.idea

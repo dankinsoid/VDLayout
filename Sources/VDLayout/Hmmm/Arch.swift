@@ -24,3 +24,6 @@ protocol Component {
 protocol Builder {
 //	func build<C: Component>(component: Component)
 }
+
+func updateLayout(state: State) -> some UI {
+}
