@@ -13,7 +13,8 @@ let package = Package(
     ],
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.30.0"),
-			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.189.0"),
+			.package(url: "https://github.com/dankinsoid/VDKit.git", from: "1.196.0"),
+            .package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.3.0"),
 			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0"),
 			.package(url: "https://github.com/dankinsoid/CarbonTable.git", from: "2.1.0")
     ],
@@ -21,15 +22,17 @@ let package = Package(
         .target(
             name: "VDLayout",
             dependencies: [
-							"ConstraintsOperators",
-							"VDKit",
-							"RxSwift",
-							.product(name: "RxCocoa", package: "RxSwift"),
-							"CarbonTable"
-						]
-				),
+                "ConstraintsOperators",
+                "VDKit",
+                "VDChain",
+                "RxSwift",
+                .product(name: "RxCocoa", package: "RxSwift"),
+                "CarbonTable"
+                ]
+            ),
 			.testTarget(
 				name: "VDLayoutTests",
-				dependencies: ["VDLayout", "VDKit"]),
+				dependencies: ["VDLayout", "VDKit"]
+            ),
     ]
 )
