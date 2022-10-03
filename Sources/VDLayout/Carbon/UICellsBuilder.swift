@@ -168,7 +168,7 @@ private final class CellView: UIView {
 	override func addSubview(_ view: UIView) {
 		super.addSubview(view)
 		view.ignoreAutoresizingMask()
-		view.edges() =| 0
+		view.edges =| 0
 	}
 	
 }
