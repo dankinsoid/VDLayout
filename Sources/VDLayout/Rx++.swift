@@ -50,10 +50,10 @@ extension PropertyChain where Base: ValueChaining, Base.Root: AnyObject {
 	
 	private func subscribe(_ value: Observable<Value>) {
 		let result = chaining.root
-		let setter = (getter as? ReferenceWritableKeyPath<Base.Root, Value>)?.set
+        guard let setter = getter as? ReferenceWritableKeyPath<Base.Root, Value> else { return }
 		value.asObservable().subscribe(onNext: {[weak result] in
-			guard var it = result else { return }
-			setter?(&it, $0)
+			guard let it = result else { return }
+            it[keyPath: setter] = $0
 		}).disposed(by: Reactive(result).asDisposeBag)
 	}
 	
@@ -97,10 +97,9 @@ extension PropertyChain where Base: ValueChaining, Base.Root: AnyObject, Value: 
 	
 	private func subscribe(_ value: Observable<Value.Element>) {
 		let result = chaining.root
-		let getter = getter.get
-		value.asObservable().subscribe(onNext: {[weak result] in
+		value.asObservable().subscribe(onNext: {[weak result, getter] in
 			guard let it = result else { return }
-			getter(it).on(.next($0))
+			it[keyPath: getter].on(.next($0))
 		}).disposed(by: Reactive(result).asDisposeBag)
 	}
 	
@@ -147,7 +146,7 @@ extension PropertyChain where Base: ValueChaining, Base.Root: AnyObject, Value: 
 	
 	private func subscribe(_ value: AnyObserver<Value.Element>) {
 		let result = chaining.root
-		getter.get(result).asObservable().subscribe(value).disposed(by: Reactive(result).asDisposeBag)
+		result[keyPath: getter].asObservable().subscribe(value).disposed(by: Reactive(result).asDisposeBag)
 	}
 }
 

@@ -1,12 +1,4 @@
-//
-//  Layoutt.swift
-//  TestUI (iOS)
-//
-//  Created by Данил Войдилов on 10.02.2021.
-//
-
 import UIKit
-import VDKit
 import RxSwift
 import ConstraintsOperators
 

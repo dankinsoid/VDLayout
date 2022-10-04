@@ -1,12 +1,4 @@
-//
-//  Stack.swift
-//  TestUI (iOS)
-//
-//  Created by Данил Войдилов on 09.02.2021.
-//
-
 import UIKit
-import UIKitComposable
 
 extension UIStackView {
 	

@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import VDChain
-import VDKit
 import ConstraintsOperators
 
 public struct WrappedView<Root: SubviewProtocol, P: SubviewProtocol>: SubviewProtocol, ValueChaining {

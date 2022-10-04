@@ -1,12 +1,4 @@
-//
-//  File.swift
-//  
-//
-//  Created by Данил Войдилов on 14.02.2021.
-//
-
 import UIKit
-import VDKit
 
 open class LtView: UIView {
 	

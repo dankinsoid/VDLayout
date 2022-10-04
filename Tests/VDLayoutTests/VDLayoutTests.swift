@@ -8,7 +8,6 @@
 import XCTest
 @testable import RxSwift
 @testable import CarbonTable
-@testable import VDKit
 @testable import VDLayout
 
 final class VDTests: XCTestCase {
@@ -28,21 +27,4 @@ final class VDTests: XCTestCase {
 		("tests", tests),
 	]
 	
-}
-
-struct Cmp: IdentifiableComponent {
-	var id: String { "" }
-	func renderContent() -> UIView {
-		UIView()
-	}
-	func render(in content: UIView) {
-		
-	}
-}
-
-@UISectionsBuilder
-func cells(array: [Int]) -> [Section] {
-	Section(id: "", items: array) { i in
-		UILabel("\(i)")
-	}
 }
