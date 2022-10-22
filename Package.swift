@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.33.0"),
-            .package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.3.0"),
+            .package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.4.0"),
 			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0")
     ],
     targets: [
