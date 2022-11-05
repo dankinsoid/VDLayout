@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "VDLayout",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v13)
     ],
     products: [
         .library(name: "VDLayout", targets: ["VDLayout"]),
@@ -14,7 +14,7 @@ let package = Package(
     dependencies: [
 			.package(url: "https://github.com/dankinsoid/ConstraintsOperators.git", from: "2.33.0"),
             .package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.4.0"),
-			.package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0")
+			.package(url: "https://github.com/dankinsoid/CombineOperators.git", from: "2.0.0")
     ],
     targets: [
         .target(
@@ -22,13 +22,13 @@ let package = Package(
             dependencies: [
                 "ConstraintsOperators",
                 "VDChain",
-                "RxSwift",
-                .product(name: "RxCocoa", package: "RxSwift"),
-                ]
-            ),
-			.testTarget(
-				name: "VDLayoutTests",
-				dependencies: ["VDLayout"]
-            ),
+                "CombineOperators",
+                .product(name: "CombineCocoa", package: "CombineOperators"),
+            ]
+        ),
+        .testTarget(
+            name: "VDLayoutTests",
+            dependencies: ["VDLayout"]
+        )
     ]
 )

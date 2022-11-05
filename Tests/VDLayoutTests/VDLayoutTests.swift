@@ -1,5 +1,4 @@
 import XCTest
-@testable import RxSwift
 @testable import VDLayout
 
 final class VDTests: XCTestCase {

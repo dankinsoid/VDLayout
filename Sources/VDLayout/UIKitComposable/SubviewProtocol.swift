@@ -1,6 +1,7 @@
 #if canImport(UIKit)
 import UIKit
-import RxSwift
+import Combine
+import CombineCocoa
 
 public protocol SubviewProtocol {
 	func createViewToAdd() -> UIView
@@ -14,15 +15,11 @@ extension UIViewController: SubviewProtocol {
 	
 	public func createViewToAdd() -> UIView {
 		loadViewIfNeeded()
-        let disposable = view.rx.movedToWindow.subscribe(
-            onSuccess: {[weak self] in
-                guard let `self` = self else { return }
-                self.view.superview?.vc?.addChild(self)
-            }
-        )
-        let bag = DisposeBag()
-        disposable.disposed(by: bag)
-        objc_setAssociatedObject(self, &disposeBagKey, bag, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        let disposable = view.cb.movedToWindow.sink {[weak self] in
+            guard let `self` = self else { return }
+            self.view.superview?.vc?.addChild(self)
+        }
+        objc_setAssociatedObject(self, &disposeBagKey, disposable, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 		return view
 	}
 }
