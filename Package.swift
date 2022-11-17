@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "VDLayout", targets: ["VDLayout"]),
     ],
     dependencies: [
-			.package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.4.0")
+			.package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.5.1")
     ],
     targets: [
 			.target(
