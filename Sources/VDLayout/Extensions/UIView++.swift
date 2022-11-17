@@ -32,6 +32,10 @@ public extension SubviewProtocol where Self: UIView {
     static func subviews(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<DoChain<EmptyChaining<Self>>> {
         Self.init().chain.subviews(subviews: subviews)
     }
+    
+    func callAsFunction(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<DoChain<EmptyChaining<Self>>> {
+        chain.subviews(subviews: subviews)
+    }
 }
 
 extension UIView {
