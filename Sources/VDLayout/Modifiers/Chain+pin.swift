@@ -1,7 +1,7 @@
 import SwiftUI
 import VDChain
 
-extension Chain where Base.Root: NSLayoutConstraintable & SubviewProtocol & AnyObject {
+extension Chain where Base.Root: NSLayoutConstraintable {
     
     /// Set any constraints for a given view.
     /// - Parameters:
