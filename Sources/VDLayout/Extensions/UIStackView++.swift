@@ -1,4 +1,5 @@
 import UIKit
+import VDChain
 
 extension UIStackView: CustomAddSubviewType {
     
@@ -7,27 +8,28 @@ extension UIStackView: CustomAddSubviewType {
     }
 }
 
-public extension UIStackView {
+public extension SubviewProtocol where Self: UIStackView {
     
-    static func V(spacing: CGFloat = 0, alignment: VAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }) -> Self {
+    static func V(spacing: CGFloat = 0, alignment: VAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }) -> Chain<DoChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .vertical
         result.spacing = spacing
         result.alignment = alignment.origin
         result.distribution = distribution
-        subviews().forEach(result.add)
-        return result
+        return result.chain.subviews(subviews: subviews)
     }
     
-    static func H(spacing: CGFloat = 0, alignment: HAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }) -> Self {
+    static func H(spacing: CGFloat = 0, alignment: HAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }) -> Chain<DoChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .horizontal
         result.spacing = spacing
         result.alignment = alignment.origin
         result.distribution = distribution
-        subviews().forEach(result.add)
-        return result
+        return result.chain.subviews(subviews: subviews)
     }
+}
+
+public extension UIStackView {
     
     @frozen
     enum VAlignment {

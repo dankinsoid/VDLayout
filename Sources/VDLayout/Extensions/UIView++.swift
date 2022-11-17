@@ -1,4 +1,5 @@
 import UIKit
+import VDChain
 
 extension UIView: SubviewProtocol {
     
@@ -23,6 +24,13 @@ public extension UIView {
             addSubview(view)
         }
         subview.configureAfterAddToSuperview()
+    }
+}
+
+extension SubviewProtocol where Self: UIView {
+    
+    static func subviews(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<DoChain<EmptyChaining<Self>>> {
+        Self.init().chain.subviews(subviews: subviews)
     }
 }
 
