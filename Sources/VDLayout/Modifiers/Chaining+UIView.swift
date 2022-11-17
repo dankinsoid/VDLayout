@@ -17,34 +17,6 @@ public extension Chain where Base.Root: UIView {
             $0.layer.maskedCorners = corners.union(CACornerMask(others))
         }
     }
-    
-    func size(_ size: CGSize) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.pin(.width, size.width).pin(.height, size.height)
-        }
-    }
-
-    func height(_ height: CGFloat) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.pin(.height, height)
-        }
-    }
-
-    func width(_ width: CGFloat) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.pin(.width, width)
-        }
-    }
-
-    func size(_ width: CGFloat, _ height: CGFloat) -> Chain<DoChain<Base>> {
-        size(CGSize(width: width, height: height))
-    }
-    
-    func size(_ size: CGFloat) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.pin(.size, size)
-        }
-    }
 
     func alpha(_ value: CGFloat) -> Chain<DoChain<Base>> {
         self.do {
