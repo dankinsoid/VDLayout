@@ -4,9 +4,9 @@ public extension NSLayoutConstraint {
 
     static func create(
         attribute firstAttribute: NSLayoutConstraint.Attribute,
-        item firstItem: NSLayoutConstraintable,
+        item firstItem: some NSLayoutConstraintable,
         attribute secondAttribute: NSLayoutConstraint.Attribute,
-        toItem secondItem: NSLayoutConstraintable?,
+        toItem secondItem: (any NSLayoutConstraintable)?,
         options: Options,
         file: String = #filePath,
         line: UInt = #line
@@ -15,7 +15,7 @@ public extension NSLayoutConstraint {
             firstItem.asUIView?.translatesAutoresizingMaskIntoConstraints = false
         }
 
-        let toItem: NSLayoutConstraintable?
+        let toItem: (any NSLayoutConstraintable)?
         if let second = secondItem {
             toItem = second
         } else if firstAttribute.requireSecondItem {
@@ -118,9 +118,9 @@ private extension NSLayoutConstraint {
 
     static func updateConstraint(
         attribute firstAttribute: NSLayoutConstraint.Attribute,
-        item firstItem: NSLayoutConstraintable?,
+        item firstItem: (any NSLayoutConstraintable)?,
         attribute secondAttribute: NSLayoutConstraint.Attribute,
-        toItem secondItem: NSLayoutConstraintable?,
+        toItem secondItem: (any NSLayoutConstraintable)?,
         options: NSLayoutConstraint.Options
     ) -> NSLayoutConstraint? {
         guard options.update else { return nil }

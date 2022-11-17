@@ -1,4 +1,4 @@
-import UIKit
+import SwiftUI
 import VDChain
 
 public extension Chain where Base.Root: UIView {
@@ -79,6 +79,15 @@ public extension Chain where Base.Root: UIView {
         self.do {
             let stackView = UIStackView().chain.vertical().apply()
             stackView.addArrangedSubview($0)
+        }
+    }
+    
+    func subviews(
+        @SubviewsBuilder subviews: () -> [SubviewProtocol]
+    ) -> Chain<DoChain<Base>> {
+        let views = subviews()
+        return self.do {
+            $0.add(subviews: views)
         }
     }
 }

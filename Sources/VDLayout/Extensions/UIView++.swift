@@ -7,30 +7,12 @@ extension UIView: SubviewProtocol {
 
 public extension UIView {
     
-    convenience init(@SubviewsBuilder subviews: () -> [SubviewProtocol]) {
-        self.init()
-        add(subviews: subviews)
-    }
-    
     func add(@SubviewsBuilder subviews: () -> [SubviewProtocol]) {
         add(subviews: subviews())
     }
     
     func add(subviews: [SubviewProtocol]) {
         subviews.forEach(add)
-    }
-    
-    func with(subviews: [SubviewProtocol]) -> Self {
-        add(subviews: subviews)
-        return self
-    }
-    
-    func callAsFunction(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Self {
-        with(subviews: subviews)
-    }
-    
-    func with(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Self {
-        with(subviews: subviews())
     }
     
     func add(subview: SubviewProtocol) {
