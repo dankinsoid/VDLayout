@@ -1,43 +1,52 @@
-//
-//  SubviewsBuilder.swift
-//  TestUI (iOS)
-//
-//  Created by Данил Войдилов on 09.02.2021.
-//
-
 import UIKit
-import VDKit
 #if canImport(SwiftUI)
 import SwiftUI
 #endif
 
-public typealias SubviewsBuilder = ArrayBuilder<SubviewProtocol>
-
-extension ArrayBuilder where T == SubviewProtocol {
-	
-	@inline(__always)
-	public static func buildExpression<S: SubviewProtocol>(_ expression: S) -> [T] {
-		[expression]
-	}
-	
-	@available(iOS 13.0, *)
-	@inline(__always)
-	public static func buildExpression<S: View>(_ expression: S) -> [T] {
-		[expression.uiKit]
-	}
-}
-
-@available(iOS 13.0, *)
-extension ViewBuilder {
-	
-	@inline(__always)
-	public static func buildExpression<V: View>(_ expression: V) -> V {
-		expression
-	}
-	
-	@inline(__always)
-	public static func buildExpression<V: SubviewProtocol>(_ expression: @escaping @autoclosure () -> V) -> some View {
-		SubviewRepresentableView(expression).edgesIgnoringSafeArea(.all)
-	}
-	
+@resultBuilder
+public enum SubviewsBuilder {
+    
+    public static func buildBlock(_ components: [SubviewProtocol]...) -> [SubviewProtocol] {
+        Array(components.joined())
+    }
+    
+    @inlinable
+    public static func buildArray(_ components: [[SubviewProtocol]]) -> [SubviewProtocol] {
+        Array(components.joined())
+    }
+    
+    @inlinable
+    public static func buildEither(first component: [SubviewProtocol]) -> [SubviewProtocol] {
+        component
+    }
+    
+    @inlinable
+    public static func buildEither(second component: [SubviewProtocol]) -> [SubviewProtocol] {
+        component
+    }
+    
+    @inlinable
+    public static func buildOptional(_ component: [SubviewProtocol]?) -> [SubviewProtocol] {
+        component ?? []
+    }
+    
+    @inlinable
+    public static func buildLimitedAvailability(_ component: [SubviewProtocol]) -> [SubviewProtocol] {
+        component
+    }
+    
+    @inlinable
+    public static func buildExpression(_ expression: some SubviewProtocol) -> [SubviewProtocol] {
+        [expression]
+    }
+    
+    @inlinable
+    public static func buildExpression(_ expression: any SubviewProtocol) -> [SubviewProtocol] {
+        [expression]
+    }
+    
+    @inlinable
+    public static func buildExpression(_ expression: some Sequence<SubviewProtocol>) -> [SubviewProtocol] {
+        Array(expression)
+    }
 }
