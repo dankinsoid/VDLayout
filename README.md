@@ -18,7 +18,7 @@ view.add {
 			.chain
 			.textAlignment(.center)
 			.textColor(.red)
-			.contentPriority.horizontal.compression(.required)
+			.contentPriority(.required, axis: .horizontal, type: .compression)
 		UILabel().chain.text("2")
 		UIButton().chain.title("Button")
 	}
@@ -26,9 +26,9 @@ view.add {
 	.alignment(.center)
 	.distribution(.equalSpacing)
 	.spacing(3)
-	.edges().equal(to: 0)
-	.width(8)
-	.width.equal(to: { $0.height / 2 })
+	.pin(.edges)
+	.pin(.width, 8)
+	.pin(aspectRatio: 1 / 2)
 }
 ```
 ## Usage
@@ -44,24 +44,13 @@ view.add {
  - `with {...}` - same as `add` but returns the view itself, for using in layout
  
  ### Constraints
- For constraints this repo use `ConstraintsOperators` dependency, examples:
+ For constraints this repo use `pin` methods, examples:
  ```swift
  UIView()
- 	.edges().equal(to: 0)
- 	.top.equal(to: view2.bottom + 4)
- 	.bottom.greater(than: view3.bottom + 10)
- 	.width.equal(to: { $0.superview?.height * 2 + 10 })
- ```
- You can use subscripts instead of `equal(to:...)` to shorten: `button.size[44]`
- 
- ### Tables and collection
- For tables and collections this repo use `Carbon` dependency
- `UIList` and `UICollection` - helper `UITableView` and `UICollectionView` subclasses
- 
- ```swift
- UIList($elements) {
-	SomeCell($0) 
-}
+ 	.pin(.edges)
+ 	.pin(to: .bottom, of: view2, options: .offset(4))
+  .pin(.bottom, 10..., to: view3)  
+ 	.pin(.width, to: .height, of: superview, options: .multiplier(2), .offset(10))
  ```
  
 ## Installation
@@ -77,13 +66,13 @@ and run `pod update` from the podfile directory first.
 
 Create a `Package.swift` file.
 ```swift
-// swift-tools-version:5.0
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
   name: "SomeProject",
   dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "2.11.0")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "3.1.1")
   ],
   targets: [
     .target(name: "SomeProject", dependencies: ["VDLayout"])
