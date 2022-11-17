@@ -34,14 +34,13 @@ public extension UIView {
 
 public extension NSObjectProtocol where Self: UIView {
     
-    static func withID(
+    func withID(
         file: String = #file,
         line: UInt = #line,
         function: String = #function
     ) -> Self {
-        let result = Self.init()
-        result.setRestorationID(filePath: file, line: line, function: function)
-        return result
+        setRestorationID(filePath: file, line: line, function: function)
+        return self
     }
 }
 
