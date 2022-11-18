@@ -1,6 +1,6 @@
 import SwiftUI
 
-public extension NSLayoutConstraintable {
+public extension Pinnable {
 
     /// Set any constraints for a given view.
     /// - Parameters:
@@ -11,26 +11,25 @@ public extension NSLayoutConstraintable {
     @discardableResult
     func pin(
         _ attributes: NSLayoutConstraint.Attribute.Set,
-        to toItem: NSLayoutConstraintable? = nil,
+        to toItem: (any NSLayoutConstraintable)? = nil,
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
-        let options = NSLayoutConstraint.Options(options)
-        var result: [NSLayoutConstraint] = []
-        attributes.attributes.forEach { attribute in
-            let constraint = NSLayoutConstraint.create(
-                attribute: attribute,
-                item: self,
-                attribute: attribute,
-                toItem: toItem,
-                options: options,
-                file: file,
-                line: line
-            )
-            result.append(constraint)
+    ) -> ConstraintsCollection {
+        makeConstraints { item in
+            let options = NSLayoutConstraint.Options(options)
+            return attributes.attributes.map { attribute in
+                NSLayoutConstraint.create(
+                    attribute: attribute,
+                    item: item,
+                    attribute: attribute,
+                    toItem: toItem,
+                    options: options,
+                    file: file,
+                    line: line
+                )
+            }
         }
-        return withConstraints(result)
     }
 
     /// Set any constraints for a given view.
@@ -44,11 +43,11 @@ public extension NSLayoutConstraintable {
     func pin<Value: ConstraintsRangeConvertable>(
         _ attributes: NSLayoutConstraint.Attribute.Set,
         _ value: Value,
-        to toItem: NSLayoutConstraintable? = nil,
+        to toItem: (any NSLayoutConstraintable)? = nil,
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
+    ) -> ConstraintsCollection {
         pin(
             attributes,
             to: toItem,
@@ -68,23 +67,26 @@ public extension NSLayoutConstraintable {
     @discardableResult
     func pin(
         edges: [Edge.Set: CGFloat],
-        to toItem: NSLayoutConstraintable? = nil,
+        to toItem: (any NSLayoutConstraintable)? = nil,
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
-        let options = NSLayoutConstraint.Options(options)
-        let array = edges.flatMap {
-            pin(
-                .edges($0.key),
-                $0.value,
-                to: toItem,
-                options: options,
-                file: file,
-                line: line
-            ).constraints
+    ) -> ConstraintsCollection {
+        makeConstraints { item in
+            edges.flatMap { (edge, offset) in
+                NSLayoutConstraint.Attribute.Set.edges(edge).attributes.map { attribute in
+                    NSLayoutConstraint.create(
+                        attribute: attribute,
+                        item: item,
+                        attribute: attribute,
+                        toItem: toItem,
+                        options: NSLayoutConstraint.Options(options + [.offset(offset)]),
+                        file: file,
+                        line: line
+                    )
+                }
+            }
         }
-        return withConstraints(array)
     }
 
     /// Pin a given view before/after another view
@@ -96,11 +98,11 @@ public extension NSLayoutConstraintable {
     @discardableResult
     func pin(
         to edge: Edge,
-        of item: NSLayoutConstraintable,
+        of item: any NSLayoutConstraintable,
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
+    ) -> ConstraintsCollection {
         pin(
             NSLayoutConstraint.Attribute.Set(edge.opposite.attribute),
             to: NSLayoutConstraint.Attribute.Set(edge.attribute),
@@ -120,23 +122,26 @@ public extension NSLayoutConstraintable {
     @discardableResult
     func pin(
         _ attributes: [NSLayoutConstraint.Attribute.Set: CGFloat],
-        to toItem: NSLayoutConstraintable? = nil,
+        to toItem: (any NSLayoutConstraintable)? = nil,
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
-        let options = NSLayoutConstraint.Options(options)
-        let array = attributes.flatMap {
-            pin(
-                $0.key,
-                to: toItem,
-                options: options,
-                .offset($0.value),
-                file: file,
-                line: line
-            ).constraints
+    ) -> ConstraintsCollection {
+        makeConstraints { item in
+            attributes.flatMap { (attributes, offset) in
+                attributes.attributes.map { attribute in
+                    NSLayoutConstraint.create(
+                        attribute: attribute,
+                        item: item,
+                        attribute: attribute,
+                        toItem: toItem,
+                        options: NSLayoutConstraint.Options(options + [.offset(offset)]),
+                        file: file,
+                        line: line
+                    )
+                }
+            }
         }
-        return withConstraints(array)
     }
 
     /// Pin a given view to another view
@@ -144,27 +149,28 @@ public extension NSLayoutConstraintable {
     func pin(
         _ firstAttributes: NSLayoutConstraint.Attribute.Set,
         to secondAttributes: NSLayoutConstraint.Attribute.Set,
-        of item: NSLayoutConstraintable,
+        of item: any NSLayoutConstraintable,
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
+    ) -> ConstraintsCollection {
         let secondAttributesArray = secondAttributes.attributes
         let options = NSLayoutConstraint.Options(options)
-        let array = firstAttributes.attributes.flatMap { firstAttribute in
-            secondAttributesArray.filter { $0.isCompatible(with: firstAttribute) }.map { secondAttribute in
-                NSLayoutConstraint.create(
-                    attribute: firstAttribute,
-                    item: self,
-                    attribute: secondAttribute,
-                    toItem: item,
-                    options: options,
-                    file: file,
-                    line: line
-                )
+        return makeConstraints { item in
+            firstAttributes.attributes.flatMap { firstAttribute in
+                secondAttributesArray.filter { $0.isCompatible(with: firstAttribute) }.map { secondAttribute in
+                    NSLayoutConstraint.create(
+                        attribute: firstAttribute,
+                        item: item,
+                        attribute: secondAttribute,
+                        toItem: item,
+                        options: options,
+                        file: file,
+                        line: line
+                    )
+                }
             }
         }
-        return withConstraints(array)
     }
 
     /// Set size of the view.
@@ -178,17 +184,20 @@ public extension NSLayoutConstraintable {
         options: NSLayoutConstraint.Options...,
         file: String = #filePath,
         line: UInt = #line
-    ) -> Constraints {
+    ) -> ConstraintsCollection {
         let options = NSLayoutConstraint.Options(options + [.multiplier(aspectRatio)])
-        let constraint = NSLayoutConstraint.create(
-            attribute: .height,
-            item: self,
-            attribute: .width,
-            toItem: self,
-            options: options,
-            file: file,
-            line: line
-        )
-        return withConstraints([constraint])
+        return makeConstraints { item in
+            [
+                NSLayoutConstraint.create(
+                    attribute: .height,
+                    item: item,
+                    attribute: .width,
+                    toItem: item,
+                    options: options,
+                    file: file,
+                    line: line
+                )
+            ]
+        }
     }
 }

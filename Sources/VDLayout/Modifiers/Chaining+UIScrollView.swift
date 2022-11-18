@@ -3,7 +3,7 @@ import VDChain
 
 public extension Chain where Base.Root: UIScrollView {
     
-    func bounce(axis: NSLayoutConstraint.AxisSet = .both) -> Chain<DoChain<Base>> {
+    func bounces(_ axis: NSLayoutConstraint.AxisSet = .both) -> Chain<DoChain<Base>> {
         self.do {
             $0.alwaysBounceVertical = axis.contains(.vertical)
             $0.alwaysBounceHorizontal = axis.contains(.horizontal)
@@ -30,6 +30,12 @@ public extension Chain where Base.Root: UIScrollView {
     func multitouch(isEnabled: Bool = true) -> Chain<DoChain<Base>> {
         self.do {
             $0.isMultipleTouchEnabled = isEnabled
+        }
+    }
+    
+    func directionalLock(isEnabled: Bool = true) -> Chain<DoChain<Base>> {
+        self.do {
+            $0.isDirectionalLockEnabled = isEnabled
         }
     }
 }

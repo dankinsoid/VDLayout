@@ -6,7 +6,7 @@ public struct Constraints {
     public var constraints: [NSLayoutConstraint] = []
     public var isEmpty: Bool { constraints.isEmpty }
 
-    init(item: NSLayoutConstraintable, constraints: [NSLayoutConstraint] = []) {
+    init(item: any NSLayoutConstraintable, constraints: [NSLayoutConstraint] = []) {
         self.item = item.constraintItem
         self.constraints = constraints
     }
@@ -46,7 +46,7 @@ extension Constraints: NSLayoutConstraintable {
         item ?? UIView()
     }
 
-    public func withConstraints(_ constraints: [NSLayoutConstraint]) -> Constraints {
+    public func makeConstraints(_ constraints: [NSLayoutConstraint]) -> Constraints {
         Constraints(item: self, constraints: self.constraints + constraints)
     }
 }

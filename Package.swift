@@ -6,18 +6,18 @@ import PackageDescription
 let package = Package(
     name: "VDLayout",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v13),
     ],
     products: [
         .library(name: "VDLayout", targets: ["VDLayout"]),
     ],
     dependencies: [
-			.package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.5.1")
+        .package(url: "https://github.com/dankinsoid/VDChain.git", from: "2.5.1"),
     ],
     targets: [
-			.target(
-				name: "VDLayout",
-				dependencies: ["VDChain"]
-			)
+        .target(
+            name: "VDLayout",
+            dependencies: ["VDChain"]
+        ),
     ]
 )

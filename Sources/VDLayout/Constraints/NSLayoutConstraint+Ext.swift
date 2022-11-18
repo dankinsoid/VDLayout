@@ -4,7 +4,7 @@ public extension NSLayoutConstraint {
 
     static func create(
         attribute firstAttribute: NSLayoutConstraint.Attribute,
-        item firstItem: some NSLayoutConstraintable,
+        item firstItem: any NSLayoutConstraintable,
         attribute secondAttribute: NSLayoutConstraint.Attribute,
         toItem secondItem: (any NSLayoutConstraintable)?,
         options: Options,
