@@ -6,8 +6,8 @@ public struct Constraints {
     public var constraints: [NSLayoutConstraint] = []
     public var isEmpty: Bool { constraints.isEmpty }
 
-    init(item: any NSLayoutConstraintable, constraints: [NSLayoutConstraint] = []) {
-        self.item = item.constraintItem
+    init(item: AnyObject?, constraints: [NSLayoutConstraint] = []) {
+        self.item = item
         self.constraints = constraints
     }
 
@@ -40,13 +40,16 @@ extension Constraints: CustomStringConvertible {
     }
 }
 
-extension Constraints: NSLayoutConstraintable {
-
-    public var constraintItem: AnyObject {
-        item ?? UIView()
-    }
-
-    public func makeConstraints(_ constraints: [NSLayoutConstraint]) -> Constraints {
-        Constraints(item: self, constraints: self.constraints + constraints)
+extension Constraints: Pinnable {
+    
+    public func makeConstraints(_ constraints: @escaping (any NSLayoutConstraintable) -> [NSLayoutConstraint]) -> Constraints {
+        Constraints(
+            item: item,
+            constraints: self.constraints + (
+                item.map {
+                    constraints(AnyNSLayoutConstraintable($0))
+                } ?? []
+            )
+        )
     }
 }

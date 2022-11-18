@@ -11,7 +11,7 @@ public protocol Pinnable {
 public extension Pinnable where ConstraintsCollection == Constraints, Self: NSLayoutConstraintable {
     
     func makeConstraints(_ constraints: @escaping (any NSLayoutConstraintable) -> [NSLayoutConstraint]) -> Constraints {
-        Constraints(item: self, constraints: constraints(self))
+        Constraints(item: constraintItem, constraints: constraints(self))
     }
 }
 
