@@ -22,7 +22,6 @@ view.add {
 		UILabel().chain.text("2")
 		UIButton().chain.title("Button")
 	}
-	.chain
 	.alignment(.center)
 	.distribution(.equalSpacing)
 	.spacing(3)
