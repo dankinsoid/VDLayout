@@ -37,4 +37,44 @@ extension UIButton {
     public var titleColors: UIControl.States<UIColor> {
         UIControl.States(get: titleColor, set: setTitleColor)
     }
+    
+    public convenience init(_ title: String, type: ButtonType = .system, action: @escaping () -> Void) {
+        self.init(type: type)
+        setTitle(title, for: .normal)
+        setAction(action)
+    }
+    
+    public func setAction(_ action: @escaping () -> Void) {
+        if let actions = objc_getAssociatedObject(self, &buttonActionsKey) as? ButtonActions {
+            actions.action = action
+            return
+        }
+        let actions = ButtonActions()
+        actions.action = action
+        addTarget(actions, action: #selector(ButtonActions.objcAction), for: .touchUpInside)
+        objc_getAssociatedObject(self, &buttonActionsKey)
+    }
+    
+    public func addAction(_ action: @escaping () -> Void) {
+        guard let actions = objc_getAssociatedObject(self, &buttonActionsKey) as? ButtonActions else {
+            setAction(action)
+            return
+        }
+        let oldAction = actions.action
+        actions.action = {
+            oldAction()
+            action()
+        }
+    }
 }
+
+private final class ButtonActions {
+    
+    var action: () -> Void = {}
+
+    @objc func objcAction() {
+        action()
+    }
+}
+
+private var buttonActionsKey = "buttonActionsKey"
