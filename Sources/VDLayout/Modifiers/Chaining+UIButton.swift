@@ -3,9 +3,29 @@ import VDChain
 
 public extension Chain where Base.Root: UIButton {
 
-    func edgeInsets(_ insets: UIEdgeInsets) -> Chain<DoChain<Base>> {
+    func insets(
+        title: UIEdgeInsets,
+        image: UIEdgeInsets = .zero
+    ) -> Chain<DoChain<Base>> {
         self.do {
-            $0.contentEdgeInsets = insets
+            $0.contentEdgeInsets = UIEdgeInsets(
+                top: title.top + image.top,
+                left: title.left + image.right,
+                bottom: title.bottom + image.bottom,
+                right: title.right + image.right
+            )
+            $0.titleEdgeInsets = UIEdgeInsets(
+                top: -title.top,
+                left: -title.left,
+                bottom: -title.bottom,
+                right: -title.right
+            )
+            $0.imageEdgeInsets = UIEdgeInsets(
+                top: -image.top,
+                left: -image.left,
+                bottom: -image.bottom,
+                right: -image.right
+            )
         }
     }
 
@@ -30,18 +50,6 @@ public extension Chain where Base.Root: UIButton {
     func horizontalAlignment(_ alignment: NSTextAlignment) -> Chain<DoChain<Base>> {
         self.do {
             $0.contentHorizontalAlignment = .left
-        }
-    }
-
-    func titleEdgeInsets(_ insets: UIEdgeInsets) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.titleEdgeInsets = insets
-        }
-    }
-
-    func contentEdgeInsets(_ insets: UIEdgeInsets) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.contentEdgeInsets = insets
         }
     }
 

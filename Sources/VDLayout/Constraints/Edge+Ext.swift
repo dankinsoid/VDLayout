@@ -131,8 +131,19 @@ public extension Edge.Set {
     }
 }
 
+extension UIEdgeInsets: ExpressibleByDictionaryLiteral {
+}
+
 public extension UIEdgeInsets {
 
+    init(dictionaryLiteral elements: (Edge.Set, CGFloat)...) {
+        self.init(edges: Dictionary(elements) { _, p in p })
+    }
+    
+    init(_ value: CGFloat) {
+        self.init(top: value, left: value, bottom: value, right: value)
+    }
+    
     init(edges: [Edge.Set: CGFloat]) {
         self = UIEdgeInsets(
             top: edges.first { $0.key.contains(.top) }?.value ?? 0,
