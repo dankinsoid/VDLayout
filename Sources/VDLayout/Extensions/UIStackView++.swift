@@ -34,11 +34,11 @@ public extension UIStackView {
     @frozen
     enum VAlignment {
         
-        case сenter, fill, leading, trailing
+        case center, fill, leading, trailing
         
         public var origin: Alignment {
             switch self {
-            case .сenter: return .center
+            case .center: return .center
             case .fill: return .fill
             case .leading: return .leading
             case .trailing: return .trailing
