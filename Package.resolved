@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dankinsoid/VDPin.git",
       "state" : {
-        "revision" : "08a9d5b93f16af3db2c33bc627dd21184f7b37d0",
-        "version" : "1.0.1"
+        "revision" : "184e78ef128d818d407f10c57b2f73b226680228",
+        "version" : "1.0.3"
       }
     }
   ],
