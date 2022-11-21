@@ -71,7 +71,7 @@ import PackageDescription
 let package = Package(
   name: "SomeProject",
   dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "3.2.3")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "3.3.0")
   ],
   targets: [
     .target(name: "SomeProject", dependencies: ["VDLayout"])

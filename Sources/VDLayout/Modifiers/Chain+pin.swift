@@ -1,5 +1,6 @@
 import SwiftUI
 import VDChain
+@_exported import VDPin
 
 extension Chain: Pinnable where Base: ValueChaining, Base.Root: NSLayoutConstraintable {
     
