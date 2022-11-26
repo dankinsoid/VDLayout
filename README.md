@@ -43,7 +43,7 @@ view.add {
  - `with {...}` - same as `add` but returns the view itself, for using in layout
  
  ### Constraints
- For constraints this repo use `pin` methods, examples:
+ For constraints this repo use [`pin`](https://github.com/dankinsoid/VDPin.git) methods, examples:
  ```swift
  UIView()
  	.pin(.edges)
