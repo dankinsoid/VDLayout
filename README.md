@@ -7,7 +7,7 @@
 
 
 ## Description
-This repository provides a declarative way to layout in SwiftUI-style. The DSL is based on [KeyPath chaining](https://github.com/dankinsoid/VDChain) so you can use any view property, don't need to create a DSL wrapper on your custom views, but you can create custom convinience modifiers.
+This repository provides a declarative way to layout in SwiftUI-style. The DSL is based on [KeyPath chaining](https://github.com/dankinsoid/VDChain) so you can use any view property, don't need to create a DSL wrapper on your custom views, but you can create [custom convinience modifiers](Sources/VDLayout/Modifiers).
 
 ## Example
 
