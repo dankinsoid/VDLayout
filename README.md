@@ -7,27 +7,28 @@
 
 
 ## Description
-This repository provides a declarative way to layout in SwiftUI-style
+This repository provides a declarative way to layout in SwiftUI-style. The DSL is based on [KeyPath chaining](https://github.com/dankinsoid/VDChain) so you can use any view property, don't need to create a DSL wrapper on your custom views.
 
 ## Example
 
 ```swift
 view.add {
-	UIStackView.V {
-		UILabel("1")
-			.chain
-			.textAlignment(.center)
-			.textColor(.red)
-			.contentPriority(.required, axis: .horizontal, type: .compression)
-		UILabel().chain.text("2")
-		UIButton().chain.title("Button")
-	}
-	.alignment(.center)
-	.distribution(.equalSpacing)
-	.spacing(3)
-	.pin(.edges)
-	.pin(.width, 8)
-	.pin(aspectRatio: 1 / 2)
+    UIStackView.V {
+        UILabel("1")
+            .chain
+	    .textAlignment(.center)
+	    .textColor(.red)
+	    .contentPriority(.required, axis: .horizontal, type: .compression)
+	    
+	UILabel().chain.text("2")
+        UIButton().chain.title("Button")
+    }
+    .alignment(.center)
+    .distribution(.equalSpacing)
+    .spacing(3)
+    .pin(.edges)
+    .pin(.width, 8)
+    .pin(aspectRatio: 1 / 2)
 }
 ```
 ## Usage
