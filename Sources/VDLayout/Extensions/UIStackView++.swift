@@ -10,21 +10,39 @@ extension UIStackView: CustomAddSubviewType {
 
 public extension SubviewProtocol where Self: UIStackView {
     
-    static func V(spacing: CGFloat = 0, alignment: VAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }) -> Chain<DoChain<EmptyChaining<Self>>> {
+    static func V(
+        spacing: CGFloat = 0,
+        alignment: VAlignment = .fill,
+        distribution: Distribution = .fill,
+        file: String = #fileID,
+        line: UInt = #line,
+        function: String = #function,
+        @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
+    ) -> Chain<DoChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .vertical
         result.spacing = spacing
         result.alignment = alignment.origin
         result.distribution = distribution
+        result.setRestorationID(fileID: file, line: line, function: function)
         return result.chain.subviews(subviews: subviews)
     }
     
-    static func H(spacing: CGFloat = 0, alignment: HAlignment = .fill, distribution: Distribution = .fill, @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }) -> Chain<DoChain<EmptyChaining<Self>>> {
+    static func H(
+        spacing: CGFloat = 0,
+        alignment: HAlignment = .fill,
+        distribution: Distribution = .fill,
+        file: String = #fileID,
+        line: UInt = #line,
+        function: String = #function,
+        @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
+    ) -> Chain<DoChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .horizontal
         result.spacing = spacing
         result.alignment = alignment.origin
         result.distribution = distribution
+        result.setRestorationID(fileID: file, line: line, function: function)
         return result.chain.subviews(subviews: subviews)
     }
 }

@@ -26,20 +26,19 @@ public extension UIView {
         subview.configureAfterAddToSuperview()
     }
     
-    func setRestorationID(filePath: String, line: UInt, function: String) {
-        let path = filePath.components(separatedBy: ["/"]).suffix(1).joined(separator: "/")
-        restorationIdentifier = "\(path) \(line) - \(function)"
+    func setRestorationID(fileID: String, line: UInt, function: String) {
+        restorationIdentifier = "\(fileID) \(line)"
     }
 }
 
 public extension NSObjectProtocol where Self: UIView {
     
     func withID(
-        file: String = #file,
+        file: String = #fileID,
         line: UInt = #line,
         function: String = #function
     ) -> Self {
-        setRestorationID(filePath: file, line: line, function: function)
+        setRestorationID(fileID: file, line: line, function: function)
         return self
     }
 }
@@ -47,7 +46,7 @@ public extension NSObjectProtocol where Self: UIView {
 public extension SubviewProtocol where Self: UIView {
     
     static func subviews(
-        file: String = #file,
+        file: String = #fileID,
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder subviews: () -> [SubviewProtocol]

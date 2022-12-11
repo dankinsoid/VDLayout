@@ -97,9 +97,9 @@ public extension Chain where Base.Root: UIView {
         }
     }
     
-    func restorationID(file: String = #file, line: UInt = #line, function: String = #function) -> Chain<DoChain<Base>> {
+    func restorationID(file: String = #fileID, line: UInt = #line, function: String = #function) -> Chain<DoChain<Base>> {
         self.do {
-            $0.setRestorationID(filePath: file, line: line, function: function)
+            $0.setRestorationID(fileID: file, line: line, function: function)
         }
     }
 }

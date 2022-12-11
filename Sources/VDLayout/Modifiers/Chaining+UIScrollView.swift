@@ -1,5 +1,6 @@
 import UIKit
 import VDChain
+import VDPin
 
 public extension Chain where Base.Root: UIScrollView {
     
