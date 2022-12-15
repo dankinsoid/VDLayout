@@ -7,27 +7,28 @@
 
 
 ## Description
-This repository provides a declarative way to layout in SwiftUI-style
+This repository provides a declarative way to layout in SwiftUI-style. The DSL is based on [KeyPath chaining](https://github.com/dankinsoid/VDChain) so you can use any view property, don't need to create a DSL wrapper on your custom views, but you can create [custom convinience modifiers](Sources/VDLayout/Modifiers).
 
 ## Example
 
 ```swift
 view.add {
-	UIStackView.V {
-		UILabel("1")
-			.chain
-			.textAlignment(.center)
-			.textColor(.red)
-			.contentPriority(.required, axis: .horizontal, type: .compression)
-		UILabel().chain.text("2")
-		UIButton().chain.title("Button")
-	}
-	.alignment(.center)
-	.distribution(.equalSpacing)
-	.spacing(3)
-	.pin(.edges)
-	.pin(.width, 8)
-	.pin(aspectRatio: 1 / 2)
+    UIStackView.V {
+        UILabel("1")
+            .chain
+	    .textAlignment(.center)
+	    .textColor(.red)
+	    .contentPriority(.required, axis: .horizontal, type: .compression)
+	    
+	UILabel().chain.text("2")
+        UIButton().chain.title("Button")
+    }
+    .alignment(.center)
+    .distribution(.equalSpacing)
+    .spacing(3)
+    .pin(.edges)
+    .pin(.width, 8)
+    .pin(aspectRatio: 1 / 2)
 }
 ```
 ## Usage
@@ -43,7 +44,7 @@ view.add {
  - `with {...}` - same as `add` but returns the view itself, for using in layout
  
  ### Constraints
- For constraints this repo use `pin` methods, examples:
+ For constraints this repo use [`pin`](https://github.com/dankinsoid/VDPin.git) methods, examples:
  ```swift
  UIView()
  	.pin(.edges)
@@ -71,7 +72,7 @@ import PackageDescription
 let package = Package(
   name: "SomeProject",
   dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "3.4.3")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "3.5.0")
   ],
   targets: [
     .target(name: "SomeProject", dependencies: ["VDLayout"])
