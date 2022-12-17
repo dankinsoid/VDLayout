@@ -8,9 +8,9 @@ extension Chain: Pinnable where Base: ValueChaining, Base.Root: NSLayoutConstrai
     
     public func makeConstraints(_ constraints: @escaping (NSLayoutConstraintable) -> [NSLayoutConstraint]) -> Chain<DoChain<Base>> {
         var made = false
-        return self.do {
+        return self.do { subview in
             guard !made else { return }
-            _ = constraints($0)
+            _ = constraints(subview)
             made = true
         }
     }

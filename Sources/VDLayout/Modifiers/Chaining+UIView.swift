@@ -74,20 +74,34 @@ public extension Chain where Base.Root: UIView {
             $0.layer.shadowRadius = radius
         }
     }
-
-    func wrapped() -> Chain<DoChain<Base>> {
+    
+    func margins(_ value: CGFloat) -> Chain<DoChain<Base>> {
+        margins(.all, value)
+    }
+    
+    func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<DoChain<Base>> {
         self.do {
-            let stackView = UIStackView().chain.vertical().apply()
-            stackView.addArrangedSubview($0)
+            if edges.contains(.leading) {
+                $0.directionalLayoutMargins.leading += value
+            }
+            if edges.contains(.trailing) {
+                $0.directionalLayoutMargins.trailing += value
+            }
+            if edges.contains(.top) {
+                $0.directionalLayoutMargins.top += value
+            }
+            if edges.contains(.bottom) {
+                $0.directionalLayoutMargins.bottom += value
+            }
         }
     }
     
-    func subviews(
-        @SubviewsBuilder subviews: () -> [SubviewProtocol]
-    ) -> Chain<DoChain<Base>> {
-        let views = subviews()
-        return self.do {
-            $0.add(subviews: views)
+    func margins(insets: NSDirectionalEdgeInsets) -> Chain<DoChain<Base>> {
+        self.do {
+            $0.directionalLayoutMargins.leading += insets.leading
+            $0.directionalLayoutMargins.trailing += insets.trailing
+            $0.directionalLayoutMargins.top += insets.top
+            $0.directionalLayoutMargins.bottom += insets.bottom
         }
     }
     
@@ -100,6 +114,24 @@ public extension Chain where Base.Root: UIView {
     func restorationID(file: String = #fileID, line: UInt = #line, function: String = #function) -> Chain<DoChain<Base>> {
         self.do {
             $0.setRestorationID(fileID: file, line: line, function: function)
+        }
+    }
+}
+
+public extension Chain where Base: SubviewChaining, Base.Root: UIView {
+    
+    func subviews(
+        @SubviewsBuilder subviews: () -> [SubviewProtocol]
+    ) -> Chain<SubviewChain<Base>> {
+        let installers = subviews().map(\.subviewInstaller)
+        return self.on { root, superview in
+            installers.forEach {
+                $0.install(on: root)
+            }
+        } configure: { root, superview in
+            installers.forEach {
+                $0.configure(on: root)
+            }
         }
     }
 }

@@ -3,7 +3,29 @@ import VDChain
 
 extension UIView: SubviewProtocol {
     
-    public func createViewToAdd() -> UIView { self }
+    public var subviewInstaller: SubviewInstaller {
+        UIViewInstaller(self)
+    }
+}
+
+private struct UIViewInstaller: SubviewInstaller {
+    
+    let view: UIView
+    
+    init(_ view: UIView) {
+        self.view = view
+    }
+    
+    func install(on superview: UIView) {
+        if let customAdd = superview as? CustomAddSubviewType {
+            customAdd.customAdd(subview: view)
+        } else {
+            superview.addSubview(view)
+        }
+    }
+    
+    func configure(on superview: UIView) {
+    }
 }
 
 public extension UIView {
@@ -13,21 +35,25 @@ public extension UIView {
     }
     
     func add(subviews: [SubviewProtocol]) {
-        subviews.forEach(add)
+        let installers = subviews.map(\.subviewInstaller)
+        installers.forEach {
+            $0.install(on: self)
+        }
+        installers.forEach {
+            $0.configure(on: self)
+        }
     }
     
     func add(subview: SubviewProtocol) {
-        let view = subview.createViewToAdd()
-        if let customAdd = self as? CustomAddSubviewType {
-            customAdd.customAdd(subview: view)
-        } else {
-            addSubview(view)
-        }
-        subview.configureAfterAddToSuperview()
+        add(subviews: [subview])
     }
     
     func setRestorationID(fileID: String, line: UInt, function: String) {
         restorationIdentifier = "\(fileID) \(line)"
+    }
+    
+    var controller: UIViewController? {
+        (next as? UIViewController) ?? superview?.controller
     }
 }
 
@@ -50,14 +76,14 @@ public extension SubviewProtocol where Self: UIView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder subviews: () -> [SubviewProtocol]
-    ) -> Chain<some ValueChaining<Self>> {
+    ) -> Chain<some SubviewChaining<Self>> {
         Self.init().chain
             .subviews(subviews: subviews)
             .restorationID(file: file, line: line, function: function)
             
     }
     
-    func callAsFunction(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<some ValueChaining<Self>> {
+    func callAsFunction(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<some SubviewChaining<Self>> {
         chain.subviews(subviews: subviews)
     }
 }

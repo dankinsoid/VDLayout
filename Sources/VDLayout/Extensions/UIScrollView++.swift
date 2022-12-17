@@ -13,7 +13,7 @@ public extension SubviewProtocol where Self: UIScrollView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
-    ) -> Chain<some ValueChaining<Self>> {
+    ) -> Chain<some SubviewChaining<Self>> {
         Self.subviews {
             UIStackView.V(
                 spacing: spacing,
@@ -39,7 +39,7 @@ public extension SubviewProtocol where Self: UIScrollView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
-    ) -> Chain<some ValueChaining<Self>> {
+    ) -> Chain<some SubviewChaining<Self>> {
         Self.subviews {
             UIStackView.H(
                 spacing: spacing,
