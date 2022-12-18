@@ -1,5 +1,6 @@
 import SwiftUI
 import VDChain
+import VDPin
 
 public extension Chain where Base.Root: UIView {
 
@@ -80,28 +81,12 @@ public extension Chain where Base.Root: UIView {
     }
     
     func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<DoChain<Base>> {
-        self.do {
-            if edges.contains(.leading) {
-                $0.directionalLayoutMargins.leading += value
-            }
-            if edges.contains(.trailing) {
-                $0.directionalLayoutMargins.trailing += value
-            }
-            if edges.contains(.top) {
-                $0.directionalLayoutMargins.top += value
-            }
-            if edges.contains(.bottom) {
-                $0.directionalLayoutMargins.bottom += value
-            }
-        }
+        margins(NSDirectionalEdgeInsets(edges, value))
     }
     
-    func margins(insets: NSDirectionalEdgeInsets) -> Chain<DoChain<Base>> {
+    func margins(_ insets: NSDirectionalEdgeInsets) -> Chain<DoChain<Base>> {
         self.do {
-            $0.directionalLayoutMargins.leading += insets.leading
-            $0.directionalLayoutMargins.trailing += insets.trailing
-            $0.directionalLayoutMargins.top += insets.top
-            $0.directionalLayoutMargins.bottom += insets.bottom
+            $0.directionalLayoutMargins += insets
         }
     }
     
@@ -118,11 +103,47 @@ public extension Chain where Base.Root: UIView {
     }
 }
 
-public extension Chain where Base: SubviewChaining, Base.Root: UIView {
+public extension Chain where Base.Root: UIView, Base: SubviewChaining {
+    
+    func scrollable(
+        _ axis: NSLayoutConstraint.Axis,
+        showsIndicators: Bool = false,
+        bounce: Bool = true
+    ) -> SubviewChain<UIScrollView> {
+        let scroll = UIScrollView()
+        switch axis {
+        case .horizontal:
+            scroll.alwaysBounceHorizontal = bounce
+            scroll.alwaysBounceVertical = false
+            scroll.showsHorizontalScrollIndicator = showsIndicators
+            scroll.showsVerticalScrollIndicator = false
+        case .vertical:
+            scroll.alwaysBounceHorizontal = false
+            scroll.alwaysBounceVertical = bounce
+            scroll.showsHorizontalScrollIndicator = false
+            scroll.showsVerticalScrollIndicator = showsIndicators
+        @unknown default:
+            break
+        }
+        return scroll.chain.subviews {
+            switch axis {
+            case .horizontal:
+                self.pin(.edges).pin(.centerY)
+            case .vertical:
+                self.pin(.edges).pin(.centerX)
+            @unknown default:
+                self.pin(.edges)
+            }
+        }
+        .any()
+    }
+}
+
+public extension Chain where Base: SubviewInstallerChaining, Base.Root: UIView {
     
     func subviews(
         @SubviewsBuilder subviews: () -> [SubviewProtocol]
-    ) -> Chain<SubviewChain<Base>> {
+    ) -> Chain<SubviewInstallerChain<Base>> {
         let installers = subviews().map(\.subviewInstaller)
         return self.on { root, superview in
             installers.forEach {

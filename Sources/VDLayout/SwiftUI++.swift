@@ -1,7 +1,7 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-public struct UIKitView<V: UIView>: UIViewRepresentable {
+public struct UIKitView<V: SingleSubviewProtocol>: UIViewRepresentable where V.Root: UIView {
     
     let make: () -> V
     
@@ -13,16 +13,16 @@ public struct UIKitView<V: UIView>: UIViewRepresentable {
         self.make = make
     }
     
-    public func makeUIView(context: UIViewRepresentableContext<UIKitView<V>>) -> V {
-        make()
+    public func makeUIView(context: Context) -> V.Root {
+        make().asSubview()
     }
     
-    public func updateUIView(_ uiView: V, context: UIViewRepresentableContext<UIKitView<V>>) {}
+    public func updateUIView(_ uiView: V.Root, context: Context) {}
     
 }
 
 @available(iOS 13.0, *)
-public struct UIKitViewController<V: UIViewController>: UIViewControllerRepresentable {
+public struct UIKitViewController<V: SingleSubviewProtocol>: UIViewControllerRepresentable where V.Root: UIViewController {
     
     public let make: () -> V
     
@@ -34,10 +34,9 @@ public struct UIKitViewController<V: UIViewController>: UIViewControllerRepresen
         self.make = make
     }
     
-    public func makeUIViewController(context: UIViewControllerRepresentableContext<UIKitViewController<V>>) -> V {
-        make()
+    public func makeUIViewController(context: Context) -> V.Root {
+        make().asSubview()
     }
     
-    public func updateUIViewController(_ uiViewController: V, context: UIViewControllerRepresentableContext<UIKitViewController<V>>) {}
-    
+    public func updateUIViewController(_ uiViewController: V.Root, context: Context) {}
 }

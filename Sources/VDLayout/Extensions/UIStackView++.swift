@@ -18,7 +18,7 @@ public extension SubviewProtocol where Self: UIStackView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
-    ) -> Chain<SubviewChain<EmptyChaining<Self>>> {
+    ) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .vertical
         result.spacing = spacing
@@ -36,7 +36,7 @@ public extension SubviewProtocol where Self: UIStackView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
-    ) -> Chain<SubviewChain<EmptyChaining<Self>>> {
+    ) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .horizontal
         result.spacing = spacing

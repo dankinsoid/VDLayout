@@ -13,7 +13,7 @@ public extension SubviewProtocol where Self: UIScrollView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
-    ) -> Chain<some SubviewChaining<Self>> {
+    ) -> SubviewChain<Self> {
         Self.subviews {
             UIStackView.V(
                 spacing: spacing,
@@ -29,6 +29,7 @@ public extension SubviewProtocol where Self: UIScrollView {
         }
         .bounces(.vertical)
         .showsIndicators(.vertical)
+        .any()
     }
     
     static func H(
@@ -39,7 +40,7 @@ public extension SubviewProtocol where Self: UIScrollView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
-    ) -> Chain<some SubviewChaining<Self>> {
+    ) -> SubviewChain<Self> {
         Self.subviews {
             UIStackView.H(
                 spacing: spacing,
@@ -55,5 +56,6 @@ public extension SubviewProtocol where Self: UIScrollView {
         }
         .bounces(.horizontal)
         .showsIndicators(.horizontal)
+        .any()
     }
 }

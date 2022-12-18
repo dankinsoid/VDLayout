@@ -1,10 +1,14 @@
 import UIKit
 import VDChain
 
-extension UIView: SubviewProtocol {
+extension UIView: SingleSubviewProtocol {
     
     public var subviewInstaller: SubviewInstaller {
         UIViewInstaller(self)
+    }
+    
+    public func asSubview() -> UIView {
+        self
     }
 }
 
@@ -16,22 +20,24 @@ private struct UIViewInstaller: SubviewInstaller {
         self.view = view
     }
     
-    func install(on superview: UIView) {
+    func install(on superview: UIView?) {
         if let customAdd = superview as? CustomAddSubviewType {
             customAdd.customAdd(subview: view)
         } else {
-            superview.addSubview(view)
+            superview?.addSubview(view)
         }
     }
     
-    func configure(on superview: UIView) {
+    func configure(on superview: UIView?) {
     }
 }
 
 public extension UIView {
     
-    func add(@SubviewsBuilder subviews: () -> [SubviewProtocol]) {
+    @discardableResult
+    func add(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Self {
         add(subviews: subviews())
+        return self
     }
     
     func add(subviews: [SubviewProtocol]) {
@@ -76,14 +82,14 @@ public extension SubviewProtocol where Self: UIView {
         line: UInt = #line,
         function: String = #function,
         @SubviewsBuilder subviews: () -> [SubviewProtocol]
-    ) -> Chain<some SubviewChaining<Self>> {
+    ) -> SubviewChain<Self> {
         Self.init().chain
             .subviews(subviews: subviews)
             .restorationID(file: file, line: line, function: function)
-            
+            .any()
     }
     
-    func callAsFunction(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<some SubviewChaining<Self>> {
+    func callAsFunction(@SubviewsBuilder subviews: () -> [SubviewProtocol]) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
         chain.subviews(subviews: subviews)
     }
 }

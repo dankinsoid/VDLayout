@@ -1,12 +1,15 @@
 import UIKit
 
-extension UIViewController: SubviewProtocol {
+extension UIViewController: SingleSubviewProtocol {
     
     public var subviewInstaller: SubviewInstaller {
         UIViewControllerInstaller(self)
     }
+    
+    public func asSubview() -> UIViewController {
+        self
+    }
 }
-
 
 private struct UIViewControllerInstaller: SubviewInstaller {
     
@@ -16,8 +19,8 @@ private struct UIViewControllerInstaller: SubviewInstaller {
         self.viewController = viewController
     }
     
-    func install(on superview: UIView) {
-        let parent = superview.controller
+    func install(on superview: UIView?) {
+        let parent = superview?.controller
         if parent == nil {
             debugPrint("Attempt to add UIViewController \(type(of: viewController)) to UIView \(type(of: superview)) when UIView's controller is not determined")
         }
@@ -27,8 +30,8 @@ private struct UIViewControllerInstaller: SubviewInstaller {
         viewController.view.subviewInstaller.install(on: superview)
     }
     
-    func configure(on superview: UIView) {
-        guard let parent = superview.controller else {
+    func configure(on superview: UIView?) {
+        guard let parent = superview?.controller else {
             return
         }
         parent.addChild(viewController)
