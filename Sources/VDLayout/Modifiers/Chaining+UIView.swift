@@ -84,9 +84,9 @@ public extension Chain where Base.Root: UIView {
         margins(NSDirectionalEdgeInsets(edges, value))
     }
     
-    func margins(_ insets: NSDirectionalEdgeInsets) -> Chain<DoChain<Base>> {
+    func margins(_ insets: NSDirectionalEdgeInsets, _ other: NSDirectionalEdgeInsets...) -> Chain<DoChain<Base>> {
         self.do {
-            $0.directionalLayoutMargins += insets
+            $0.directionalLayoutMargins += other.reduce(into: insets, +=)
         }
     }
     

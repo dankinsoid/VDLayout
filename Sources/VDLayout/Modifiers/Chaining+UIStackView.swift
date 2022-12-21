@@ -1,4 +1,4 @@
-import UIKit
+import SwiftUI
 import VDChain
 
 public extension Chain where Base.Root: UIStackView {
@@ -47,6 +47,21 @@ public extension Chain where Base.Root: UIStackView {
         self.do {
             $0.layoutMargins = insets
             $0.isLayoutMarginsRelativeArrangement = true
+        }
+    }
+    
+    func margins(_ value: CGFloat) -> Chain<DoChain<Base>> {
+        margins(.all, value)
+    }
+    
+    func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<DoChain<Base>> {
+        margins(NSDirectionalEdgeInsets(edges, value))
+    }
+    
+    func margins(_ insets: NSDirectionalEdgeInsets, _ other: NSDirectionalEdgeInsets...) -> Chain<DoChain<Base>> {
+        self.do {
+            $0.isLayoutMarginsRelativeArrangement = true
+            $0.directionalLayoutMargins += other.reduce(into: insets, +=)
         }
     }
 }
