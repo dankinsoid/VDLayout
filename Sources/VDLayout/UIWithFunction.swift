@@ -2,6 +2,8 @@ import UIKit
 
 open class LtView: UIView {
     
+    private var didCallAfterInit = false
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         afterInit()
@@ -13,6 +15,10 @@ open class LtView: UIView {
     }
     
     open func afterInit() {
+        guard !didCallAfterInit else {
+            return
+        }
+        didCallAfterInit = true
         add(subviews: createLayout)
         configureConstraints()
     }
