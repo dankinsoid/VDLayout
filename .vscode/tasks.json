@@ -1,0 +1,28 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "xcodebuild-build",
+            "type": "shell",
+            "group": "build",
+            "command": "xcodebuild -scheme VDLayout -destination generic/platform=iOS",
+            "args": []
+        },
+        {
+            "type": "swift",
+            "args": [
+                "build",
+                "--build-tests"
+            ],
+            "cwd": "/Users/danil/VDLayout",
+            "problemMatcher": [
+                "$swiftc"
+            ],
+            "group": "build",
+            "label": "swift: Build All",
+            "detail": "swift build --build-tests"
+        }
+    ]
+}
