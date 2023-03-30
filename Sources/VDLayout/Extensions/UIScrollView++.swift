@@ -59,3 +59,32 @@ public extension SubviewProtocol where Self: UIScrollView {
         .any()
     }
 }
+
+extension UIScrollView {
+	
+	var _isScrolling: Bool {
+		isTracking || isDragging || isDecelerating
+	}
+	
+	func _setAdjustedContentOffsetIfNeeded(_ contentOffset: CGPoint) {
+		let maxContentOffsetX = contentSize.width + adjustedContentInset.right - bounds.width
+		let maxContentOffsetY = contentSize.height + adjustedContentInset.bottom - bounds.height
+		let isContentRectContainsBounds = CGRect(origin: .zero, size: contentSize)
+			.inset(by: adjustedContentInset.inverted)
+			.contains(bounds)
+		
+		if isContentRectContainsBounds && !_isScrolling {
+			self.contentOffset = CGPoint(
+				x: min(maxContentOffsetX, contentOffset.x),
+				y: min(maxContentOffsetY, contentOffset.y)
+			)
+		}
+	}
+}
+
+private extension UIEdgeInsets {
+	
+	var inverted: UIEdgeInsets {
+		UIEdgeInsets(top: -top, left: -left, bottom: -bottom, right: -right)
+	}
+}

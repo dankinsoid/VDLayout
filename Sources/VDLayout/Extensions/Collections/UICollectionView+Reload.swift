@@ -43,7 +43,7 @@ public final class UICollectionViewSource: NSObject, UICollectionViewDataSource,
 		cells: [ViewCell<Cell>]
 	) {
 		self.sections = [
-			CellsSection(cells: cells)
+			CellsSection(id: "main", cells: cells)
 		]
 	}
 	

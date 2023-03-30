@@ -25,13 +25,8 @@ extension UIStackView: ViewCellsReloadable {
 	}
 	
 	private func firstMatch(for cell: ViewCellProtocol, subviews: [UIView]) -> Int? {
-		let result: Int?
-		if let id = cell.id {
-			result = subviews.firstIndex {
-				$0.accessibilityIdentifier == id
-			}
-		} else {
-			result = nil
+		let result = subviews.firstIndex {
+			$0.accessibilityIdentifier == cell.id
 		}
 		return result ?? subviews.firstIndex {
 			cell.type == type(of: $0)

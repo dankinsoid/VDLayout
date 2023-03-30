@@ -15,8 +15,8 @@ public extension ViewCellsReloadable {
 		reload: @escaping (Cell, Data.Element) -> Void
 	) {
 		self.reload(
-			cells: data.map { data in
-				ViewCell<Cell> {
+			cells: data.enumerated().map { index, data in
+				ViewCell<Cell>(id: "\(index)") {
 					create(data)
 				} reload: {
 					reload($0, data)
@@ -25,15 +25,15 @@ public extension ViewCellsReloadable {
 		)
 	}
 	
-	func reload<Data: Collection, Cell: UIView>(
+	func reload<Data: Collection, ID: Hashable & CustomStringConvertible, Cell: UIView>(
 		data: Data,
-		id: (Data.Element) -> String,
+		id: (Data.Element) -> ID,
 		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void
 	) {
 		self.reload(
 			cells: data.map { data in
-				ViewCell<Cell>(id: id(data)) {
+				ViewCell<Cell>(id: id(data).description) {
 					create(data)
 				} reload: {
 					reload($0, data)

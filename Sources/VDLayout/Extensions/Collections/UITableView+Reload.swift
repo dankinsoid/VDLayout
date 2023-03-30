@@ -1,5 +1,6 @@
 import UIKit
 import VDPin
+import VDChain
 
 public extension UITableView {
 	
@@ -27,9 +28,11 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 	
 	public var sections: [CellsSection] = [] {
 		didSet {
-			reloadData()
+			reloadData(oldValue: oldValue)
 		}
 	}
+	
+	public var isAnimated = false
 	
 	public weak var tableView: UITableView? {
 		didSet {
@@ -38,7 +41,18 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 		}
 	}
 	
+	public var insertAnimation: UITableView.RowAnimation = .automatic
+	public var removeAnimation: UITableView.RowAnimation = .automatic
+	public var reloadAnimation: UITableView.RowAnimation = .none
+	public var maxAnimatableCount = 1_000
+	public var animateFirstReload = false
+	
 	private var registeredIDs: Set<String> = []
+	private var isFirstAnimation = true
+	
+	public init(isAnimated: Bool = false) {
+		self.isAnimated = isAnimated
+	}
 	
 	public func reloadData() {
 		tableView?.reloadData()
@@ -47,15 +61,15 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 	public func reload<Cell>(
 		cells: [ViewCell<Cell>]
 	) {
-		self.sections = [
-			CellsSection(cells: cells)
+		sections = [
+			CellsSection(id: "main", cells: cells)
 		]
 	}
 	
 	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		sections[section].cells.count
 	}
-	
+
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let section = sections[indexPath.section]
 		let cell = section.cells[indexPath.row]
@@ -66,7 +80,7 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 		cellView.reload(cell: cell)
 		return cellView
 	}
-	
+
 	public func numberOfSections(in tableView: UITableView) -> Int {
 		sections.count
 	}
@@ -106,6 +120,83 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 
 private extension UITableViewSource {
 	
+	func reloadData(oldValue: [CellsSection]) {
+		guard let tableView else { return }
+		defer {
+			isFirstAnimation = false
+		}
+		guard
+			isAnimated,
+			tableView.window != nil,
+			!(isFirstAnimation && !animateFirstReload),
+			(sections + oldValue).reduce(0, { $1.cells.count + $0 }) < maxAnimatableCount * 2
+		else {
+			tableView.reloadData()
+			return
+		}
+		let contentOffsetBeforeUpdates = tableView.contentOffset
+		let sectionChanges = computeChanges(oldData: oldValue, newData: sections)
+		var updates: [(IndexPath, IndexPath)] = []
+		
+		tableView.performBatchUpdates {
+			if !sectionChanges.deletions.isEmpty {
+				tableView.deleteSections(IndexSet(sectionChanges.deletions), with: insertAnimation)
+			}
+			if !sectionChanges.insertions.isEmpty {
+				tableView.insertSections(IndexSet(sectionChanges.insertions), with: removeAnimation)
+			}
+			var deletions: [IndexPath] = []
+			var insertions: [IndexPath] = []
+			for (oldIndex, newIndex) in sectionChanges.moves {
+				if oldIndex != newIndex {
+					tableView.moveSection(oldIndex, toSection: newIndex)
+				}
+				
+				let changeset = computeChanges(oldData: oldValue[oldIndex].cells.map(\.asAny), newData: sections[newIndex].cells.map(\.asAny))
+				deletions.append(contentsOf: changeset.deletions.map { IndexPath(row: $0, section: oldIndex) })
+				insertions.append(contentsOf: changeset.insertions.map { IndexPath(row: $0, section: newIndex) })
+				
+				for (oldRaw, newRaw) in changeset.moves {
+					let (old, new) = (
+						IndexPath(row: oldRaw, section: oldIndex),
+						IndexPath(row: newRaw, section: newIndex)
+					)
+					if oldRaw != newRaw {
+						tableView.moveRow(at: old, to: new)
+					}
+					updates.append((old, new))
+				}
+			}
+			
+			if !deletions.isEmpty {
+				tableView.deleteRows(at: deletions, with: insertAnimation)
+			}
+			
+			if !insertions.isEmpty {
+				tableView.insertRows(at: insertions, with: removeAnimation)
+			}
+			
+			let reloads = updates.filter {
+				oldValue[$0.0.section].cells[$0.0.row].type != sections[$0.1.section].cells[$0.1.row].type
+			}
+			updates = updates.filter {
+				oldValue[$0.0.section].cells[$0.0.row].type == sections[$0.1.section].cells[$0.1.row].type
+			}
+			if !reloads.isEmpty {
+				tableView.reloadRows(at: reloads.map(\.1), with: reloadAnimation)
+			}
+		}
+		if !updates.isEmpty {
+			tableView.performBatchUpdates {
+				for update in updates {
+					let cell = tableView.cellForRow(at: update.1) as? AnyTableViewCell
+					cell?.reload(cell: sections[update.1.section].cells[update.1.row])
+				}
+			}
+		}
+		tableView._setAdjustedContentOffsetIfNeeded(contentOffsetBeforeUpdates)
+	}
+	
 	func prepareTableView() {
 		guard let tableView else { return }
 		tableView.dataSource = self
@@ -116,6 +207,28 @@ private extension UITableViewSource {
 		guard !registeredIDs.contains(cell.typeIdentifier) else { return }
 		tableView?.register(AnyTableViewCell.self, forCellReuseIdentifier: cell.typeIdentifier)
 		registeredIDs.insert(cell.typeIdentifier)
+	}
+	
+	func computeChanges<Data: Identifiable>(oldData: [Data], newData: [Data]) -> (deletions: [Int], insertions: [Int], moves: [(Int, Int)]) {
+		
+		// Compute the deletions
+		let newIDs = Set(newData.map(\.id))
+		let deletions = oldData.enumerated().filter { !newIDs.contains($0.element.id) }.map { $0.offset }
+		
+		// Compute the insertions
+		let oldIDs = Set(oldData.map(\.id))
+		let insertions = newData.enumerated().filter { !oldIDs.contains($0.element.id) }.map { $0.offset }
+		
+		// Compute the modifications
+		let moves = oldData.enumerated().compactMap { i, old in
+			if let newIndex = newData.firstIndex(where: { $0.id == old.id }) {
+				return (i, newIndex)
+			} else {
+				return nil
+			}
+		}
+		
+		return (deletions, insertions, moves)
 	}
 }
 

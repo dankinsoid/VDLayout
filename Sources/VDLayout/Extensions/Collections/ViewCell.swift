@@ -2,7 +2,7 @@ import UIKit
 
 protocol ViewCellProtocol {
 	
-	var id: String? { get }
+	var id: String { get }
 	var type: Any.Type { get }
 	func createView() -> UIView
 	func reloadView(_ view: UIView)
@@ -13,17 +13,21 @@ extension ViewCellProtocol {
 	var typeIdentifier: String {
 		String(reflecting: type)
 	}
+	
+	var asAny: ViewCell<UIView> {
+		ViewCell(id: id, create: createView, reload: reloadView)
+	}
 }
 
-public struct ViewCell<Cell: UIView>: ViewCellProtocol {
+public struct ViewCell<Cell: UIView>: ViewCellProtocol, Identifiable {
 	
-	let create: () -> Cell
-	let reload: (Cell) -> Void
-	let id: String?
-	var type: Any.Type { Cell.self }
+	public let create: () -> Cell
+	public let reload: (Cell) -> Void
+	public let id: String
+	public var type: Any.Type { Cell.self }
 	
 	public init(
-		id: String? = nil,
+		id: String,
 		create: @escaping () -> Cell,
 		reload: @escaping (Cell) -> Void
 	) {
