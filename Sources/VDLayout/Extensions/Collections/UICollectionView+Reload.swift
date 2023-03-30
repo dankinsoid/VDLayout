@@ -55,7 +55,10 @@ public final class UICollectionViewSource: NSObject, UICollectionViewDataSource,
 		let section = sections[indexPath.section]
 		let cell = section.cells[indexPath.row]
 		registerIfNeeded(cell: cell)
-		guard let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: cell.identifier, for: indexPath) as? AnyCollectionViewCell else {
+		guard let cellView = collectionView.dequeueReusableCell(
+			withReuseIdentifier: cell.typeIdentifier,
+			for: indexPath
+		) as? AnyCollectionViewCell else {
 			return UICollectionViewCell()
 		}
 		cellView.reload(cell: cell)
@@ -99,9 +102,9 @@ private extension UICollectionViewSource {
 	}
 	
 	func registerIfNeeded(cell: ViewCellProtocol) {
-		guard !registeredIDs.contains(cell.identifier) else { return }
-		collectionView?.register(AnyCollectionViewCell.self, forCellWithReuseIdentifier: cell.identifier)
-		registeredIDs.insert(cell.identifier)
+		guard !registeredIDs.contains(cell.typeIdentifier) else { return }
+		collectionView?.register(AnyCollectionViewCell.self, forCellWithReuseIdentifier: cell.typeIdentifier)
+		registeredIDs.insert(cell.typeIdentifier)
 	}
 }
 
@@ -110,7 +113,7 @@ private final class AnyCollectionViewCell: UICollectionViewCell {
 	private var cellView: UIView?
 	
 	func reload(cell: ViewCellProtocol) {
-		guard cell.identifier == reuseIdentifier else { return }
+		guard cell.typeIdentifier == reuseIdentifier else { return }
 		let view: UIView
 		if let cellView {
 			view = cellView

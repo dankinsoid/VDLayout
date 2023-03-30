@@ -60,7 +60,7 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 		let section = sections[indexPath.section]
 		let cell = section.cells[indexPath.row]
 		registerIfNeeded(cell: cell)
-		guard let cellView = tableView.dequeueReusableCell(withIdentifier: cell.identifier, for: indexPath) as? AnyTableViewCell else {
+		guard let cellView = tableView.dequeueReusableCell(withIdentifier: cell.typeIdentifier, for: indexPath) as? AnyTableViewCell else {
 			return UITableViewCell()
 		}
 		cellView.reload(cell: cell)
@@ -113,9 +113,9 @@ private extension UITableViewSource {
 	}
 	
 	func registerIfNeeded(cell: ViewCellProtocol) {
-		guard !registeredIDs.contains(cell.identifier) else { return }
-		tableView?.register(AnyTableViewCell.self, forCellReuseIdentifier: cell.identifier)
-		registeredIDs.insert(cell.identifier)
+		guard !registeredIDs.contains(cell.typeIdentifier) else { return }
+		tableView?.register(AnyTableViewCell.self, forCellReuseIdentifier: cell.typeIdentifier)
+		registeredIDs.insert(cell.typeIdentifier)
 	}
 }
 
@@ -124,7 +124,7 @@ private final class AnyTableViewCell: UITableViewCell {
 	private var cellView: UIView?
 	
 	func reload(cell: ViewCellProtocol) {
-		guard cell.identifier == reuseIdentifier else { return }
+		guard cell.typeIdentifier == reuseIdentifier else { return }
 		let view: UIView
 		if let cellView {
 			view = cellView
