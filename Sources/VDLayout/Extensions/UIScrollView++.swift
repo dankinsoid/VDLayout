@@ -3,7 +3,7 @@ import UIKit
 import VDPin
 import VDChain
 
-public extension SubviewProtocol where Self: UIScrollView {
+public extension Subview where Self: UIScrollView {
     
     static func V(
         spacing: CGFloat = 0,
@@ -12,9 +12,9 @@ public extension SubviewProtocol where Self: UIScrollView {
         file: String = #fileID,
         line: UInt = #line,
         function: String = #function,
-        @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
+        @SubviewBuilder _ subviews: () -> any Subview = { EmptySubview() }
     ) -> SubviewChain<Self> {
-        Self.subviews {
+        Self.subview {
             UIStackView.V(
                 spacing: spacing,
                 alignment: alignment,
@@ -39,9 +39,9 @@ public extension SubviewProtocol where Self: UIScrollView {
         file: String = #fileID,
         line: UInt = #line,
         function: String = #function,
-        @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
+        @SubviewBuilder _ subviews: () -> any Subview = { EmptySubview() }
     ) -> SubviewChain<Self> {
-        Self.subviews {
+        Self.subview {
             UIStackView.H(
                 spacing: spacing,
                 alignment: alignment,

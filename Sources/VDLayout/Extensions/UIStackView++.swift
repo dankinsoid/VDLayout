@@ -8,7 +8,7 @@ extension UIStackView: CustomAddSubviewType {
     }
 }
 
-public extension SubviewProtocol where Self: UIStackView {
+public extension Subview where Self: UIStackView {
     
     static func V(
         spacing: CGFloat = 0,
@@ -17,7 +17,7 @@ public extension SubviewProtocol where Self: UIStackView {
         file: String = #fileID,
         line: UInt = #line,
         function: String = #function,
-        @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
+        @SubviewBuilder _ subviews: () -> any Subview = { EmptySubview() }
     ) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .vertical
@@ -25,7 +25,7 @@ public extension SubviewProtocol where Self: UIStackView {
         result.alignment = alignment.origin
         result.distribution = distribution
         result.setRestorationID(fileID: file, line: line, function: function)
-        return result.chain.subviews(subviews: subviews)
+        return result.chain.subview(subview: subviews)
     }
     
     static func H(
@@ -35,7 +35,7 @@ public extension SubviewProtocol where Self: UIStackView {
         file: String = #fileID,
         line: UInt = #line,
         function: String = #function,
-        @SubviewsBuilder _ subviews: () -> [SubviewProtocol] = { [] }
+				@SubviewBuilder _ subviews: () -> any Subview = { EmptySubview() }
     ) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
         let result = Self.init()
         result.axis = .horizontal
@@ -43,7 +43,7 @@ public extension SubviewProtocol where Self: UIStackView {
         result.alignment = alignment.origin
         result.distribution = distribution
         result.setRestorationID(fileID: file, line: line, function: function)
-        return result.chain.subviews(subviews: subviews)
+        return result.chain.subview(subview: subviews)
     }
 }
 

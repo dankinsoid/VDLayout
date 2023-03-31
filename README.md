@@ -13,22 +13,22 @@ This repository provides a declarative way to layout in SwiftUI-style. The DSL i
 
 ```swift
 view.add {
-    UIStackView.V {
-        UILabel("1")
-            .chain
+  UIStackView.V {
+    UILabel("1")
+      .chain
 	    .textAlignment(.center)
 	    .textColor(.red)
 	    .contentPriority(.required, axis: .horizontal, type: .compression)
 	    
-	UILabel().chain.text("2")
-        UIButton().chain.title("Button")
-    }
-    .alignment(.center)
-    .distribution(.equalSpacing)
-    .spacing(3)
-    .pin(.edges)
-    .pin(.width, 8)
-    .pin(aspectRatio: 1 / 2)
+	  UILabel().chain.text("2")
+    UIButton().chain.title("Button")
+  }
+  .alignment(.center)
+  .distribution(.equalSpacing)
+  .spacing(3)
+  .pin(.edges)
+  .pin(.width, 8)
+  .pin(aspectRatio: 1 / 2)
 }
 ```
 ## Usage
@@ -36,6 +36,7 @@ view.add {
 ### Base
  - `SubviewProtocol` - protocol describes any type that can be used as a subview
  - `SubviewsBuilder` - function builder to create `[SubviewProtocol]`, it allows use SwiftUI `View`s as well (also you can use any `SubviewProtocol` in SwiftUI `ViewBuilder`)
+ - `ViewComponent` - protocol describes 
  - `LtView`, `LtViewController` - helper classes with `createLayout()` function to override, optional for use
  - `UIKiView`, `UIKitViewController` - SwiftUI wrappers on `UIView` and `UIViewController`: useful for `PreviewProvider`
  - `.chain` - property to create `KeyPath` chaining for views, after `.chain` you can write any property of view, then subscript with value (`[value]`) or `Publisher` to subscribe (`[cb: somePublisher]`)
@@ -72,7 +73,7 @@ import PackageDescription
 let package = Package(
   name: "SomeProject",
   dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "3.14.0")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "4.0.0")
   ],
   targets: [
     .target(name: "SomeProject", dependencies: ["VDLayout"])

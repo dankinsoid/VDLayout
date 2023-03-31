@@ -1,12 +1,12 @@
 import UIKit
 
-extension UIViewController: SingleSubviewProtocol {
+extension UIViewController: SingleSubview {
     
-    public var subviewInstaller: SubviewInstaller {
+    public var subviewInstaller: any SubviewInstaller {
         UIViewControllerInstaller(self)
     }
     
-    public func asSubview() -> UIViewController {
+    public func asSingleSubview() -> UIViewController {
         self
     }
 }

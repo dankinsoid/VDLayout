@@ -75,14 +75,14 @@ extension SubviewInstallerChain: KeyPathChaining where Base: KeyPathChaining {
     }
 }
 
-extension EmptyChaining: SubviewInstallerChaining where Root: SubviewProtocol {
+extension EmptyChaining: SubviewInstallerChaining where Root: Subview {
     
     public func installer(for root: Root) -> SubviewInstaller {
         root.subviewInstaller
     }
 }
 
-extension TypeChain: SubviewInstallerChaining where Root: SubviewProtocol {
+extension TypeChain: SubviewInstallerChaining where Root: Subview {
     
     public func installer(for root: Root) -> SubviewInstaller {
         root.subviewInstaller

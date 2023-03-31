@@ -1,42 +1,42 @@
 import UIKit
 
-open class LtView: UIView {
-    
-    private var didCallAfterInit = false
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        afterInit()
-    }
-    
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        afterInit()
-    }
-    
-    open func afterInit() {
-        guard !didCallAfterInit else {
-            return
-        }
-        didCallAfterInit = true
-        add(subviews: createLayout)
-        configureConstraints()
-    }
-    
-    @SubviewsBuilder
-    open func createLayout() -> [SubviewProtocol] {}
-    open func configureConstraints() {}
+open class UISubview: UIView {
+
+	private var didCallAfterInit = false
+
+	override public init(frame: CGRect) {
+		super.init(frame: frame)
+		afterInit()
+	}
+
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		afterInit()
+	}
+
+	open func afterInit() {
+		guard !didCallAfterInit else {
+			return
+		}
+		didCallAfterInit = true
+		add(subview: content)
+		configureConstraints()
+	}
+
+	@SubviewBuilder
+	open var content: any Subview { EmptySubview() }
+	open func configureConstraints() {}
 }
 
-open class LtViewController: UIViewController {
-    
-    open override func viewDidLoad() {
-        super.viewDidLoad()
-        view.add(subviews: createLayout)
-        configureConstraints()
-    }
-    
-    @SubviewsBuilder
-    open func createLayout() -> [SubviewProtocol] {}
-    open func configureConstraints() {}
+open class UISubviewController: UIViewController {
+
+	override open func viewDidLoad() {
+		super.viewDidLoad()
+		view.add(subview: content)
+		configureConstraints()
+	}
+	
+	@SubviewBuilder
+	open var content: any Subview { EmptySubview() }
+	open func configureConstraints() {}
 }

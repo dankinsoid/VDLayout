@@ -125,7 +125,7 @@ public extension Chain where Base.Root: UIView, Base: SubviewChaining {
         @unknown default:
             break
         }
-        return scroll.chain.subviews {
+        return scroll.chain.subview {
             switch axis {
             case .horizontal:
                 self.pin(.edges).pin(.centerY)
@@ -141,18 +141,14 @@ public extension Chain where Base.Root: UIView, Base: SubviewChaining {
 
 public extension Chain where Base: SubviewInstallerChaining, Base.Root: UIView {
     
-    func subviews(
-        @SubviewsBuilder subviews: () -> [SubviewProtocol]
+    func subview(
+        @SubviewBuilder subview: () -> any Subview
     ) -> Chain<SubviewInstallerChain<Base>> {
-        let installers = subviews().map(\.subviewInstaller)
+        let installer = subview().subviewInstaller
         return self.on { root, superview in
-            installers.forEach {
-                $0.install(on: root)
-            }
+            installer.install(on: root)
         } configure: { root, superview in
-            installers.forEach {
-                $0.configure(on: root)
-            }
+            installer.configure(on: root)
         }
     }
 }

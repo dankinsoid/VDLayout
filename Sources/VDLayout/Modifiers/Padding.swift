@@ -13,7 +13,7 @@ public extension Chain where Base.Root: UIView, Base: SubviewChaining {
     }
     
     func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> SubviewChain<PaddingView> {
-        PaddingView.subviews {
+        PaddingView.subview {
             self
         }
         .insets(last.reduce(into: first, +=))
