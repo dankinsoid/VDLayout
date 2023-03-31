@@ -1,4 +1,4 @@
-import UIKit
+import SwiftUI
 
 public struct CellsSection: Identifiable {
 	
@@ -26,7 +26,7 @@ public struct CellsSection: Identifiable {
 		footer: String? = nil,
 		data: Data,
 		cellID: (Data.Element) -> String,
-		create: @escaping (Data.Element) -> Cell,
+		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void
 	) {
 		self.init(
@@ -43,12 +43,33 @@ public struct CellsSection: Identifiable {
 		)
 	}
 	
+	public init<Data: Collection, Cell: View>(
+		id: String,
+		header: String? = nil,
+		footer: String? = nil,
+		data: Data,
+		cellID: (Data.Element) -> String,
+		@ViewBuilder create: @escaping (Data.Element) -> Cell
+	) {
+		self.init(
+			id: id,
+			header: header,
+			footer: footer,
+			data: data,
+			cellID: cellID
+		) {
+			HostingView(create($0))
+		} reload: {
+			$0.rootView = create($1)
+		}
+	}
+	
 	public init<Data: Collection, ID: Hashable & CustomStringConvertible, Cell: UIView>(
 		id: String,
 		header: String? = nil,
 		footer: String? = nil,
 		data: Data,
-		create: @escaping (Data.Element) -> Cell,
+		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void
 	) where Data.Element: Identifiable<ID> {
 		self.init(
@@ -62,12 +83,31 @@ public struct CellsSection: Identifiable {
 		)
 	}
 	
+	public init<Data: Collection, ID: Hashable & CustomStringConvertible, Cell: View>(
+		id: String,
+		header: String? = nil,
+		footer: String? = nil,
+		data: Data,
+		@ViewBuilder create: @escaping (Data.Element) -> Cell
+	) where Data.Element: Identifiable<ID> {
+		self.init(
+			id: id,
+			header: header,
+			footer: footer,
+			data: data
+		) {
+			HostingView(create($0))
+		} reload: {
+			$0.rootView = create($1)
+		}
+	}
+	
 	public init<Data: Collection, Cell: UIView>(
 		id: String,
 		header: String? = nil,
 		footer: String? = nil,
 		data: Data,
-		create: @escaping (Data.Element) -> Cell,
+		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void
 	) {
 		self.init(
@@ -82,5 +122,24 @@ public struct CellsSection: Identifiable {
 				}
 			}
 		)
+	}
+	
+	public init<Data: Collection, Cell: View>(
+		id: String,
+		header: String? = nil,
+		footer: String? = nil,
+		data: Data,
+		@ViewBuilder create: @escaping (Data.Element) -> Cell
+	) {
+		self.init(
+			id: id,
+			header: header,
+			footer: footer,
+			data: data
+		) {
+			HostingView(create($0))
+		} reload: {
+			$0.rootView = create($1)
+		}
 	}
 }
