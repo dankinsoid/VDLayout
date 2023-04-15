@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 public protocol Subview {
 	
@@ -26,13 +26,6 @@ extension Subview where Body == any Subview {
 
 public protocol SingleSubview<Root>: Subview {
 	
-	associatedtype Root = Self
+	associatedtype Root
 	func asSingleSubview() -> Root
-}
-
-extension SingleSubview where Root == Self {
-    
-    public func asSingleSubview() -> Root {
-        self
-    }
 }
