@@ -5,10 +5,6 @@ extension UIViewController: SingleSubview {
     public var subviewInstaller: any SubviewInstaller {
         UIViewControllerInstaller(self)
     }
-    
-    public func asSingleSubview() -> UIViewController {
-        self
-    }
 }
 
 private struct UIViewControllerInstaller: SubviewInstaller {

@@ -39,8 +39,8 @@ public final class UICollectionViewSource: NSObject, UICollectionViewDataSource,
 		collectionView?.reloadData()
 	}
 	
-	public func reload<Cell>(
-		cells: [ViewCell<Cell>]
+	public func reload(
+		cells: [ViewCell]
 	) {
 		self.sections = [
 			CellsSection(id: "main", cells: cells)
@@ -101,7 +101,7 @@ private extension UICollectionViewSource {
 		registeredIDs = []
 	}
 	
-	func registerIfNeeded(cell: ViewCellProtocol) {
+	func registerIfNeeded(cell: ViewCell) {
 		guard !registeredIDs.contains(cell.typeIdentifier) else { return }
 		collectionView?.register(AnyCollectionViewCell.self, forCellWithReuseIdentifier: cell.typeIdentifier)
 		registeredIDs.insert(cell.typeIdentifier)
@@ -112,7 +112,7 @@ private final class AnyCollectionViewCell: UICollectionViewCell {
 	
 	private var cellView: UIView?
 	
-	func reload(cell: ViewCellProtocol) {
+	func reload(cell: ViewCell) {
 		guard cell.typeIdentifier == reuseIdentifier else { return }
 		let view: UIView
 		if let cellView {

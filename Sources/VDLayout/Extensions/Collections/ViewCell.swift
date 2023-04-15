@@ -1,49 +1,46 @@
 import SwiftUI
 
-protocol ViewCellProtocol {
+public struct ViewCell: Identifiable {
 	
-	var id: String { get }
-	var type: Any.Type { get }
-	func createView() -> UIView
-	func reloadView(_ view: UIView)
-}
-
-extension ViewCellProtocol {
-	
-	var typeIdentifier: String {
-		String(reflecting: type)
-	}
-	
-	var asAny: ViewCell<UIView> {
-		ViewCell(id: id, create: createView, reload: reloadView)
-	}
-}
-
-public struct ViewCell<Cell: UIView>: ViewCellProtocol, Identifiable {
-	
-	public let create: () -> Cell
-	public let reload: (Cell) -> Void
+	private let create: () -> UIView
+    private let reload: (UIView) -> Void
 	public let id: String
-	public var type: Any.Type { Cell.self }
+	public let type: Any.Type
 	
-	public init(
+    var typeIdentifier: String {
+        String(reflecting: type)
+    }
+    
+    public init<Cell: UIView>(
 		id: String,
 		create: @escaping () -> Cell,
 		reload: @escaping (Cell) -> Void
 	) {
-		self.id = id
-		self.create = create
-		self.reload = reload
+        self.init(
+            id: id,
+            type: Cell.self
+        ) {
+            create()
+        } reload: { view in
+            guard let cell = view as? Cell else {
+                return
+            }
+            reload(cell)
+        }
 	}
 	
-	func createView() -> UIView {
+    public init(id: String, type: Any.Type, create: @escaping () -> UIView, reload: @escaping (UIView) -> Void) {
+        self.create = create
+        self.reload = reload
+        self.id = id
+        self.type = type
+    }
+    
+    public func createView() -> UIView {
 		create()
 	}
 	
-	func reloadView(_ view: UIView) {
-		guard let cell = view as? Cell else {
-			return
-		}
-		reload(cell)
+    public func reloadView(_ view: UIView) {
+		reload(view)
 	}
 }

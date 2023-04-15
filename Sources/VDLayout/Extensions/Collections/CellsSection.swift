@@ -6,13 +6,13 @@ public struct CellsSection: Identifiable {
 	public var header: String?
 	public var footer: String?
 	
-	let cells: [ViewCellProtocol]
+	let cells: [ViewCell]
 	
-	public init<Cell>(
+	public init(
 		id: String,
 		header: String? = nil,
 		footer: String? = nil,
-		cells: [ViewCell<Cell>]
+		cells: [ViewCell]
 	) {
 		self.id = id
 		self.header = header
@@ -20,6 +20,15 @@ public struct CellsSection: Identifiable {
 		self.cells = Array(cells)
 	}
 	
+    public init(
+        id: String,
+        header: String? = nil,
+        footer: String? = nil,
+        @ViewCellsBuilder _ cells: () -> [ViewCell]
+    ) {
+        self.init(id: id, header: header, footer: footer, cells: cells())
+    }
+    
 	public init<Data: Collection, Cell: UIView>(
 		id: String,
 		header: String? = nil,

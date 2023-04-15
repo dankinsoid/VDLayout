@@ -58,8 +58,8 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 		tableView?.reloadData()
 	}
 	
-	public func reload<Cell>(
-		cells: [ViewCell<Cell>]
+	public func reload(
+		cells: [ViewCell]
 	) {
 		sections = [
 			CellsSection(id: "main", cells: cells)
@@ -152,7 +152,7 @@ private extension UITableViewSource {
 					tableView.moveSection(oldIndex, toSection: newIndex)
 				}
 				
-				let changeset = computeChanges(oldData: oldValue[oldIndex].cells.map(\.asAny), newData: sections[newIndex].cells.map(\.asAny))
+				let changeset = computeChanges(oldData: oldValue[oldIndex].cells, newData: sections[newIndex].cells)
 				deletions.append(contentsOf: changeset.deletions.map { IndexPath(row: $0, section: oldIndex) })
 				insertions.append(contentsOf: changeset.insertions.map { IndexPath(row: $0, section: newIndex) })
 				
@@ -203,7 +203,7 @@ private extension UITableViewSource {
 		registeredIDs = []
 	}
 	
-	func registerIfNeeded(cell: ViewCellProtocol) {
+	func registerIfNeeded(cell: ViewCell) {
 		guard !registeredIDs.contains(cell.typeIdentifier) else { return }
 		tableView?.register(AnyTableViewCell.self, forCellReuseIdentifier: cell.typeIdentifier)
 		registeredIDs.insert(cell.typeIdentifier)
@@ -236,7 +236,7 @@ private final class AnyTableViewCell: UITableViewCell {
 	
 	private var cellView: UIView?
 	
-	func reload(cell: ViewCellProtocol) {
+	func reload(cell: ViewCell) {
 		guard cell.typeIdentifier == reuseIdentifier else { return }
 		let view: UIView
 		if let cellView {

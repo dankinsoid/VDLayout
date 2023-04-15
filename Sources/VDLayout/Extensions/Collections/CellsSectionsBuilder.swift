@@ -45,7 +45,7 @@ public enum CellsSectionsBuilder {
 
 public extension Array<CellsSection> {
 	
-	init(@CellsSectionsBuilder _ builder: () -> [CellsSection]) {
-		self = builder()
+	mutating func reload(@CellsSectionsBuilder _ builder: () -> [CellsSection]) {
+        self = builder()
 	}
 }

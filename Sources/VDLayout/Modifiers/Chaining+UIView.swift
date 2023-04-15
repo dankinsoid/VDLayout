@@ -142,6 +142,7 @@ public extension Chain where Base.Root: UIView, Base: SubviewChaining {
 public extension Chain where Base: SubviewInstallerChaining, Base.Root: UIView {
     
     func subview(
+			  alignment: UIView.Alignment? = nil,
         @SubviewBuilder subview: () -> any Subview
     ) -> Chain<SubviewInstallerChain<Base>> {
         let installer = subview().subviewInstaller

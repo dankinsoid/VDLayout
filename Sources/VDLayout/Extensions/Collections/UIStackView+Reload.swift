@@ -2,8 +2,8 @@ import UIKit
 
 extension UIStackView: ViewCellsReloadable {
 	
-	public func reload<Cell>(
-		cells: [ViewCell<Cell>]
+	public func reload(
+		cells: [ViewCell]
 	) {
 		var subviews = arrangedSubviews
 		for cell in cells {
@@ -24,7 +24,7 @@ extension UIStackView: ViewCellsReloadable {
 		}
 	}
 	
-	private func firstMatch(for cell: ViewCellProtocol, subviews: [UIView]) -> Int? {
+	private func firstMatch(for cell: ViewCell, subviews: [UIView]) -> Int? {
 		let result = subviews.firstIndex {
 			$0.accessibilityIdentifier == cell.id
 		}

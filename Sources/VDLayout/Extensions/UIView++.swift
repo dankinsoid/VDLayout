@@ -8,10 +8,6 @@ extension UIView: SingleSubview {
 	public var subviewInstaller: any SubviewInstaller {
 		UIViewInstaller(self)
 	}
-
-	public func asSingleSubview() -> UIView {
-		self
-	}
 }
 
 private struct UIViewInstaller: SubviewInstaller {
@@ -71,13 +67,14 @@ public extension NSObjectProtocol where Self: UIView {
 public extension Subview where Self: UIView {
 
 	static func subview(
+		alignment: UIView.Alignment? = nil,
 		file: String = #fileID,
 		line: UInt = #line,
 		function: String = #function,
 		@SubviewBuilder subview: () -> any Subview
 	) -> SubviewChain<Self> {
 		Self().chain
-			.subview(subview: subview)
+			.subview(alignment: alignment, subview: subview)
 			.restorationID(file: file, line: line, function: function)
 			.any()
 	}

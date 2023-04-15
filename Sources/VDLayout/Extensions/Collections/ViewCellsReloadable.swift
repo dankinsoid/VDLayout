@@ -2,13 +2,17 @@ import SwiftUI
 
 public protocol ViewCellsReloadable {
 	
-	func reload<Cell: UIView>(
-		cells: [ViewCell<Cell>]
+	func reload(
+		cells: [ViewCell]
 	)
 }
 
 public extension ViewCellsReloadable {
 	
+    func reload(@ViewCellsBuilder _ cells: () -> [ViewCell]) {
+        reload(cells: cells())
+    }
+    
 	func reload<Data: Collection, Cell: UIView>(
 		data: Data,
 		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
@@ -16,7 +20,7 @@ public extension ViewCellsReloadable {
 	) {
 		self.reload(
 			cells: data.enumerated().map { index, data in
-				ViewCell<Cell>(id: "\(index)") {
+				ViewCell(id: "\(index)") {
 					create(data)
 				} reload: {
 					reload($0, data)
@@ -44,7 +48,7 @@ public extension ViewCellsReloadable {
 	) {
 		self.reload(
 			cells: data.map { data in
-				ViewCell<Cell>(id: id(data).description) {
+				ViewCell(id: id(data).description) {
 					create(data)
 				} reload: {
 					reload($0, data)
