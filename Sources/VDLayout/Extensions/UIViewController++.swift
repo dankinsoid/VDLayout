@@ -2,6 +2,10 @@ import UIKit
 
 extension UIViewController: SingleSubview {
     
+    public func asSingleSubview() -> UIView {
+        view
+    }
+    
     public var subviewInstaller: any SubviewInstaller {
         UIViewControllerInstaller(self)
     }

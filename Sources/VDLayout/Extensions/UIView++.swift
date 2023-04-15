@@ -50,6 +50,10 @@ public extension UIView {
 	var controller: UIViewController? {
 		(next as? UIViewController) ?? superview?.controller
 	}
+    
+    func asSingleSubview() -> UIView {
+        self
+    }
 }
 
 public extension NSObjectProtocol where Self: UIView {
@@ -67,14 +71,13 @@ public extension NSObjectProtocol where Self: UIView {
 public extension Subview where Self: UIView {
 
 	static func subview(
-		alignment: UIView.Alignment? = nil,
 		file: String = #fileID,
 		line: UInt = #line,
 		function: String = #function,
 		@SubviewBuilder subview: () -> any Subview
 	) -> SubviewChain<Self> {
 		Self().chain
-			.subview(alignment: alignment, subview: subview)
+			.subview(subview: subview)
 			.restorationID(file: file, line: line, function: function)
 			.any()
 	}
