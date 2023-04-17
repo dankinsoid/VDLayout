@@ -93,6 +93,11 @@ extension AnyUIViewRepresentable: UIViewRepresentable {
 	public func updateUIView(_ uiView: Content, context: Context) {
 		updater(uiView, context)
 	}
+    
+    @available(iOS 16.0, *)
+    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: Content, context: Context) -> CGSize? {
+        uiView.sizeThatFits(proposal)
+    }
 }
 
 public struct AnyUIViewControllerRepresentable<Content: UIViewController>: UIKitRepresentable {
@@ -114,4 +119,41 @@ extension AnyUIViewControllerRepresentable: UIViewControllerRepresentable {
 	public func updateUIViewController(_ uiViewController: Content, context: Context) {
 		updater(uiViewController, context)
 	}
+    
+    @available(iOS 16.0, *)
+    public func sizeThatFits(_ proposal: ProposedViewSize, uiViewController: Content, context: Context) -> CGSize? {
+        uiViewController.view.sizeThatFits(proposal)
+    }
+}
+
+@available(iOS 16.0, *)
+private extension UIView {
+    
+    func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize? {
+        let targetSize = CGSize(
+            width: proposal.width ?? intrinsicContentSize.width,
+            height: proposal.height ?? intrinsicContentSize.height
+        )
+        let horizontalPriority: UILayoutPriority
+        if intrinsicContentSize.width == UIView.noIntrinsicMetric {
+            horizontalPriority = .defaultLow
+        } else if targetSize.width > intrinsicContentSize.width {
+            horizontalPriority = contentHuggingPriority(for: .horizontal)
+        } else {
+            horizontalPriority = contentCompressionResistancePriority(for: .horizontal)
+        }
+        let verticalPriority: UILayoutPriority
+        if intrinsicContentSize.height == UIView.noIntrinsicMetric {
+            verticalPriority = .defaultLow
+        } else if targetSize.height > intrinsicContentSize.height {
+            verticalPriority = contentHuggingPriority(for: .vertical)
+        } else {
+            verticalPriority = contentCompressionResistancePriority(for: .vertical)
+        }
+        return systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: horizontalPriority,
+            verticalFittingPriority: verticalPriority
+        )
+    }
 }
