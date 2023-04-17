@@ -130,25 +130,29 @@ extension AnyUIViewControllerRepresentable: UIViewControllerRepresentable {
 private extension UIView {
     
     func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize? {
+        let intrinsicContentSize = self.intrinsicContentSize
         let targetSize = CGSize(
             width: proposal.width ?? intrinsicContentSize.width,
             height: proposal.height ?? intrinsicContentSize.height
         )
+        guard targetSize.width != UIView.noIntrinsicMetric, targetSize.height != UIView.noIntrinsicMetric else {
+            return nil
+        }
         let horizontalPriority: UILayoutPriority
-        if intrinsicContentSize.width == UIView.noIntrinsicMetric {
+        if proposal.width == nil {
             horizontalPriority = .defaultLow
-        } else if targetSize.width > intrinsicContentSize.width {
-            horizontalPriority = contentHuggingPriority(for: .horizontal)
+        } else if intrinsicContentSize.width == UIView.noIntrinsicMetric {
+            horizontalPriority = .required
         } else {
-            horizontalPriority = contentCompressionResistancePriority(for: .horizontal)
+            horizontalPriority = .defaultHigh
         }
         let verticalPriority: UILayoutPriority
-        if intrinsicContentSize.height == UIView.noIntrinsicMetric {
+        if proposal.height == nil {
             verticalPriority = .defaultLow
-        } else if targetSize.height > intrinsicContentSize.height {
-            verticalPriority = contentHuggingPriority(for: .vertical)
+        } else if intrinsicContentSize.height == UIView.noIntrinsicMetric {
+            verticalPriority = .required
         } else {
-            verticalPriority = contentCompressionResistancePriority(for: .vertical)
+            verticalPriority = .defaultHigh
         }
         return systemLayoutSizeFitting(
             targetSize,
