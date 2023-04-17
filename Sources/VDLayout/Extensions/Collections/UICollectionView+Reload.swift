@@ -93,11 +93,27 @@ public final class UICollectionViewSource: NSObject, UICollectionViewDataSource,
 //	optional func collectionView(_ collectionView: UICollectionView, indexPathForIndexTitle title: String, at index: Int) -> IndexPath
 }
 
+
+extension UICollectionViewSource: UICollectionViewDelegateFlowLayout {
+    
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let size = (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
+        return sections[indexPath.section].cells[indexPath.row].size(size)
+    }
+}
+
 private extension UICollectionViewSource {
 	
 	func prepareCollectionView() {
 		guard let collectionView else { return }
 		collectionView.dataSource = self
+        if collectionView.delegate == nil {
+            collectionView.delegate = self
+        }
 		registeredIDs = []
 	}
 	

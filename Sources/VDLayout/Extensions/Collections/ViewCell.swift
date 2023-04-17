@@ -6,6 +6,7 @@ public struct ViewCell: Identifiable {
     private let reload: (UIView) -> Void
 	public let id: String
 	public let type: Any.Type
+    public let size: (CGSize) -> CGSize
 	
     var typeIdentifier: String {
         String(reflecting: type)
@@ -14,7 +15,8 @@ public struct ViewCell: Identifiable {
     public init<Cell: UIView>(
 		id: String,
 		create: @escaping () -> Cell,
-		reload: @escaping (Cell) -> Void
+        reload: @escaping (Cell) -> Void,
+        size: @escaping (CGSize) -> CGSize = { $0 }
 	) {
         self.init(
             id: id,
@@ -26,14 +28,23 @@ public struct ViewCell: Identifiable {
                 return
             }
             reload(cell)
+        } size: {
+            size($0)
         }
 	}
 	
-    public init(id: String, type: Any.Type, create: @escaping () -> UIView, reload: @escaping (UIView) -> Void) {
+    public init(
+        id: String,
+        type: Any.Type,
+        create: @escaping () -> UIView,
+        reload: @escaping (UIView) -> Void,
+        size: @escaping (CGSize) -> CGSize
+    ) {
         self.create = create
         self.reload = reload
         self.id = id
         self.type = type
+        self.size = size
     }
     
     public func createView() -> UIView {

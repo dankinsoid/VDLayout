@@ -5,8 +5,7 @@ public struct CellsSection: Identifiable {
 	public var id: String
 	public var header: String?
 	public var footer: String?
-	
-	let cells: [ViewCell]
+    public let cells: [ViewCell]
 	
 	public init(
 		id: String,
@@ -36,7 +35,10 @@ public struct CellsSection: Identifiable {
 		data: Data,
 		cellID: (Data.Element) -> String,
 		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
-		reload: @escaping (Cell, Data.Element) -> Void
+		reload: @escaping (Cell, Data.Element) -> Void,
+        size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
+            rect
+        }
 	) {
 		self.init(
 			id: id,
@@ -47,7 +49,9 @@ public struct CellsSection: Identifiable {
 					create(data)
 				} reload: {
 					reload($0, data)
-				}
+                } size: {
+                    size($0, data)
+                }
 			}
 		)
 	}
@@ -58,6 +62,9 @@ public struct CellsSection: Identifiable {
 		footer: String? = nil,
 		data: Data,
 		cellID: (Data.Element) -> String,
+        size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
+            rect
+        },
 		@ViewBuilder create: @escaping (Data.Element) -> Cell
 	) {
 		self.init(
@@ -70,7 +77,9 @@ public struct CellsSection: Identifiable {
 			HostingView(create($0))
 		} reload: {
 			$0.rootView = create($1)
-		}
+        } size: {
+            size($0, $1)
+        }
 	}
 	
 	public init<Data: Collection, ID: Hashable & CustomStringConvertible, Cell: UIView>(
@@ -79,7 +88,10 @@ public struct CellsSection: Identifiable {
 		footer: String? = nil,
 		data: Data,
 		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
-		reload: @escaping (Cell, Data.Element) -> Void
+		reload: @escaping (Cell, Data.Element) -> Void,
+        size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
+            rect
+        }
 	) where Data.Element: Identifiable<ID> {
 		self.init(
 			id: id,
@@ -88,7 +100,8 @@ public struct CellsSection: Identifiable {
 			data: data,
 			cellID: \.id.description,
 			create: create,
-			reload: reload
+			reload: reload,
+            size: size
 		)
 	}
 	
@@ -97,6 +110,9 @@ public struct CellsSection: Identifiable {
 		header: String? = nil,
 		footer: String? = nil,
 		data: Data,
+        size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
+            rect
+        },
 		@ViewBuilder create: @escaping (Data.Element) -> Cell
 	) where Data.Element: Identifiable<ID> {
 		self.init(
@@ -108,7 +124,9 @@ public struct CellsSection: Identifiable {
 			HostingView(create($0))
 		} reload: {
 			$0.rootView = create($1)
-		}
+        } size: {
+            size($0, $1)
+        }
 	}
 	
 	public init<Data: Collection, Cell: UIView>(
@@ -117,7 +135,10 @@ public struct CellsSection: Identifiable {
 		footer: String? = nil,
 		data: Data,
 		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
-		reload: @escaping (Cell, Data.Element) -> Void
+		reload: @escaping (Cell, Data.Element) -> Void,
+        size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
+            rect
+        }
 	) {
 		self.init(
 			id: id,
@@ -128,7 +149,9 @@ public struct CellsSection: Identifiable {
 					create(data)
 				} reload: {
 					reload($0, data)
-				}
+                } size: {
+                    size($0, data)
+                }
 			}
 		)
 	}
@@ -138,6 +161,9 @@ public struct CellsSection: Identifiable {
 		header: String? = nil,
 		footer: String? = nil,
 		data: Data,
+        size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
+            rect
+        },
 		@ViewBuilder create: @escaping (Data.Element) -> Cell
 	) {
 		self.init(
@@ -149,6 +175,8 @@ public struct CellsSection: Identifiable {
 			HostingView(create($0))
 		} reload: {
 			$0.rootView = create($1)
-		}
+        } size: {
+            size($0, $1)
+        }
 	}
 }

@@ -118,6 +118,14 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 //	}
 }
 
+extension UITableViewSource: UITableViewDelegate {
+
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let size = CGSize(width: tableView.frame.width, height: tableView.rowHeight)
+        return sections[indexPath.section].cells[indexPath.row].size(size).height
+    }
+}
+
 private extension UITableViewSource {
 	
 	func reloadData(oldValue: [CellsSection]) {
@@ -200,6 +208,9 @@ private extension UITableViewSource {
 	func prepareTableView() {
 		guard let tableView else { return }
 		tableView.dataSource = self
+        if tableView.delegate == nil {
+            tableView.delegate = self
+        }
 		registeredIDs = []
 	}
 	
