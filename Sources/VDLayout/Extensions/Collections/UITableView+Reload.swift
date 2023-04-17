@@ -253,6 +253,8 @@ private final class AnyTableViewCell: UITableViewCell {
 		if let cellView {
 			view = cellView
 		} else {
+            contentView.backgroundColor = .clear
+            backgroundColor = .clear
 			view = cell.createView()
 			add(view: view)
 			cellView = view
