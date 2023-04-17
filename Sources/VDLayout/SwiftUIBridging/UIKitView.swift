@@ -138,22 +138,8 @@ private extension UIView {
         guard targetSize.width != UIView.noIntrinsicMetric, targetSize.height != UIView.noIntrinsicMetric else {
             return nil
         }
-        let horizontalPriority: UILayoutPriority
-        if proposal.width == nil {
-            horizontalPriority = .defaultLow
-        } else if intrinsicContentSize.width == UIView.noIntrinsicMetric {
-            horizontalPriority = .required
-        } else {
-            horizontalPriority = .defaultHigh
-        }
-        let verticalPriority: UILayoutPriority
-        if proposal.height == nil {
-            verticalPriority = .defaultLow
-        } else if intrinsicContentSize.height == UIView.noIntrinsicMetric {
-            verticalPriority = .required
-        } else {
-            verticalPriority = .defaultHigh
-        }
+        let horizontalPriority: UILayoutPriority = proposal.width == nil ? .defaultLow : .defaultHigh
+        let verticalPriority: UILayoutPriority = proposal.height == nil ? .defaultLow : .defaultHigh
         return systemLayoutSizeFitting(
             targetSize,
             withHorizontalFittingPriority: horizontalPriority,
