@@ -47,7 +47,7 @@ struct UIKitViewEnvironment {
     }
 
     subscript<Base, Value>(_ keyPath: ReferenceWritableKeyPath<Base, Value>) -> Value? {
-        values[keyPath] as? Value
+			  values[keyPath]?.value as? Value
     }
 
     private struct ValueAndSetter {

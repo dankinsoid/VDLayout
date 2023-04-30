@@ -5,18 +5,19 @@ import SwiftUI
 ///
 ///  - Overview:
 /// Create a `UIKitView` object when you want to integrate `UIKit` views into a `SwiftUI` view hierarchy.
-/// At creation time, specify an autoclosure that creates the `UIKit` view and a closure that updates the view.
+/// At creation time, specify an autoclosure that creates the `UIKit` view.
 /// You can set view properties via method chaining and `uiKitViewEnvironment` modifier.
 /// Use the `UIKitView` like you would any other view.
-@dynamicMemberLookup
-public struct UIKitView<Content: UIKitRepresentable>: View, Chaining {
+public typealias UIKitView<Content: UIKitRepresentable> = Chain<UIKitViewChaining<Content>>
+
+public struct UIKitViewChaining<Representable: UIKitRepresentable>: View, Chaining, UIKitRepresentableWrapper {
 	
-	private let content: Content
+	private let representable: Representable
 	@Environment(\.uiKitView) private var environment
-	@Environment(UIKitViewChainKey<Content.Content>.self) private var applier
+	@Environment(UIKitViewChainKey<Representable.Content>.self) private var applier
 	
 	public var body: some View {
-		var result = content
+		var result = representable
 		let updater = result.updater
 		result.updater = {
 			var view = $0
@@ -27,46 +28,50 @@ public struct UIKitView<Content: UIKitRepresentable>: View, Chaining {
 		return result
 	}
 	
-	init(_ content: Content) {
-		self.content = content
+	init(_ representable: Representable) {
+		self.representable = representable
 	}
 	
-	public subscript<A>(dynamicMember keyPath: KeyPath<Content.Content, A>) -> PropertyChain<UIKitView<Content>, A> {
-		PropertyChain(self, getter: keyPath)
-	}
-	
-	public func apply(on root: inout Content.Content) {
+	public func apply(on root: inout Representable.Content) {
 	}
 }
 
 public extension UIKitView {
 	
-	init<T>(_ make: @escaping @autoclosure () -> Content.Content, update: @escaping (Content.Content, Content.ViewContext) -> Void = { _, _ in })
-	where Content == AnyUIViewRepresentable<T> {
-		self.init(make, update: update)
+	init<T>(
+		_ make: @escaping @autoclosure () -> Base.Root
+	) where Base == UIKitViewChaining<AnyUIViewRepresentable<T>> {
+		self.init(make)
 	}
 	
-	init<T>(_ make: @escaping @autoclosure () -> Content.Content, update: @escaping (Content.Content, Content.ViewContext) -> Void = { _, _ in })
-	where Content == AnyUIViewControllerRepresentable<T> {
-		self.init(make, update: update)
-	}
-	
-	init<T>(@ValueBuilder<Content.Content> _ make: @escaping () -> Content.Content, update: @escaping (Content.Content, Content.ViewContext) -> Void = { _, _ in })
-	where Content == AnyUIViewRepresentable<T> {
-		var wrapper = Content(make)
-		wrapper.updater = update
-		self = .init(wrapper)
-	}
-	
-	init<T>(@ValueBuilder<Content.Content> _ make: @escaping () -> Content.Content, update: @escaping (Content.Content, Content.ViewContext) -> Void = { _, _ in })
-	where Content == AnyUIViewControllerRepresentable<T> {
-		var wrapper = Content(make)
-		wrapper.updater = update
-		self = .init(wrapper)
+	init<T>(
+		@ValueBuilder<Base.Root> _ make: @escaping () -> Base.Root
+	) where Base == UIKitViewChaining<AnyUIViewRepresentable<T>> {
+		self = UIKitViewChaining(AnyUIViewRepresentable(make)).wrap()
 	}
 }
 
-public protocol UIKitRepresentable: View {
+public extension UIKitView {
+	
+	init<T>(
+		_ make: @escaping @autoclosure () -> Base.Root
+	) where Base == UIKitViewChaining<AnyUIViewControllerRepresentable<T>> {
+		self.init(make)
+	}
+	
+	init<T>(
+		@ValueBuilder<Base.Root> _ make: @escaping () -> Base.Root
+	) where Base == UIKitViewChaining<AnyUIViewControllerRepresentable<T>> {
+		self = UIKitViewChaining(AnyUIViewControllerRepresentable(make)).wrap()
+	}
+}
+
+public protocol UIKitRepresentableWrapper {
+	 
+	associatedtype Representable: UIKitRepresentable
+}
+
+public protocol UIKitRepresentable<Content>: View {
 	
 	associatedtype Content
 	associatedtype ViewContext
@@ -93,11 +98,11 @@ extension AnyUIViewRepresentable: UIViewRepresentable {
 	public func updateUIView(_ uiView: Content, context: Context) {
 		updater(uiView, context)
 	}
-    
-    @available(iOS 16.0, *)
-    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: Content, context: Context) -> CGSize? {
-        uiView.sizeThatFits(proposal)
-    }
+	
+//	@available(iOS 16.0, *)
+//	public func sizeThatFits(_ proposal: ProposedViewSize, uiView: Content, context: Context) -> CGSize? {
+//		uiView.sizeThatFits(proposal.width, proposal.height)
+//	}
 }
 
 public struct AnyUIViewControllerRepresentable<Content: UIViewController>: UIKitRepresentable {
@@ -119,31 +124,30 @@ extension AnyUIViewControllerRepresentable: UIViewControllerRepresentable {
 	public func updateUIViewController(_ uiViewController: Content, context: Context) {
 		updater(uiViewController, context)
 	}
-    
-    @available(iOS 16.0, *)
-    public func sizeThatFits(_ proposal: ProposedViewSize, uiViewController: Content, context: Context) -> CGSize? {
-        uiViewController.view.sizeThatFits(proposal)
-    }
+	
+//	@available(iOS 16.0, *)
+//	public func sizeThatFits(_ proposal: ProposedViewSize, uiViewController: Content, context: Context) -> CGSize? {
+//		uiViewController.view.sizeThatFits(proposal)
+//	}
 }
 
-@available(iOS 16.0, *)
 private extension UIView {
-    
-    func sizeThatFits(_ proposal: ProposedViewSize) -> CGSize? {
-        let intrinsicContentSize = self.intrinsicContentSize
-        let targetSize = CGSize(
-            width: proposal.width ?? intrinsicContentSize.width,
-            height: proposal.height ?? intrinsicContentSize.height
-        )
-        guard targetSize.width != UIView.noIntrinsicMetric, targetSize.height != UIView.noIntrinsicMetric else {
-            return nil
-        }
-        let horizontalPriority: UILayoutPriority = proposal.width == nil ? .defaultLow : .defaultHigh
-        let verticalPriority: UILayoutPriority = proposal.height == nil ? .defaultLow : .defaultHigh
-        return systemLayoutSizeFitting(
-            targetSize,
-            withHorizontalFittingPriority: horizontalPriority,
-            verticalFittingPriority: verticalPriority
-        )
-    }
+	
+	func sizeThatFits(_ width: CGFloat?, _ height: CGFloat?) -> CGSize? {
+		let intrinsicContentSize = self.intrinsicContentSize
+		let targetSize = CGSize(
+			width: width ?? intrinsicContentSize.width,
+			height: height ?? intrinsicContentSize.height
+		)
+		guard targetSize.width != UIView.noIntrinsicMetric, targetSize.height != UIView.noIntrinsicMetric else {
+			return nil
+		}
+		let horizontalPriority: UILayoutPriority = width == nil ? .defaultLow : .defaultHigh
+		let verticalPriority: UILayoutPriority = height == nil ? .defaultLow : .defaultHigh
+		return systemLayoutSizeFitting(
+			targetSize,
+			withHorizontalFittingPriority: horizontalPriority,
+			verticalFittingPriority: verticalPriority
+		)
+	}
 }
