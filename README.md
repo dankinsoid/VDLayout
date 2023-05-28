@@ -38,7 +38,6 @@ view.add {
  - `SubviewsBuilder` - function builder to create `[SubviewProtocol]`, it allows use SwiftUI `View`s as well (also you can use any `SubviewProtocol` in SwiftUI `ViewBuilder`)
  - `ViewComponent` - protocol describes 
  - `LtView`, `LtViewController` - helper classes with `createLayout()` function to override, optional for use
- - `UIKiView`, `UIKitViewController` - SwiftUI wrappers on `UIView` and `UIViewController`: useful for `PreviewProvider`
  - `.chain` - property to create `KeyPath` chaining for views, after `.chain` you can write any property of view, then subscript with value (`[value]`) or `Publisher` to subscribe (`[cb: somePublisher]`)
  - `do {...}` - function to any custom actions on view
  - `add {...}` - analog of `addSubview` but with `SubviewsBuilder`
@@ -73,7 +72,7 @@ import PackageDescription
 let package = Package(
   name: "SomeProject",
   dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "4.5.0")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "4.6.0")
   ],
   targets: [
     .target(name: "SomeProject", dependencies: ["VDLayout"])

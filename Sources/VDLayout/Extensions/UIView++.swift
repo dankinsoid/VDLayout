@@ -1,8 +1,9 @@
 import UIKit
+@_exported import UIKitViews
 import VDChain
 
 extension UIView: SingleSubview {
-	
+
 	public typealias _Body = Never
 
 	public var subviewInstaller: any SubviewInstaller {
@@ -50,10 +51,10 @@ public extension UIView {
 	var controller: UIViewController? {
 		(next as? UIViewController) ?? superview?.controller
 	}
-    
-    func asSingleSubview() -> UIView {
-        self
-    }
+
+	func asSingleSubview() -> UIView {
+		self
+	}
 }
 
 public extension NSObjectProtocol where Self: UIView {
