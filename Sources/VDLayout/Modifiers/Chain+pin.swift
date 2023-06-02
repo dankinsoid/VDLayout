@@ -170,10 +170,6 @@ private struct WrappedConstraintable: NSLayoutConstraintable {
     }
 }
 
-private func setWrapperForConstraints(_ object: AnyObject, for view: AnyObject) {
-    
-}
-
 private func forConstraints(_ object: AnyObject) -> AnyObject {
     let associated = objc_getAssociatedObject(object, &constraintKey) as? ConstraintableWrapper
     if let associated {

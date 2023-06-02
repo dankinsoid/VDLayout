@@ -1,5 +1,4 @@
 import UIKit
-@_exported import UIKitViews
 import VDChain
 
 extension UIView: SingleSubview {

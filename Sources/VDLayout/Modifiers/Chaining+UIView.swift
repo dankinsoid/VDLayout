@@ -4,21 +4,31 @@ import VDPin
 
 public extension Chain where Base.Root: UIView {
 
+	@available(*, deprecated, message: "Use cornerRadius instead")
     func rounded(radius: CGFloat) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.layer.cornerRadius = radius
-            $0.clipsToBounds = true
-        }
+        cornerRadius(radius)
     }
     
+	@available(*, deprecated, message: "Use cornerRadius instead")
     func rounded(radius: CGFloat, corners: CACornerMask, _ others: CACornerMask...) -> Chain<DoChain<Base>> {
-        self.do {
-            $0.layer.cornerRadius = radius
-            $0.clipsToBounds = true
-            $0.layer.maskedCorners = corners.union(CACornerMask(others))
-        }
+        cornerRadius(radius, at: corners.union(CACornerMask(others)))
     }
+	
+	func cornerRadius(_ radius: CGFloat, at corners: CACornerMask, _ others: CACornerMask...) -> Chain<DoChain<Base>> {
+		self.do {
+			$0.layer.cornerRadius = radius
+			$0.clipsToBounds = true
+			$0.layer.maskedCorners = corners.union(CACornerMask(others))
+		}
+	}
 
+	func cornerRadius(_ radius: CGFloat) -> Chain<DoChain<Base>> {
+		self.do {
+			$0.layer.cornerRadius = radius
+			$0.clipsToBounds = true
+		}
+	}
+	
     func alpha(_ value: CGFloat) -> Chain<DoChain<Base>> {
         self.do {
             $0.alpha = value
