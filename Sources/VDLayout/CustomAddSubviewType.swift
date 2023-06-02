@@ -1,6 +1,6 @@
 import UIKit
 
 public protocol CustomAddSubviewType {
-    
-    func customAdd(subview: UIView)
+
+	func customAdd(subview: UIView)
 }

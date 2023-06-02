@@ -1,7 +1,7 @@
 import UIKit
 
 extension UIStackView: ViewCellsReloadable {
-	
+
 	public func reload(
 		cells: [ViewCell]
 	) {
@@ -23,7 +23,7 @@ extension UIStackView: ViewCellsReloadable {
 			$0.removeFromSuperview()
 		}
 	}
-	
+
 	private func firstMatch(for cell: ViewCell, subviews: [UIView]) -> Int? {
 		let result = subviews.firstIndex {
 			$0.accessibilityIdentifier == cell.id

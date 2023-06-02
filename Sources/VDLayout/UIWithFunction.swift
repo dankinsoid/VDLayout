@@ -35,7 +35,7 @@ open class UISubviewController: UIViewController {
 		view.add(subview: content)
 		configureConstraints()
 	}
-	
+
 	@SubviewBuilder
 	open var content: any Subview { EmptySubview() }
 	open func configureConstraints() {}

@@ -32,7 +32,7 @@ public final class UITableViewSource: NSObject, UITableViewDataSource, ViewCells
 		}
 	}
 
-	// TODO: Fix bug with animation
+	/// TODO: Fix bug with animation
 	public private(set) var isAnimated = false
 
 	public weak var tableView: UITableView? {

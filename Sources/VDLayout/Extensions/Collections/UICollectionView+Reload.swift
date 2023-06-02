@@ -1,14 +1,14 @@
 import UIKit
 
 public extension UICollectionView {
-	
+
 	convenience init(
 		_ source: UICollectionViewSource
 	) {
 		self.init()
 		source.collectionView = self
 	}
-	
+
 	convenience init(
 		_ source: UICollectionViewSource,
 		@CellsSectionsBuilder sections: () -> [CellsSection]
@@ -19,38 +19,38 @@ public extension UICollectionView {
 }
 
 public final class UICollectionViewSource: NSObject, UICollectionViewDataSource, ViewCellsReloadable {
-	
+
 	public var sections: [CellsSection] = [] {
 		didSet {
 			reloadData()
 		}
 	}
-	
+
 	public weak var collectionView: UICollectionView? {
 		didSet {
 			guard let collectionView, collectionView !== oldValue else { return }
 			prepareCollectionView()
 		}
 	}
-	
+
 	private var registeredIDs: Set<String> = []
-	
+
 	public func reloadData() {
 		collectionView?.reloadData()
 	}
-	
+
 	public func reload(
 		cells: [ViewCell]
 	) {
-		self.sections = [
-			CellsSection(id: "main", cells: cells)
+		sections = [
+			CellsSection(id: "main", cells: cells),
 		]
 	}
-	
+
 	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		sections[section].cells.count
 	}
-	
+
 	public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let section = sections[indexPath.section]
 		let cell = section.cells[indexPath.row]
@@ -64,12 +64,11 @@ public final class UICollectionViewSource: NSObject, UICollectionViewDataSource,
 		cellView.reload(cell: cell)
 		return cellView
 	}
-	
+
 	public func numberOfSections(in collectionView: UICollectionView) -> Int {
 		sections.count
 	}
-	
-	
+
 //	// The view that is returned must be retrieved from a call to -dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:
 //	@available(iOS 6.0, *)
 //	optional func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
@@ -93,30 +92,29 @@ public final class UICollectionViewSource: NSObject, UICollectionViewDataSource,
 //	optional func collectionView(_ collectionView: UICollectionView, indexPathForIndexTitle title: String, at index: Int) -> IndexPath
 }
 
-
 extension UICollectionViewSource: UICollectionViewDelegateFlowLayout {
-    
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let size = (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
-        return sections[indexPath.section].cells[indexPath.row].size(size)
-    }
+
+	public func collectionView(
+		_ collectionView: UICollectionView,
+		layout collectionViewLayout: UICollectionViewLayout,
+		sizeForItemAt indexPath: IndexPath
+	) -> CGSize {
+		let size = (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
+		return sections[indexPath.section].cells[indexPath.row].size(size)
+	}
 }
 
 private extension UICollectionViewSource {
-	
+
 	func prepareCollectionView() {
 		guard let collectionView else { return }
 		collectionView.dataSource = self
-        if collectionView.delegate == nil {
-            collectionView.delegate = self
-        }
+		if collectionView.delegate == nil {
+			collectionView.delegate = self
+		}
 		registeredIDs = []
 	}
-	
+
 	func registerIfNeeded(cell: ViewCell) {
 		guard !registeredIDs.contains(cell.typeIdentifier) else { return }
 		collectionView?.register(AnyCollectionViewCell.self, forCellWithReuseIdentifier: cell.typeIdentifier)
@@ -125,29 +123,29 @@ private extension UICollectionViewSource {
 }
 
 private final class AnyCollectionViewCell: UICollectionViewCell {
-	
+
 	private var cellView: UIView?
-	
+
 	func reload(cell: ViewCell) {
 		guard cell.typeIdentifier == reuseIdentifier else { return }
 		let view: UIView
 		if let cellView {
 			view = cellView
 		} else {
-            contentView.backgroundColor = .clear
-            backgroundColor = .clear
+			contentView.backgroundColor = .clear
+			backgroundColor = .clear
 			view = cell.createView()
 			add(view: view)
 			cellView = view
 		}
 		cell.reloadView(view)
 	}
-	
+
 	private func add(view: UIView) {
 		contentView.add(subview: view)
 		view.pin(.edges)
 	}
-	
+
 	override func prepareForReuse() {
 		super.prepareForReuse()
 	}
