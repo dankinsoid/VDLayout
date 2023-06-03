@@ -25,15 +25,15 @@ public extension Chain where Base.Root: UIView, Base: SubviewChaining {
 }
 
 public extension SubviewChain<PaddingView> {
-	
+
 	func padding(_ value: CGFloat) -> SubviewChain<PaddingView> {
 		padding(.all, value)
 	}
-	
+
 	func padding(_ edges: Edge.Set, _ value: CGFloat) -> SubviewChain<PaddingView> {
 		padding(NSDirectionalEdgeInsets(edges, value))
 	}
-	
+
 	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> SubviewChain<PaddingView> {
 		AnySubviewChaining(root: base.root) {
 			base.constraintable(for: $0)

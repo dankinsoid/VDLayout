@@ -4,14 +4,14 @@ import VDLayout
 struct ContentView: View {
 
 	@State private var value = 0.0
-	
+
 	var body: some View {
 		VStack {
 			Spacer()
 			HStack {
 				Color.red
 					.frame(width: value)
-				
+
 				UIKitView {
 					UILabel("Text dsdas sd fsdf sdf s dfsfd sd sdf sd fsf sd fsd fs dfs d fs dfs df s dfs df ").chain
 						.multiline()
@@ -26,14 +26,14 @@ struct ContentView: View {
 				}
 				.uiKitViewFixedSize(.vertical)
 			}
-			Slider(value: $value, in: 0...300)
+			Slider(value: $value, in: 0 ... 300)
 		}
 		.padding()
 	}
 }
 
 struct ContentView_Previews: PreviewProvider {
-	
+
 	static var previews: some View {
 		ContentView()
 	}

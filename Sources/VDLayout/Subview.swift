@@ -24,6 +24,13 @@ public extension Subview where Body == any Subview {
 	}
 }
 
+public extension Subview where Body: Subview {
+
+	var subviewInstaller: any SubviewInstaller {
+		body.subviewInstaller
+	}
+}
+
 public protocol SingleSubview<Root>: Subview {
 
 	associatedtype Root
