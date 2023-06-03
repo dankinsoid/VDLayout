@@ -1,5 +1,7 @@
 import UIKit
 
+/// Extension that allows an array of any type conforming to `Subview` protocol to also
+/// conform to `Subview`.
 extension [any Subview]: Subview {
 
 	public var subviewInstaller: any SubviewInstaller {

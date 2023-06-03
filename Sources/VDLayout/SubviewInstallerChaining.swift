@@ -28,6 +28,8 @@ public struct SubviewInstallerChain<Base: SubviewInstallerChaining>: SubviewInst
 	}
 }
 
+/// Extension that enables `Chain` to conform to `Subview` protocol when `Base.Root` is
+/// a subclass of `AnyObject` and `Base` conforms to `SubviewInstallerChaining` and `ValueChaining`.
 extension Chain where Base: SubviewInstallerChaining {
 
 	public func installer(

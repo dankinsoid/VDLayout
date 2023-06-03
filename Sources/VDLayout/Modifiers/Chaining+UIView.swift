@@ -35,7 +35,7 @@ public extension Chain where Base.Root: UIView {
 		}
 	}
 
-	func filled(_ color: UIColor?) -> Chain<DoChain<Base>> {
+	func backgroundColor(_ color: UIColor?) -> Chain<DoChain<Base>> {
 		self.do {
 			$0.backgroundColor = color
 		}

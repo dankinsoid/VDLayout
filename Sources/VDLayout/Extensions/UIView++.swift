@@ -31,12 +31,19 @@ private struct UIViewInstaller: SubviewInstaller {
 
 public extension UIView {
 
+	/// Method that adds a `Subview` to the `UIView`.
+	///
+	/// - Parameter subview: The `Subview` to add.
+	/// - Returns: The `UIView` with the added `Subview`.
 	@discardableResult
 	func add(@SubviewBuilder subview: () -> any Subview) -> Self {
 		add(subview: subview())
 		return self
 	}
 
+	/// Method that adds a `Subview` to the `UIView`.
+	///
+	/// - Parameter subview: The `Subview` to add.
 	func add(subview: some Subview) {
 		let installer = subview.subviewInstaller
 		installer.install(on: self)
