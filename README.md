@@ -4,9 +4,35 @@
 [![License](https://img.shields.io/cocoapods/l/VDLayout.svg?style=flat)](https://cocoapods.org/pods/VDLayout)
 [![Platform](https://img.shields.io/cocoapods/p/VDLayout.svg?style=flat)](https://cocoapods.org/pods/VDLayout)
 
-This repository provides a declarative way to layout in SwiftUI-style. The DSL is based on [KeyPath chaining](https://github.com/dankinsoid/VDChain) so you can use any view property, don't need to create a DSL wrapper on your custom views, but you can create [custom convinience modifiers](Sources/VDLayout/Modifiers).
+## Table of Contents
+- [Overview](#overview)
+- [Concepts](#concepts)
+- [Usage and Examples](#usage-and-examples)
+- [List of Methods and Extensions](#list-of-methods-and-extensions)
+- [Installation](#installation)
+- [Related Libraries](#related-libraries)
+- [Contributors](#contributors)
 
-## Example
+## Overview
+VDLayout is a lightweight and intuitive Swift library designed to simplify the layout building process in UIKit. By providing convenient extensions on native UIKit components, it allows developers to easily and quickly define user interfaces in a manner that is clean, efficient, and easy to understand. This library aims to offer a smooth integration into any UIKit project, and also SwiftUI, by avoiding complex abstractions or magic. It's essentially a friendly UIKit companion, making your layout code more readable and maintainable.
+
+## Concepts
+VDLayout introduces several key concepts:
+
+- **Subview and SubviewBuilder**: These types allow for the creation and configuration of subviews within a parent view.
+- **UISubview and UISubviewController**: These are helper subclasses for UIView and UIViewController respectively. You can inherit these to override the `content` property.
+- [**Chain**](https://github.com/dankinsoid/VDChain): This is a view wrapper that enables method chaining on a view via keypaths.
+- [**pin(_:) methods**](https://github.com/dankinsoid/VDPin): These methods allow for the creation of auto-layout constraints.
+- [**UIKitView**](https://github.com/dankinsoid/UIKitViews): This is a SwiftUI wrapper around UIView and UIViewController that supports chaining and provides seamless integration of UIKit components with SwiftUI.
+- **CellsSection and ViewCell**: These structures are used for building and managing cells in table and collection views.
+- [**ViewCellsReloadable**](Docs/ReloadableViews.md): This is a protocol that marks a view as having reloadable cells.
+
+With these elements, the library provides a simple, yet powerful toolkit for handling common layout tasks in UIKit.
+
+## Usage and Examples
+The VDLayout library can be used to handle a variety of tasks.
+
+For instance, you can easily chain together properties and methods on views:
 
 ```swift
 public final class SomeView: UISubview {
@@ -35,53 +61,57 @@ public final class SomeView: UISubview {
   }
 }
 ```
-## Usage
 
-### Base
- - `Subview` - protocol describes any type that can be used as a subview
- - `SubviewBuilder` - function builder to create `any Subview`, it allows use SwiftUI `View`s as well.
- - `.chain` - property to create `KeyPath` [chaining](https://github.com/dankinsoid/VDChain.git) for views.
- - `do {...}` - function to any custom actions on view
- - `add {...}` - analog of `addSubview` but with `SubviewBuilder`
- - `with {...}` - same as `add` but returns the view itself, for using in layout
- 
- ### Constraints
- For constraints this repo use [`pin`](https://github.com/dankinsoid/VDPin.git) methods, examples:
- ```swift
- UIView()
-  .pin(.edges)
-  .pin(to: .bottom, of: view2, options: .offset(4))
-  .pin(.bottom, 10..., to: view3)  
-  .pin(.width, to: .height, of: superview, options: .multiplier(2), .offset(10), .toSafeArea)
- ```
- 
-## Installation
-1. [Swift Package Manager](https://github.com/apple/swift-package-manager)
+You can also use it to manage collections and tables:
 
-Create a `Package.swift` file.
 ```swift
-// swift-tools-version:5.7
-import PackageDescription
+let dataSource = UITableViewSource()
+let tableView = UITableView(dataSource)
 
-let package = Package(
-  name: "SomeProject",
-  dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "4.8.1")
-  ],
-  targets: [
-    .target(name: "SomeProject", dependencies: ["VDLayout"])
-  ]
-)
-```
-```ruby
-$ swift build
+dataSource.reload(data: items) { _ in
+    SomeTableViewCell()
+} reload: { cell, item in
+  cell.text = item.name
+}
 ```
 
-## Author
+## List of Methods and Extensions
+VDLayout extends various UIKit components with numerous useful methods. For a full list, see [here](Docs/MethodsAndExtensions.md).
 
-dankinsoid, voidilov@gmail.com
+## Installation
+VDLayout is available via Swift Package Manager (SPM). 
 
-## License
+To install it, simply add the following line to the dependencies value of your Package.swift:
 
-VDLayout is available under the MIT license. See the LICENSE file for more info.
+```swift
+dependencies: [
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "1.3.0")
+]
+```
 
+Then, in your target dependencies, add `"VDLayout"`:
+
+```swift
+targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: ["VDLayout"]),
+]
+```
+
+## Related Libraries
+VDLayout makes use of several related libraries:
+
+- [VDPin](https://github.com/dankinsoid/VDPin): A Swift library for easy creation of AutoLayout constraints.
+- [VDChain](https://github.com/dankinsoid/VDChain): A Swift library that enables method chaining on views via keypaths.
+- [UIKitViews](https://github.com/dankinsoid/UIKitViews): A Swift library providing seamless integration of UIKit components with the SwiftUI framework
+
+## Contributors
+- Voidilov Daniil: Main Developer
+- OpenAI's ChatGPT: Contributor to README
+
+For any queries or suggestions, feel free to open an issue on GitHub.
+
+--- 
+
+This document was co-authored by an OpenAI language model. The descriptions and examples have been reviewed for accuracy and clarity. If you have any corrections or improvements, please open an issue or make a pull request on GitHub.
