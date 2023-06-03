@@ -4,20 +4,46 @@ import VDPin
 
 public extension Chain where Base.Root: UIView, Base: SubviewChaining {
 
+	@_disfavoredOverload
 	func padding(_ value: CGFloat) -> SubviewChain<PaddingView> {
 		padding(.all, value)
 	}
 
+	@_disfavoredOverload
 	func padding(_ edges: Edge.Set, _ value: CGFloat) -> SubviewChain<PaddingView> {
 		padding(NSDirectionalEdgeInsets(edges, value))
 	}
 
+	@_disfavoredOverload
 	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> SubviewChain<PaddingView> {
 		PaddingView.subview {
 			self
 		}
 		.insets(last.reduce(into: first, +=))
 		.any()
+	}
+}
+
+public extension SubviewChain<PaddingView> {
+	
+	func padding(_ value: CGFloat) -> SubviewChain<PaddingView> {
+		padding(.all, value)
+	}
+	
+	func padding(_ edges: Edge.Set, _ value: CGFloat) -> SubviewChain<PaddingView> {
+		padding(NSDirectionalEdgeInsets(edges, value))
+	}
+	
+	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> SubviewChain<PaddingView> {
+		AnySubviewChaining(root: base.root) {
+			base.constraintable(for: $0)
+		} _installer: {
+			base.installer(for: $0)
+		} _apply: {
+			base.apply(on: &$0)
+			$0.insets = last.reduce(into: $0.insets + first, +=)
+		}
+		.wrap()
 	}
 }
 
@@ -34,7 +60,9 @@ public final class PaddingView: UIView {
 	private var edgesConstraints: [ObjectIdentifier: [Edge: Constraints]] = [:]
 
 	override public var intrinsicContentSize: CGSize {
-		guard subviews.count == 1 else { return .zero }
+		guard subviews.count == 1 else {
+			return CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+		}
 		var result = subviews[0].intrinsicContentSize
 		result.width += insets.leading + insets.trailing
 		result.height += insets.top + insets.bottom
