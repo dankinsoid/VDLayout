@@ -85,7 +85,7 @@ To install it, simply add the following line to the dependencies value of your P
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "4.8.1")
+    .package(url: "https://github.com/dankinsoid/VDLayout.git", from: "4.8.3")
 ]
 ```
 
