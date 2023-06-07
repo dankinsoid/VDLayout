@@ -34,7 +34,7 @@ public struct CellsSection: Identifiable {
 		footer: String? = nil,
 		data: Data,
 		cellID: (Data.Element) -> String,
-		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
+		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void,
 		size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
 			rect
@@ -76,7 +76,7 @@ public struct CellsSection: Identifiable {
 		) {
 			HostingView(create($0))
 		} reload: {
-			$0.rootView = create($1)
+			($0 as HostingView<Cell>).rootView = create($1)
 		} size: {
 			size($0, $1)
 		}
@@ -87,7 +87,7 @@ public struct CellsSection: Identifiable {
 		header: String? = nil,
 		footer: String? = nil,
 		data: Data,
-		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
+		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void,
 		size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
 			rect
@@ -134,7 +134,7 @@ public struct CellsSection: Identifiable {
 		header: String? = nil,
 		footer: String? = nil,
 		data: Data,
-		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
+		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void,
 		size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
 			rect

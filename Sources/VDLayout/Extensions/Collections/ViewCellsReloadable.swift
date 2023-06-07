@@ -15,7 +15,7 @@ public extension ViewCellsReloadable {
 
 	func reload<Data: Collection, Cell: UIView>(
 		data: Data,
-		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
+		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void,
 		size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
 			rect
@@ -53,7 +53,7 @@ public extension ViewCellsReloadable {
 	func reload<Data: Collection, ID: Hashable & CustomStringConvertible, Cell: UIView>(
 		data: Data,
 		id: (Data.Element) -> ID,
-		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
+		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void,
 		size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
 			rect
@@ -91,7 +91,7 @@ public extension ViewCellsReloadable {
 
 	func reload<Data: Collection, ID: Hashable & CustomStringConvertible, Cell: UIView>(
 		data: Data,
-		@ValueBuilder<Cell> create: @escaping (Data.Element) -> Cell,
+		create: @escaping (Data.Element) -> Cell,
 		reload: @escaping (Cell, Data.Element) -> Void,
 		size: @escaping (CGSize, Data.Element) -> CGSize = { rect, _ in
 			rect
