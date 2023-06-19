@@ -8,11 +8,10 @@ public extension UIKitView {
 	) where Base == UIKitViewChaining<AnyUIViewRepresentable<C.Root>> {
 		self.init {
 			let chain = make()
-			let result = chain.apply()
-			let installer = chain.base.installer(for: result)
-			installer.install(on: nil)
-			installer.configure(on: nil)
-			return result
+      let installer = chain.subviewInstaller
+      installer.install(on: nil)
+      installer.configure(on: nil)
+      return chain.base.root
 		}
 	}
 
@@ -21,11 +20,10 @@ public extension UIKitView {
 	) where Base == UIKitViewChaining<AnyUIViewControllerRepresentable<C.Root>> {
 		self.init {
 			let chain = make()
-			let result = chain.apply()
-			let installer = chain.base.installer(for: result)
-			installer.install(on: nil)
-			installer.configure(on: nil)
-			return result
+      let installer = chain.subviewInstaller
+      installer.install(on: nil)
+      installer.configure(on: nil)
+      return chain.base.root
 		}
 	}
 }
