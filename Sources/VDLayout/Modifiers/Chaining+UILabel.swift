@@ -7,7 +7,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter alignment: The NSTextAlignment to set.
 	/// - Returns: The updated Chain object.
-	func alignment(_ alignment: NSTextAlignment) -> Chain<DoChain<Base>> {
+	func alignment(_ alignment: NSTextAlignment) -> Chain<Base> {
 		self.do {
 			$0.textAlignment = alignment
 		}
@@ -16,7 +16,7 @@ public extension Chain where Base.Root: UILabel {
 	/// Method to make the UILabel multiline.
 	///
 	/// - Returns: The updated Chain object.
-	func multiline() -> Chain<DoChain<Base>> {
+	func multiline() -> Chain<Base> {
 		self.do {
 			$0.numberOfLines = .zero
 		}
@@ -26,7 +26,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter limit: The number of lines limit to set.
 	/// - Returns: The updated Chain object.
-	func linesLimit(_ limit: Int) -> Chain<DoChain<Base>> {
+	func linesLimit(_ limit: Int) -> Chain<Base> {
 		self.do {
 			$0.numberOfLines = limit
 		}
@@ -36,7 +36,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter text: The string to set.
 	/// - Returns: The updated Chain object.
-	func text(_ text: String) -> Chain<DoChain<Base>> {
+	func text(_ text: String) -> Chain<Base> {
 		self.do {
 			$0.text = text
 		}
@@ -46,7 +46,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter text: The NSAttributedString to set.
 	/// - Returns: The updated Chain object.
-	func attributedText(_ text: NSAttributedString) -> Chain<DoChain<Base>> {
+	func attributedText(_ text: NSAttributedString) -> Chain<Base> {
 		self.do {
 			$0.attributedText = text
 		}
@@ -56,7 +56,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter text: The string to strikethrough.
 	/// - Returns: The updated Chain object.
-	func strikeThrough(_ text: String) -> Chain<DoChain<Base>> {
+	func strikeThrough(_ text: String) -> Chain<Base> {
 		self.do {
 			$0.add(
 				[.strikethroughStyle: NSUnderlineStyle.single.rawValue],
@@ -69,7 +69,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter lineHeightMultiple: The line height multiple to set.
 	/// - Returns: The updated Chain object.
-	func lineHeightMultiple(_ lineHeightMultiple: CGFloat) -> Chain<DoChain<Base>> {
+	func lineHeightMultiple(_ lineHeightMultiple: CGFloat) -> Chain<Base> {
 		self.do {
 			let style = NSMutableParagraphStyle()
 			style.lineHeightMultiple = lineHeightMultiple
@@ -81,7 +81,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter kern: The kern value to set.
 	/// - Returns: The updated Chain object.
-	func kern(_ kern: CGFloat) -> Chain<DoChain<Base>> {
+	func kern(_ kern: CGFloat) -> Chain<Base> {
 		self.do {
 			$0.add([.kern: kern])
 		}
@@ -91,7 +91,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter lineBreakMode: The NSLineBreakMode to set.
 	/// - Returns: The updated Chain object.
-	func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> Chain<DoChain<Base>> {
+	func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> Chain<Base> {
 		self.do {
 			$0.lineBreakMode = lineBreakMode
 		}
@@ -103,7 +103,7 @@ public extension Chain where Base.Root: UILabel {
 	///   - font: The UIFont to set.
 	///   - adjustsFontSizeToFitWidth: Whether the font size should adjust to the UILabel's width.
 	/// - Returns: The updated Chain object.
-	func font(_ font: UIFont, adjustsFontSizeToFitWidth: Bool = false) -> Chain<DoChain<Base>> {
+	func font(_ font: UIFont, adjustsFontSizeToFitWidth: Bool = false) -> Chain<Base> {
 		self.do {
 			$0.font = font
 			$0.adjustsFontSizeToFitWidth = adjustsFontSizeToFitWidth
@@ -114,7 +114,7 @@ public extension Chain where Base.Root: UILabel {
 	///
 	/// - Parameter color: The UIColor to set.
 	/// - Returns: The updated Chain object.
-	func textColor(_ color: UIColor) -> Chain<DoChain<Base>> {
+	func textColor(_ color: UIColor) -> Chain<Base> {
 		self.do {
 			$0.textColor = color
 		}

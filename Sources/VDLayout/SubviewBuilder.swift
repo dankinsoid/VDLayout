@@ -1,4 +1,5 @@
 import SwiftUI
+import VDChain
 
 @resultBuilder
 public enum SubviewBuilder {
@@ -57,4 +58,26 @@ public enum SubviewBuilder {
 	public static func buildExpression(_ expression: some Sequence<any Subview>) -> any Subview {
 		buildArray(Array(expression))
 	}
+
+	#if DEBUG
+	@inlinable
+	public static func buildExpression<T: ValueChaining>(
+		_ expression: Chain<T>,
+		file: String = #fileID,
+		line: UInt = #line,
+		function: String = #function
+	) -> any Subview where T.Root: UIView {
+		expression.restorationIDIfNeeded(file: file, line: line, function: function)
+	}
+
+	@inlinable
+	public static func buildExpression<T: UIView>(
+		_ expression: T,
+		file: String = #fileID,
+		line: UInt = #line,
+		function: String = #function
+	) -> any Subview {
+		buildExpression(expression.chain, file: file, line: line, function: function)
+	}
+	#endif
 }

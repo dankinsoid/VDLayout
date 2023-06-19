@@ -6,7 +6,7 @@ public extension Chain where Base.Root: UIButton {
 	func insets(
 		title: UIEdgeInsets,
 		image: UIEdgeInsets = .zero
-	) -> Chain<DoChain<Base>> {
+	) -> Chain<Base> {
 		self.do {
 			$0.contentEdgeInsets = UIEdgeInsets(
 				top: title.top + image.top,
@@ -29,31 +29,31 @@ public extension Chain where Base.Root: UIButton {
 		}
 	}
 
-	func title(_ title: String, for state: UIControl.State = .normal) -> Chain<DoChain<Base>> {
+	func title(_ title: String, for state: UIControl.State = .normal) -> Chain<Base> {
 		self.do {
 			$0.setTitle(title, for: state)
 		}
 	}
 
-	func attributedTitle(_ title: NSAttributedString, for state: UIControl.State = .normal) -> Chain<DoChain<Base>> {
+	func attributedTitle(_ title: NSAttributedString, for state: UIControl.State = .normal) -> Chain<Base> {
 		self.do {
 			$0.setAttributedTitle(title, for: state)
 		}
 	}
 
-	func titleColor(_ color: UIColor, for state: UIControl.State = .normal) -> Chain<DoChain<Base>> {
+	func titleColor(_ color: UIColor, for state: UIControl.State = .normal) -> Chain<Base> {
 		self.do {
 			$0.setTitleColor(color, for: state)
 		}
 	}
 
-	func horizontalAlignment(_: NSTextAlignment) -> Chain<DoChain<Base>> {
+	func horizontalAlignment(_: NSTextAlignment) -> Chain<Base> {
 		self.do {
 			$0.contentHorizontalAlignment = .left
 		}
 	}
 
-	func font(_ font: UIFont) -> Chain<DoChain<Base>> {
+	func font(_ font: UIFont) -> Chain<Base> {
 		self.do {
 			$0.titleLabel?.font = font
 		}
@@ -64,7 +64,7 @@ public extension Chain where Base.Root: UIButton {
 		trailing: Bool = false,
 		spacing: CGFloat? = nil,
 		for state: UIControl.State = .normal
-	) -> Chain<DoChain<Base>> {
+	) -> Chain<Base> {
 		self.do {
 			$0.setImage(image, for: state)
 
@@ -83,7 +83,7 @@ public extension Chain where Base.Root: UIButton {
 		}
 	}
 
-	func onTap(_ action: @escaping () -> Void) -> Chain<DoChain<Base>> {
+	func onTap(_ action: @escaping () -> Void) -> Chain<Base> {
 		self.do {
 			$0.addAction(action)
 		}

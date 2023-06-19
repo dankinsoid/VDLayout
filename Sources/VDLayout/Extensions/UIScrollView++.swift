@@ -29,7 +29,6 @@ public extension Subview where Self: UIScrollView {
 		}
 		.bounces(.vertical)
 		.showsIndicators(.vertical)
-		.any()
 	}
 
 	static func H(
@@ -56,7 +55,6 @@ public extension Subview where Self: UIScrollView {
 		}
 		.bounces(.horizontal)
 		.showsIndicators(.horizontal)
-		.any()
 	}
 }
 

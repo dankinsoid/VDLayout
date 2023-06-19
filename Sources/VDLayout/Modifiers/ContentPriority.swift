@@ -7,7 +7,7 @@ public extension Chain where Base.Root: UIView {
 		_ priority: UILayoutPriority,
 		axis: NSLayoutConstraint.AxisSet = .both,
 		type: UIView.LayoutPriorityDirectionSet = .both
-	) -> Chain<DoChain<Base>> {
+	) -> Chain<Base> {
 		self.do {
 			$0.set(contentPriority: priority, axis: axis, type: type)
 		}

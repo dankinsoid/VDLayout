@@ -7,7 +7,7 @@ public extension Chain where Base.Root: UIImageView {
 	///
 	/// - Parameter image: The UIImage to set.
 	/// - Returns: The updated Chain object.
-	func image(_ image: UIImage?) -> Chain<DoChain<Base>> {
+	func image(_ image: UIImage?) -> Chain<Base> {
 		self.do {
 			$0.image = image?.imageFlippedForRightToLeftLayoutDirection()
 		}
@@ -17,7 +17,7 @@ public extension Chain where Base.Root: UIImageView {
 	///
 	/// - Parameter color: The UIColor to use for the tint.
 	/// - Returns: The updated Chain object.
-	func tinted(with color: UIColor?) -> Chain<DoChain<Base>> {
+	func tinted(with color: UIColor?) -> Chain<Base> {
 		self.do {
 			guard let color else { return }
 			$0.image = $0.image?.withTintColor(color)

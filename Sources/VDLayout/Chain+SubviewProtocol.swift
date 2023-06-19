@@ -1,23 +1,16 @@
 import UIKit
 import VDChain
 
-extension Chain: Subview where Base.Root: AnyObject, Base: SubviewInstallerChaining & ValueChaining {
+public typealias SubviewChain<Root: Subview> = Chain<EmptyChaining<Root>>
+
+extension Chain: Subview where Base.Root: AnyObject & Subview, Base: ValueChaining {
 
 	public var subviewInstaller: any SubviewInstaller {
-		ChainInstaller(chain: self, installer: base.installer(for: base.root))
+		ChainInstaller(chain: self, installer: values.installer(base.root))
 	}
 }
 
-extension Chain: SingleSubview where Base.Root: AnyObject & SingleSubview, Base: SubviewInstallerChaining & ValueChaining {
-
-	public func asSingleSubview() -> Base.Root {
-		subviewInstaller.install(on: nil)
-		subviewInstaller.configure(on: nil)
-		return apply()
-	}
-}
-
-private struct ChainInstaller<Base: SubviewInstallerChaining & ValueChaining>: SubviewInstaller where Base.Root: AnyObject {
+private struct ChainInstaller<Base: ValueChaining>: SubviewInstaller where Base.Root: AnyObject & Subview {
 
 	let chain: Chain<Base>
 	let installer: SubviewInstaller

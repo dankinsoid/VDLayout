@@ -7,7 +7,7 @@ public extension Chain where Base.Root: UIStackView {
 	///
 	/// - Parameter spacing: The space between each subview.
 	/// - Returns: The updated Chain object.
-	func vertical(_ spacing: CGFloat = .zero) -> Chain<DoChain<Base>> {
+	func vertical(_ spacing: CGFloat = .zero) -> Chain<Base> {
 		self.do {
 			$0.axis = .vertical
 			$0.distribution = .fill
@@ -19,7 +19,7 @@ public extension Chain where Base.Root: UIStackView {
 	///
 	/// - Parameter spacing: The space between each subview.
 	/// - Returns: The updated Chain object.
-	func horizontal(_ spacing: CGFloat = .zero) -> Chain<DoChain<Base>> {
+	func horizontal(_ spacing: CGFloat = .zero) -> Chain<Base> {
 		self.do {
 			$0.axis = .horizontal
 			$0.distribution = .fill
@@ -31,7 +31,7 @@ public extension Chain where Base.Root: UIStackView {
 	///
 	/// - Parameter alignment: The UIStackView.Alignment to set.
 	/// - Returns: The updated Chain object.
-	func alignment(_ alignment: UIStackView.Alignment) -> Chain<DoChain<Base>> {
+	func alignment(_ alignment: UIStackView.Alignment) -> Chain<Base> {
 		self.do {
 			$0.alignment = alignment
 		}
@@ -41,7 +41,7 @@ public extension Chain where Base.Root: UIStackView {
 	///
 	/// - Parameter distribution: The UIStackView.Distribution to set.
 	/// - Returns: The updated Chain object.
-	func distribution(_ distribution: UIStackView.Distribution) -> Chain<DoChain<Base>> {
+	func distribution(_ distribution: UIStackView.Distribution) -> Chain<Base> {
 		self.do {
 			$0.distribution = distribution
 		}
@@ -52,29 +52,29 @@ public extension Chain where Base.Root: UIStackView {
 		left: CGFloat = .zero,
 		right: CGFloat = .zero,
 		bottom: CGFloat = .zero
-	) -> Chain<DoChain<Base>> {
+	) -> Chain<Base> {
 		self.do {
 			$0.layoutMargins = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
 			$0.isLayoutMarginsRelativeArrangement = true
 		}
 	}
 
-	func layoutMargins(_ insets: UIEdgeInsets) -> Chain<DoChain<Base>> {
+	func layoutMargins(_ insets: UIEdgeInsets) -> Chain<Base> {
 		self.do {
 			$0.layoutMargins = insets
 			$0.isLayoutMarginsRelativeArrangement = true
 		}
 	}
 
-	func margins(_ value: CGFloat) -> Chain<DoChain<Base>> {
+	func margins(_ value: CGFloat) -> Chain<Base> {
 		margins(.all, value)
 	}
 
-	func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<DoChain<Base>> {
+	func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<Base> {
 		margins(NSDirectionalEdgeInsets(edges, value))
 	}
 
-	func margins(_ insets: NSDirectionalEdgeInsets, _ other: NSDirectionalEdgeInsets...) -> Chain<DoChain<Base>> {
+	func margins(_ insets: NSDirectionalEdgeInsets, _ other: NSDirectionalEdgeInsets...) -> Chain<Base> {
 		self.do {
 			$0.isLayoutMarginsRelativeArrangement = true
 			$0.directionalLayoutMargins += other.reduce(into: insets, +=)

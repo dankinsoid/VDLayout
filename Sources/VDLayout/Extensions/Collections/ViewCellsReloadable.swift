@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKitViews
 
 public protocol ViewCellsReloadable {
 
@@ -43,8 +44,8 @@ public extension ViewCellsReloadable {
 	) {
 		reload(data: data) {
 			HostingView(create($0))
-		} reload: {
-			$0.rootView = create($1)
+		} reload: { (cell: HostingView<Cell>, data) in
+			cell.rootView = create(data)
 		} size: {
 			size($0, $1)
 		}
@@ -82,8 +83,8 @@ public extension ViewCellsReloadable {
 	) {
 		reload(data: data, id: id) {
 			HostingView(create($0))
-		} reload: {
-			$0.rootView = create($1)
+		} reload: { (cell: HostingView<Cell>, data) in
+			cell.rootView = create(data)
 		} size: {
 			size($0, $1)
 		}
@@ -115,8 +116,8 @@ public extension ViewCellsReloadable {
 	) where Data.Element: Identifiable<ID> {
 		reload(data: data) {
 			HostingView(create($0))
-		} reload: {
-			$0.rootView = create($1)
+		} reload: { (cell: HostingView<Cell>, data) in
+			cell.rootView = create(data)
 		} size: {
 			size($0, $1)
 		}

@@ -5,16 +5,16 @@ import VDPin
 public extension Chain where Base.Root: UIView {
 
 	@available(*, deprecated, message: "Use cornerRadius instead")
-	func rounded(radius: CGFloat) -> Chain<DoChain<Base>> {
+	func rounded(radius: CGFloat) -> Chain<Base> {
 		cornerRadius(radius)
 	}
 
 	@available(*, deprecated, message: "Use cornerRadius instead")
-	func rounded(radius: CGFloat, corners: CACornerMask, _ others: CACornerMask...) -> Chain<DoChain<Base>> {
+	func rounded(radius: CGFloat, corners: CACornerMask, _ others: CACornerMask...) -> Chain<Base> {
 		cornerRadius(radius, at: corners.union(CACornerMask(others)))
 	}
 
-	func cornerRadius(_ radius: CGFloat, at corners: CACornerMask, _ others: CACornerMask...) -> Chain<DoChain<Base>> {
+	func cornerRadius(_ radius: CGFloat, at corners: CACornerMask, _ others: CACornerMask...) -> Chain<Base> {
 		self.do {
 			$0.layer.cornerRadius = radius
 			$0.clipsToBounds = true
@@ -22,50 +22,50 @@ public extension Chain where Base.Root: UIView {
 		}
 	}
 
-	func cornerRadius(_ radius: CGFloat) -> Chain<DoChain<Base>> {
+	func cornerRadius(_ radius: CGFloat) -> Chain<Base> {
 		self.do {
 			$0.layer.cornerRadius = radius
 			$0.clipsToBounds = true
 		}
 	}
 
-	func alpha(_ value: CGFloat) -> Chain<DoChain<Base>> {
+	func alpha(_ value: CGFloat) -> Chain<Base> {
 		self.do {
 			$0.alpha = value
 		}
 	}
 
-	func backgroundColor(_ color: UIColor?) -> Chain<DoChain<Base>> {
+	func backgroundColor(_ color: UIColor?) -> Chain<Base> {
 		self.do {
 			$0.backgroundColor = color
 		}
 	}
 
-	func clipped(_ isClipped: Bool = true) -> Chain<DoChain<Base>> {
+	func clipped(_ isClipped: Bool = true) -> Chain<Base> {
 		self.do {
 			$0.clipsToBounds = isClipped
 		}
 	}
 
-	func userInteractionEnabled(_ isUserInteractionEnabled: Bool = true) -> Chain<DoChain<Base>> {
+	func userInteractionEnabled(_ isUserInteractionEnabled: Bool = true) -> Chain<Base> {
 		self.do {
 			$0.isUserInteractionEnabled = isUserInteractionEnabled
 		}
 	}
 
-	func contentMode(_ mode: UIView.ContentMode) -> Chain<DoChain<Base>> {
+	func contentMode(_ mode: UIView.ContentMode) -> Chain<Base> {
 		self.do {
 			$0.contentMode = mode
 		}
 	}
 
-	func hidden(_ isHidden: Bool = true) -> Chain<DoChain<Base>> {
+	func hidden(_ isHidden: Bool = true) -> Chain<Base> {
 		self.do {
 			$0.isHidden = isHidden
 		}
 	}
 
-	func border(color: UIColor, width: CGFloat) -> Chain<DoChain<Base>> {
+	func border(color: UIColor, width: CGFloat) -> Chain<Base> {
 		self.do {
 			$0.layer.borderColor = color.cgColor
 			$0.layer.borderWidth = width
@@ -77,7 +77,7 @@ public extension Chain where Base.Root: UIView {
 		opacity: Float = 0.4,
 		offset: CGSize = CGSize(width: 0, height: 2),
 		radius: CGFloat = 6
-	) -> Chain<DoChain<Base>> {
+	) -> Chain<Base> {
 		self.do {
 			$0.layer.shadowColor = color.cgColor
 			$0.layer.shadowOpacity = opacity
@@ -86,34 +86,42 @@ public extension Chain where Base.Root: UIView {
 		}
 	}
 
-	func margins(_ value: CGFloat) -> Chain<DoChain<Base>> {
+	func margins(_ value: CGFloat) -> Chain<Base> {
 		margins(.all, value)
 	}
 
-	func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<DoChain<Base>> {
+	func margins(_ edges: Edge.Set, _ value: CGFloat) -> Chain<Base> {
 		margins(NSDirectionalEdgeInsets(edges, value))
 	}
 
-	func margins(_ insets: NSDirectionalEdgeInsets, _ other: NSDirectionalEdgeInsets...) -> Chain<DoChain<Base>> {
+	func margins(_ insets: NSDirectionalEdgeInsets, _ other: NSDirectionalEdgeInsets...) -> Chain<Base> {
 		self.do {
 			$0.directionalLayoutMargins += other.reduce(into: insets, +=)
 		}
 	}
 
-	func restorationID(_ id: String) -> Chain<DoChain<Base>> {
+	func restorationID(_ id: String) -> Chain<Base> {
 		self.do {
 			$0.restorationIdentifier = id
 		}
 	}
 
-	func restorationID(file: String = #fileID, line: UInt = #line, function: String = #function) -> Chain<DoChain<Base>> {
+	func restorationID(file: String = #fileID, line: UInt = #line, function: String = #function) -> Chain<Base> {
 		self.do {
 			$0.setRestorationID(fileID: file, line: line, function: function)
 		}
 	}
+
+	func restorationIDIfNeeded(file: String = #fileID, line: UInt = #line, function: String = #function) -> Chain<Base> {
+		self.do {
+			if $0.restorationIdentifier == nil {
+				$0.setRestorationID(fileID: file, line: line, function: function)
+			}
+		}
+	}
 }
 
-public extension Chain where Base.Root: UIView, Base: SubviewChaining {
+public extension Chain where Base.Root: UIView, Base: ValueChaining {
 
 	func scrollable(
 		_ axis: NSLayoutConstraint.Axis,
@@ -145,15 +153,14 @@ public extension Chain where Base.Root: UIView, Base: SubviewChaining {
 				self.pin(.edges)
 			}
 		}
-		.any()
 	}
 }
 
-public extension Chain where Base: SubviewInstallerChaining, Base.Root: UIView {
+public extension Chain where Base.Root: UIView {
 
 	func subview(
 		@SubviewBuilder subview: () -> any Subview
-	) -> Chain<SubviewInstallerChain<Base>> {
+	) -> Chain<Base> {
 		let installer = subview().subviewInstaller
 		return on { root, _ in
 			installer.install(on: root)

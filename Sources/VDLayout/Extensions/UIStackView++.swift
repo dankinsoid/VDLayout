@@ -18,7 +18,7 @@ public extension Subview where Self: UIStackView {
 		line: UInt = #line,
 		function: String = #function,
 		@SubviewBuilder _ subviews: () -> any Subview = { EmptySubview() }
-	) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
+	) -> SubviewChain<Self> {
 		let result = Self()
 		result.axis = .vertical
 		result.spacing = spacing
@@ -36,7 +36,7 @@ public extension Subview where Self: UIStackView {
 		line: UInt = #line,
 		function: String = #function,
 		@SubviewBuilder _ subviews: () -> any Subview = { EmptySubview() }
-	) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
+	) -> SubviewChain<Self> {
 		let result = Self()
 		result.axis = .horizontal
 		result.spacing = spacing

@@ -3,27 +3,27 @@ import SwiftUI
 
 public extension UIKitView {
 
-	init<C: SubviewInstallerChaining & ValueChaining>(
+	init<C: ValueChaining>(
 		_ make: @escaping () -> Chain<C>
-	) where Base == UIKitViewChaining<AnyUIViewRepresentable<C.Root>> {
+	) where C.Root: Subview, Base == UIKitViewChain<AnyUIViewRepresentable<C.Root>> {
 		self.init {
 			let chain = make()
-      let installer = chain.subviewInstaller
-      installer.install(on: nil)
-      installer.configure(on: nil)
-      return chain.base.root
+			let installer = chain.subviewInstaller
+			installer.install(on: nil)
+			installer.configure(on: nil)
+			return chain.base.root
 		}
 	}
 
-	init<C: SubviewInstallerChaining & ValueChaining>(
+	init<C: ValueChaining>(
 		_ make: @escaping () -> Chain<C>
-	) where Base == UIKitViewChaining<AnyUIViewControllerRepresentable<C.Root>> {
+	) where C.Root: Subview, Base == UIKitViewChain<AnyUIViewControllerRepresentable<C.Root>> {
 		self.init {
 			let chain = make()
-      let installer = chain.subviewInstaller
-      installer.install(on: nil)
-      installer.configure(on: nil)
-      return chain.base.root
+			let installer = chain.subviewInstaller
+			installer.install(on: nil)
+			installer.configure(on: nil)
+			return chain.base.root
 		}
 	}
 }

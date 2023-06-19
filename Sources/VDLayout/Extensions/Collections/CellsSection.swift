@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKitViews
 
 public struct CellsSection: Identifiable {
 
@@ -75,8 +76,8 @@ public struct CellsSection: Identifiable {
 			cellID: cellID
 		) {
 			HostingView(create($0))
-		} reload: {
-			($0 as HostingView<Cell>).rootView = create($1)
+		} reload: { (cell: HostingView<Cell>, data) in
+			cell.rootView = create(data)
 		} size: {
 			size($0, $1)
 		}
@@ -122,8 +123,8 @@ public struct CellsSection: Identifiable {
 			data: data
 		) {
 			HostingView(create($0))
-		} reload: {
-			$0.rootView = create($1)
+		} reload: { (cell: HostingView<Cell>, data) in
+			cell.rootView = create(data)
 		} size: {
 			size($0, $1)
 		}
@@ -173,8 +174,8 @@ public struct CellsSection: Identifiable {
 			data: data
 		) {
 			HostingView(create($0))
-		} reload: {
-			$0.rootView = create($1)
+		} reload: { (cell: HostingView<Cell>, data) in
+			cell.rootView = create(data)
 		} size: {
 			size($0, $1)
 		}

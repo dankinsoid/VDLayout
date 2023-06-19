@@ -1,9 +1,7 @@
 import UIKit
 import VDChain
 
-extension UIView: SingleSubview {
-
-	public typealias _Body = Never
+extension UIView: Subview {
 
 	public var subviewInstaller: any SubviewInstaller {
 		UIViewInstaller(self)
@@ -57,10 +55,6 @@ public extension UIView {
 	var controller: UIViewController? {
 		(next as? UIViewController) ?? superview?.controller
 	}
-
-	func asSingleSubview() -> UIView {
-		self
-	}
 }
 
 public extension NSObjectProtocol where Self: UIView {
@@ -82,18 +76,17 @@ public extension Subview where Self: UIView {
 		line: UInt = #line,
 		function: String = #function,
 		@SubviewBuilder subview: () -> any Subview
-	) -> SubviewChain<Self> {
+	) -> Chain<EmptyChaining<Self>> {
 		Self().chain
 			.subview(subview: subview)
 			.restorationID(file: file, line: line, function: function)
-			.any()
 	}
 
-	func callAsFunction(@SubviewBuilder subview: () -> any Subview) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
+	func callAsFunction(@SubviewBuilder subview: () -> any Subview) -> Chain<EmptyChaining<Self>> {
 		with(subview: subview)
 	}
 
-	func with(@SubviewBuilder subview: () -> any Subview) -> Chain<SubviewInstallerChain<EmptyChaining<Self>>> {
+	func with(@SubviewBuilder subview: () -> any Subview) -> Chain<EmptyChaining<Self>> {
 		chain.subview(subview: subview)
 	}
 }

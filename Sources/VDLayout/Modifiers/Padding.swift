@@ -2,48 +2,41 @@ import SwiftUI
 import VDChain
 import VDPin
 
-public extension Chain where Base.Root: UIView, Base: SubviewChaining {
+public extension Chain where Base.Root: UIView, Base: ValueChaining {
 
 	@_disfavoredOverload
-	func padding(_ value: CGFloat) -> SubviewChain<PaddingView> {
+	func padding(_ value: CGFloat) -> Chain<EmptyChaining<PaddingView>> {
 		padding(.all, value)
 	}
 
 	@_disfavoredOverload
-	func padding(_ edges: Edge.Set, _ value: CGFloat) -> SubviewChain<PaddingView> {
+	func padding(_ edges: Edge.Set, _ value: CGFloat) -> Chain<EmptyChaining<PaddingView>> {
 		padding(NSDirectionalEdgeInsets(edges, value))
 	}
 
 	@_disfavoredOverload
-	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> SubviewChain<PaddingView> {
+	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> Chain<EmptyChaining<PaddingView>> {
 		PaddingView.subview {
 			self
 		}
 		.insets(last.reduce(into: first, +=))
-		.any()
 	}
 }
 
-public extension SubviewChain<PaddingView> {
+public extension Chain<EmptyChaining<PaddingView>> {
 
-	func padding(_ value: CGFloat) -> SubviewChain<PaddingView> {
+	func padding(_ value: CGFloat) -> Chain {
 		padding(.all, value)
 	}
 
-	func padding(_ edges: Edge.Set, _ value: CGFloat) -> SubviewChain<PaddingView> {
+	func padding(_ edges: Edge.Set, _ value: CGFloat) -> Chain {
 		padding(NSDirectionalEdgeInsets(edges, value))
 	}
 
-	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> SubviewChain<PaddingView> {
-		AnySubviewChaining(root: base.root) {
-			base.constraintable(for: $0)
-		} _installer: {
-			base.installer(for: $0)
-		} _apply: {
-			base.apply(on: &$0)
+	func padding(_ first: NSDirectionalEdgeInsets, _ last: NSDirectionalEdgeInsets...) -> Chain {
+		self.do {
 			$0.insets = last.reduce(into: $0.insets + first, +=)
 		}
-		.wrap()
 	}
 }
 
