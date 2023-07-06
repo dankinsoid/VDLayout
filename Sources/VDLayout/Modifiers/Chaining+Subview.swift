@@ -4,8 +4,8 @@ import VDChain
 public extension ChainValues where Root: Subview {
 
 	var installer: (_ root: Root) -> SubviewInstaller {
-		get { self[\.installer] ?? { $0.subviewInstaller } }
-		set { self[\.installer] = newValue }
+		get { get(\.installer) ?? { $0.subviewInstaller } }
+		set { set(\.installer, newValue) }
 	}
 }
 
@@ -17,7 +17,7 @@ extension Chain where Base.Root: Subview {
 		_ installer: @escaping (SubviewInstaller, Base.Root) -> SubviewInstaller
 	) -> Chain<Base> {
 		reduce(\.installer) { installerFor in
-			installerFor = { [installerFor] root in
+            return { [installerFor] root in
 				installer(installerFor(root), root)
 			}
 		}

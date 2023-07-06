@@ -9,6 +9,7 @@ open class UISubview: UIView {
 		afterInit()
 	}
 
+    @available(*, unavailable)
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 		afterInit()
