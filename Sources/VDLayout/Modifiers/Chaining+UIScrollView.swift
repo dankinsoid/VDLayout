@@ -1,6 +1,7 @@
 import UIKit
 import VDChain
 import VDPin
+@_exported import CellsReloadable
 
 public extension Chain where Base.Root: UIScrollView {
 
