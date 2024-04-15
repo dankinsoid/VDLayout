@@ -82,10 +82,4 @@ public extension Chain where Base.Root: UIButton {
 			}
 		}
 	}
-
-	func onTap(_ action: @escaping () -> Void) -> Chain<Base> {
-		self.do {
-			$0.addAction(action)
-		}
-	}
 }
