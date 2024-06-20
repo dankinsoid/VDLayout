@@ -14,17 +14,19 @@ public extension Chain where Base.Root: UIView {
 		cornerRadius(radius, at: corners.union(CACornerMask(others)))
 	}
 
-	func cornerRadius(_ radius: CGFloat, at corners: CACornerMask, _ others: CACornerMask...) -> Chain<Base> {
+	func cornerRadius(_ radius: CGFloat, style: CALayerCornerCurve = .continuous, at corners: CACornerMask, _ others: CACornerMask...) -> Chain<Base> {
 		self.do {
 			$0.layer.cornerRadius = radius
+            $0.layer.cornerCurve = style
 			$0.clipsToBounds = true
 			$0.layer.maskedCorners = corners.union(CACornerMask(others))
 		}
 	}
 
-	func cornerRadius(_ radius: CGFloat) -> Chain<Base> {
+    func cornerRadius(_ radius: CGFloat, style: CALayerCornerCurve = .continuous) -> Chain<Base> {
 		self.do {
 			$0.layer.cornerRadius = radius
+            $0.layer.cornerCurve = style
 			$0.clipsToBounds = true
 		}
 	}
