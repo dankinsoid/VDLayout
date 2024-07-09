@@ -15,12 +15,11 @@ let package = Package(
 		.package(url: "https://github.com/dankinsoid/VDChain.git", from: "3.0.0"),
 		.package(url: "https://github.com/dankinsoid/UIKitViews.git", from: "1.4.0"),
 		.package(url: "https://github.com/dankinsoid/VDPin.git", from: "1.7.0"),
-        .package(url: "https://github.com/dankinsoid/CellsReloadable.git", from: "2.0.0"),
 	],
 	targets: [
 		.target(
 			name: "VDLayout",
-			dependencies: ["VDChain", "VDPin", "UIKitViews", "CellsReloadable"]
+			dependencies: ["VDChain", "VDPin", "UIKitViews"]
 		),
 	]
 )
